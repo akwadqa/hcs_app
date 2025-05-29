@@ -1,0 +1,56 @@
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hcs/features/Home/data/models/home_block_model.dart';
+import 'package:hcs/features/Home/presentation/controllers/home_controller.dart';
+import 'package:hcs/src/enums/request_state.dart';
+import 'package:hcs/src/shared_widgets/app_error_widget.dart';
+
+@RoutePage()
+class SettingsContentScreen extends ConsumerStatefulWidget {
+  const SettingsContentScreen({super.key});
+
+  @override
+  ConsumerState<SettingsContentScreen> createState() => _HomeContentState();
+}
+
+class _HomeContentState extends ConsumerState<SettingsContentScreen> {
+  int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    Future(() => ref.read(homeControllerProvider.notifier).fetchHomeBlocks());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final homeState = ref.watch(homeControllerProvider);
+
+    return Scaffold(
+      body: homeState.homeStates == RequestStates.loaded
+          ? _buildContent(homeState.homeBlock!)
+          : homeState.homeStates == RequestStates.loading
+          ? const Center(child: CircularProgressIndicator())
+          : homeState.homeStates == RequestStates.error
+          ? AppErrorWidget(
+              onTap: () => Future(
+                () =>
+                    ref.read(homeControllerProvider.notifier).fetchHomeBlocks(),
+              ),
+            )
+          : SizedBox.shrink(),
+    );
+  }
+
+  Widget _buildContent(HomeBlockModel homeBlock) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.only(
+        top: 75.h,
+      ), //+ 25.h vetrical padding in buildContentItem
+      child: Column(children: [Center(child: Text('SEttings'))]),
+    );
+  }
+}
