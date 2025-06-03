@@ -5,6 +5,15 @@
   "settings": "Settings",
   "chooseServices": "Choose Services",
   "customer": "Customer",
+  "next": "Next",
+  "serviceType": "Service Type",
+  "shiftType": "Shift Type",
+  "checkAvailability": "Check Availability",
+  "date": "Date",
+  "serviceCategory": "Service Category",
+  "employees": "Employees",
+  
+  
 
   
   "password": "Password",

@@ -8,11 +8,10 @@ class CustomButton extends ElevatedButton {
   CustomButton({
     super.key,
     required String title,
-    required void Function()? onPressed,
+    required super.onPressed,
     double? textSize,
     WidgetStateProperty<Size?>? fixedSize,
   }) : super(
-         onPressed: onPressed,
          style: ElevatedButton.styleFrom(
            backgroundColor: AppColors.primary,
            fixedSize:

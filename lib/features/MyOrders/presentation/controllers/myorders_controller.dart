@@ -9,46 +9,39 @@ part 'myorders_controller.g.dart';
 class MyOrdersController extends _$MyOrdersController {
   @override
   MyOrdersState build() => const MyOrdersState(
-    homeBlock: null,
-    myOrdersStates: RequestStates.init,
-    homeMessage: '',
-
     //credits
-    currentPage: null,
-    credits: [],
-    creditsStates: RequestStates.init,
-    creditsMessage: '',
+    currentCustomersPage: null,
+    customers: [],
+    customersStates: RequestStates.init,
+    customersMessage: '',
   );
 
-  Future<void> fetchHomeBlocks() async {
-    state = state.copyWith(myOrdersStates: RequestStates.loading);
+  // Future<void> fetchHomeBlocks() async {
+  //   state = state.copyWith(myOrdersStates: RequestStates.loading);
+
+  //   try {
+  //     final homeRepo = ref.read(homeRepositoryProvider);
+  //     final homeData = await homeRepo.getHomeBlocks();
+
+  //     state = state.copyWith(
+  //       homeBlock: homeData,
+  //       myOrdersStates: RequestStates.loaded,
+  //       homeMessage: '',
+  //     );
+  //   } catch (e) {
+  //     state = state.copyWith(
+  //       myOrdersStates: RequestStates.error,
+  //       homeMessage: e.toString(),
+  //     );
+  //   }
+  // }
+
+  Future<void> fetchCreditsByID() async {
+    state = state.copyWith(customersStates: RequestStates.loading);
 
     try {
       final homeRepo = ref.read(homeRepositoryProvider);
-      final homeData = await homeRepo.getHomeBlocks();
-
-      state = state.copyWith(
-        homeBlock: homeData,
-        myOrdersStates: RequestStates.loaded,
-        homeMessage: '',
-      );
-    } catch (e) {
-      state = state.copyWith(
-        myOrdersStates: RequestStates.error,
-        homeMessage: e.toString(),
-      );
-    }
-  }
-
-  Future<void> fetchCreditsByID(String itemGroupId) async {
-    state = state.copyWith(creditsStates: RequestStates.loading);
-
-    try {
-      final homeRepo = ref.read(homeRepositoryProvider);
-      final creditsData = await homeRepo.fetchCreditsByID(
-        page: 1,
-        itemGroupId: itemGroupId,
-      );
+      final creditsData = await homeRepo.getCustomers(page: 1);
       // debugPrint("currentPage #1 : ${state.currentPage.toString()}");
 
       int? nextPage;
@@ -59,16 +52,16 @@ class MyOrdersController extends _$MyOrdersController {
         nextPage = null;
       }
       state = state.copyWith(
-        currentPage: nextPage,
-        credits: creditsData.data,
-        creditsStates: RequestStates.loaded,
-        creditsMessage: '',
+        currentCustomersPage: nextPage,
+        customers: creditsData.data,
+        customersStates: RequestStates.loaded,
+        customersMessage: '',
       );
       // debugPrint("currentPage #2 : ${state.currentPage.toString()}");
     } catch (e) {
       state = state.copyWith(
-        creditsStates: RequestStates.error,
-        creditsMessage: e.toString(),
+        customersStates: RequestStates.error,
+        customersMessage: e.toString(),
       );
     }
   }
@@ -76,10 +69,7 @@ class MyOrdersController extends _$MyOrdersController {
   Future<void> onLoadMoreCreditsByID(String itemGroupId) async {
     try {
       final homeRepo = ref.read(homeRepositoryProvider);
-      final creditsData = await homeRepo.fetchCreditsByID(
-        page: state.currentPage!,
-        itemGroupId: itemGroupId,
-      );
+      final creditsData = await homeRepo.getCustomers(page: state.currentCustomersPage!);
       // debugPrint("currentPage #3 : ${state.currentPage.toString()}");
 
       int? nextPage;
@@ -90,16 +80,16 @@ class MyOrdersController extends _$MyOrdersController {
         nextPage = null;
       }
       state = state.copyWith(
-        currentPage: nextPage,
-        credits: [...state.credits, ...creditsData.data],
-        creditsStates: RequestStates.loaded,
-        creditsMessage: '',
+        currentCustomersPage: nextPage,
+        customers: [...state.customers, ...creditsData.data],
+        customersStates: RequestStates.loaded,
+        customersMessage: '',
       );
       // debugPrint("currentPage #4 : ${state.currentPage.toString()}");
     } catch (e) {
       state = state.copyWith(
-        creditsStates: RequestStates.error,
-        creditsMessage: e.toString(),
+        customersStates: RequestStates.error,
+        customersMessage: e.toString(),
       );
     }
   }

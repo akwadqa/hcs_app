@@ -5,6 +5,9 @@ class AppStrings {
   //*App
   static const String pressToRefreash = 'PressToRefreash';
   static const String emptyData = 'emptyData';
+  static const String next = 'next';
+  static const String checkAvailability = 'checkAvailability';
+  
 
   //validation
   static const String enterValidUsername = 'enterValidUsername';
@@ -21,13 +24,15 @@ class AppStrings {
   static const String forgotPassword = 'forgotPassword';
   static const String loggedInSuccesfully = 'loggedInSuccesfully';
 
-  
   //Home
   static const String home = 'home';
   static const String chooseServices = 'chooseServices';
   static const String customer = 'customer';
-
-
+  static const String serviceType = 'serviceType';
+  static const String shiftType = 'shiftType';
+  static const String date = 'date';
+  static const String serviceCategory = 'serviceCategory';
+  static const String employees = 'employees';
 
   //My Orders
   static const String myOrders = 'myOrders';
@@ -71,8 +76,6 @@ class AppStrings {
   static const String warningBeforePay = 'warningBeforePay';
   static const String pay = 'pay';
   static const String promoCode = 'promoCode';
-
-
 
   //Region
   static const String region = 'region';

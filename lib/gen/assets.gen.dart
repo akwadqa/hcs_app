@@ -39,6 +39,9 @@ class $AssetsImagesGen {
   AssetGenImage get background11 =>
       const AssetGenImage('assets/images/background11.png');
 
+  /// File path: assets/images/calendar.svg
+  SvgGenImage get calendar => const SvgGenImage('assets/images/calendar.svg');
+
   /// File path: assets/images/dummycard.png
   AssetGenImage get dummycard =>
       const AssetGenImage('assets/images/dummycard.png');
@@ -62,6 +65,9 @@ class $AssetsImagesGen {
   SvgGenImage get myordersSelected =>
       const SvgGenImage('assets/images/myorders_selected.svg');
 
+  /// File path: assets/images/search.svg
+  SvgGenImage get search => const SvgGenImage('assets/images/search.svg');
+
   /// File path: assets/images/settings_selected.svg
   SvgGenImage get settingsSelected =>
       const SvgGenImage('assets/images/settings_selected.svg');
@@ -83,12 +89,14 @@ class $AssetsImagesGen {
     back,
     background,
     background11,
+    calendar,
     dummycard,
     homeSelected,
     homeUnselected,
     imErrorScreen,
     logo,
     myordersSelected,
+    search,
     settingsSelected,
     settingsUnselected,
     smallLogo,

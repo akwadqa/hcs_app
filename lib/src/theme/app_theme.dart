@@ -85,6 +85,7 @@ abstract class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         enabledBorder: _outlineBorder(AppColors.lightGray02),
+        disabledBorder: _outlineBorder(AppColors.unSelectedGrey),
         focusedBorder: _outlineBorder(AppColors.primary),
         border: _outlineBorder(AppColors.lightGray02),
         errorBorder: _outlineBorder(AppColors.darkRed),

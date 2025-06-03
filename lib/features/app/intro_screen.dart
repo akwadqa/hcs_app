@@ -14,7 +14,7 @@ class IntroScreen extends ConsumerWidget {
     final profileRouter = AutoRouter.of(context);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!isAuthenticated) {
+      if (isAuthenticated) {
         profileRouter.replace(const MainRoute());
       } else {
         profileRouter.replace(const LoginRoute());

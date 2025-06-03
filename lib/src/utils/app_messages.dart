@@ -55,7 +55,7 @@ class AppMessages {
             color: color,
             boxShadow: [
               BoxShadow(
-                color: AppColors.black800.withOpacity(0.3),
+                color: AppColors.black800.withValues(alpha: 0.3),
                 blurRadius: 5,
                 spreadRadius: 2,
               ),

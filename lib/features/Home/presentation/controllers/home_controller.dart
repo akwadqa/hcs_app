@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:hcs/features/Home/data/models/add_cutomer_mdoel.dart';
+import 'package:hcs/features/Home/data/models/customers_model.dart';
 import 'package:hcs/features/Home/data/repositories/home_repository.dart';
 import 'package:hcs/features/Home/presentation/controllers/home_state.dart';
 import 'package:hcs/src/enums/request_state.dart';
@@ -9,97 +12,91 @@ part 'home_controller.g.dart';
 class HomeController extends _$HomeController {
   @override
   HomeState build() => const HomeState(
-    homeBlock: null,
-    homeStates: RequestStates.init,
-    homeMessage: '',
-
-    //credits
-    currentPage: null,
-    credits: [],
-    creditsStates: RequestStates.init,
-    creditsMessage: '',
+    //customers
+    currentCustomersPage: null,
+    customers: [],
+    customersStates: RequestStates.init,
+    customersMessage: '',
+    selectedCustomer: null,
   );
 
-  Future<void> fetchHomeBlocks() async {
-    state = state.copyWith(homeStates: RequestStates.loading);
+  Future<void> addCustomer(AddCustomerParams params) async {
+    state = state.copyWith(customersStates: RequestStates.loading);
 
     try {
       final homeRepo = ref.read(homeRepositoryProvider);
-      final homeData = await homeRepo.getHomeBlocks();
+      await homeRepo.addCustomer(params: params);
 
-      state = state.copyWith(
-        homeBlock: homeData,
-        homeStates: RequestStates.loaded,
-        homeMessage: '',
-      );
+      state = state.copyWith(customersStates: RequestStates.loaded);
     } catch (e) {
       state = state.copyWith(
-        homeStates: RequestStates.error,
-        homeMessage: e.toString(),
+        customersStates: RequestStates.error,
+        customersMessage: e.toString(),
       );
     }
   }
 
-  Future<void> fetchCreditsByID(String itemGroupId) async {
-    state = state.copyWith(creditsStates: RequestStates.loading);
+  Future<void> selectCustomer(Customers? selectedCustomer) async {
+    state = state.copyWith(selectedCustomer: selectedCustomer);
+    debugPrint("${state.selectedCustomer.toString()} llll");
+  }
+
+  Future<void> fetchCostumers() async {
+    state = state.copyWith(customersStates: RequestStates.loading);
 
     try {
       final homeRepo = ref.read(homeRepositoryProvider);
-      final creditsData = await homeRepo.fetchCreditsByID(
-        page: 1,
-        itemGroupId: itemGroupId,
-      );
-      // debugPrint("currentPage #1 : ${state.currentPage.toString()}");
+      final customersData = await homeRepo.getCustomers(page: 1);
+      // debugPrint("currentCustomersPage #1 : ${state.currentCustomersPage.toString()}");
 
       int? nextPage;
       //if there is a second page ?
-      if (creditsData.pagination.totalPages > 1) {
+      if (customersData.pagination.totalPages > 1) {
         nextPage = 2;
       } else {
         nextPage = null;
       }
       state = state.copyWith(
-        currentPage: nextPage,
-        credits: creditsData.data,
-        creditsStates: RequestStates.loaded,
-        creditsMessage: '',
+        currentCustomersPage: nextPage,
+        customers: customersData.data,
+        customersStates: RequestStates.loaded,
+        customersMessage: '',
       );
-      // debugPrint("currentPage #2 : ${state.currentPage.toString()}");
+      // debugPrint("currentCustomersPage #2 : ${state.currentCustomersPage.toString()}");
     } catch (e) {
       state = state.copyWith(
-        creditsStates: RequestStates.error,
-        creditsMessage: e.toString(),
+        customersStates: RequestStates.error,
+        customersMessage: e.toString(),
       );
     }
   }
 
-  Future<void> onLoadMoreCreditsByID(String itemGroupId) async {
+  Future<void> onLoadMoreCostumers() async {
     try {
       final homeRepo = ref.read(homeRepositoryProvider);
-      final creditsData = await homeRepo.fetchCreditsByID(
-        page: state.currentPage!,
-        itemGroupId: itemGroupId,
+      final customersData = await homeRepo.getCustomers(
+        page: state.currentCustomersPage!,
       );
-      // debugPrint("currentPage #3 : ${state.currentPage.toString()}");
+      // debugPrint("currentCustomersPage #3 : ${state.currentCustomersPage.toString()}");
 
       int? nextPage;
       //if we reach the limit or not ?
-      if (creditsData.pagination.totalPages > creditsData.pagination.page) {
-        nextPage = creditsData.pagination.page + 1;
+      if (customersData.pagination.totalPages > customersData.pagination.page) {
+        nextPage = customersData.pagination.page + 1;
       } else {
         nextPage = null;
       }
       state = state.copyWith(
-        currentPage: nextPage,
-        credits: [...state.credits, ...creditsData.data],
-        creditsStates: RequestStates.loaded,
-        creditsMessage: '',
+        currentCustomersPage: nextPage,
+        customers: [...state.customers, ...customersData.data],
+        customersStates: RequestStates.loaded,
+        customersMessage: '',
       );
-      // debugPrint("currentPage #4 : ${state.currentPage.toString()}");
+      // debugPrint("currentCustomersPage #4 : ${state.currentCustomersPage.toString()}");
     } catch (e) {
       state = state.copyWith(
-        creditsStates: RequestStates.error,
-        creditsMessage: e.toString(),
+        customersStates: RequestStates.error,
+        customersMessage: e.toString(),
       );
     }
   }

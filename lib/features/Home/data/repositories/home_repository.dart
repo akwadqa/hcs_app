@@ -1,7 +1,10 @@
 // home_repository.dart
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hcs/features/Home/data/models/credits_model.dart';
-import 'package:hcs/features/Home/data/models/home_block_model.dart';
+import 'package:hcs/features/Home/data/models/add_cutomer_mdoel.dart';
+import 'package:hcs/features/Home/data/models/customers_model.dart';
 import 'package:hcs/src/constants/api_constance.dart';
 import 'package:hcs/src/network/network_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -17,30 +20,38 @@ class HomeRepository {
 
   HomeRepository(this._networkService);
 
-  Future<HomeBlockModel> getHomeBlocks() async {
-    final response = await _networkService.get(ApiConstance.home);
+  Future<bool> addCustomer({required AddCustomerParams params}) async {
+    var formData = FormData.fromMap({
+      'customer_type': params.customerType,
+      'customer_name': params.customerName,
+      'customer_qid': params.customerQid,
+      'customer_phone': params.customerPhone,
+    });
+    final response = await _networkService.post(
+      ApiConstance.addCustomers,
+      formData,
+    );
+
     // final data = json.encode(response.data);
 
     if (response.statusCode == 200) {
-      return HomeBlockModel.fromJson(response.data);
+      return true;
     } else {
-      throw Exception(response.message ?? 'Failed to load home blocks');
+      throw Exception(response.message ?? 'Failed to Add Customers');
     }
   }
 
-  Future<CreditsModel> fetchCreditsByID({
-    required int page,
-    required String itemGroupId,
-  }) async {
+  Future<CustomersModel> getCustomers({required int page}) async {
     final response = await _networkService.get(
-      ApiConstance.getCreditsByID(page.toString(), itemGroupId),
+      ApiConstance.getCustomers(page.toString()),
     );
     // final data = json.encode(response.data);
 
     if (response.statusCode == 200) {
-      return CreditsModel.fromJson(response.data);
+      final jsonString = json.encode(response.data);
+      return customersModelFromJson(jsonString);
     } else {
-      throw Exception(response.message ?? 'Failed to load home blocks');
+      throw Exception(response.message ?? 'Failed to Get Customers');
     }
   }
 }

@@ -19,7 +19,7 @@ class LoginResponse {
   @JsonKey(name: "home_page")
   String homePage;
   @JsonKey(name: "full_name")
-  String fullName;
+  String fullName;  
   @JsonKey(name: "status_code")
   int statusCode;
   @JsonKey(name: "error")

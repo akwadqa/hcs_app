@@ -1,7 +1,8 @@
 class ApiConstance {
-  static const String baseUrl = "https://mgs.akwad.qa/api/method";
+  static const String baseUrl = "https://highclass.akwad.qa/api/method";
+  static const String baseDomain = "highclass";
+  static const String baseImageUrl = 'https://$baseDomain.akwad.qa/';
 
-  static const String baseImageUrl = 'https://mgs.akwad.qa/';
   static String imageUrl(String? path) {
     if (path != null) {
       return '$baseImageUrl$path';
@@ -10,28 +11,34 @@ class ApiConstance {
     }
   }
 
-  ////////////////// *  Register   //////////////////
-  static const String register = '$baseUrl/mgs.api.authentication.register';
-
   ////////////////// *  Login   /////////////////////
-  static const String loginPath = '$baseUrl/mgs.api.authentication.login';
+  static const String loginPath =
+      '$baseUrl/$baseDomain.api.authentication.login';
+
+  ////////////////// *  Customers   /////////////////////
+  static String getCustomers(String page) =>
+      '$baseUrl/$baseDomain.api.customer.customers?page=$page&limit=10';
+  static String addCustomers=
+      '$baseUrl/$baseDomain.api.customer.customer';
+
+  ////////////////// *  Register   //////////////////
+  // static const String register =
+  //     '$baseUrl/$baseDomain.api.authentication.register';
 
   ////////////////// *  Home   /////////////////////
-  static const String home = '$baseUrl/jocards.mgs_api.home_block.home_blocks';
-
-  ////////////////// *  Credit   /////////////////////
-  static String getCreditsByID(String page, String itemGroupId) =>
-      '$baseUrl/jocards.mgs_api.item_group.item_group_items?page=$page&item_group_id=$itemGroupId';
+  // static const String home =
+  //     '$baseUrl/${baseDomain}_api.home_block.home_blocks';
 
   ////////////////// *  Search   /////////////////////
-  static String searchItemGroupByID(String? itemGroupId) {
-    if (itemGroupId != null && itemGroupId.isNotEmpty) {
-      return '$baseUrl/jocards.mgs_api.item_group.item_groups?item_group_id=$itemGroupId';
-    } else {
-      return '$baseUrl/jocards.mgs_api.item_group.item_groups';
-    }
-  }
+  // static String searchItemGroupByID(String? itemGroupId) {
+  //   if (itemGroupId != null && itemGroupId.isNotEmpty) {
+  //     return '$baseUrl/jocards.${baseDomain}_api.item_group.item_groups?item_group_id=$itemGroupId';
+  //   } else {
+  //     return '$baseUrl/jocards.${baseDomain}_api.item_group.item_groups';
+  //   }
+  // }
 
   ////////////////// *  Profile   /////////////////////
-  static const String profile = '$baseUrl/jocards.mgs_api.profile.profile';
+  // static const String profile =
+  //     '$baseUrl/jocards.${baseDomain}_api.profile.profile';
 }

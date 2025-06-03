@@ -58,7 +58,7 @@ packages:
     source: hosted
     version: "2.13.0"
   auto_route:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: auto_route
       sha256: b8c036fa613a98a759cf0fdcba26e62f4985dcbff01a5e760ab411e8554bbaf0
@@ -990,7 +990,7 @@ packages:
     source: hosted
     version: "0.5.10"
   riverpod_annotation:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: riverpod_annotation
       sha256: e14b0bf45b71326654e2705d462f21b958f987087be850afd60578fcd502d1b8

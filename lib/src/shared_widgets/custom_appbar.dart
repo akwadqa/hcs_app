@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/src/manager/font_family.dart';
 import 'package:hcs/src/shared_widgets/custom_back_arrow_widget.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hcs/gen/assets.gen.dart'; // for your SVG assets
 import 'package:hcs/src/theme/app_colors.dart';
 
