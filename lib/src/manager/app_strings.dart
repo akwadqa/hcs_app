@@ -33,6 +33,9 @@ class AppStrings {
   static const String date = 'date';
   static const String serviceCategory = 'serviceCategory';
   static const String employees = 'employees';
+  static const String packages = 'Packages';
+
+  
 
   //My Orders
   static const String myOrders = 'myOrders';

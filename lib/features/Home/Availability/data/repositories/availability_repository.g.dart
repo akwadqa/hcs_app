@@ -1,26 +1,29 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'home_controller.dart';
+part of 'availability_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$homeControllerHash() => r'40df0adc81f4bfc2629d0e81a0ce660607aa6dd2';
+String _$availabilityRepositoryHash() =>
+    r'8f0c4f87aed7ba0cee839d6d13059448a1fd13a8';
 
-/// See also [HomeController].
-@ProviderFor(HomeController)
-final homeControllerProvider =
-    AutoDisposeNotifierProvider<HomeController, HomeState>.internal(
-      HomeController.new,
-      name: r'homeControllerProvider',
+/// See also [availabilityRepository].
+@ProviderFor(availabilityRepository)
+final availabilityRepositoryProvider =
+    Provider<AvailabilityRepository>.internal(
+      availabilityRepository,
+      name: r'availabilityRepositoryProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$homeControllerHash,
+          : _$availabilityRepositoryHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$HomeController = AutoDisposeNotifier<HomeState>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AvailabilityRepositoryRef = ProviderRef<AvailabilityRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

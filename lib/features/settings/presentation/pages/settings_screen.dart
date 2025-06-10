@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/Auth/application/auth_service.dart';
+import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
@@ -22,7 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: CustomAppbar(
-          title: tr(context: context, AppStrings.settings),
+          serviceTypeTitle: ServiceType.settings,
           hasBackArrow: false,
         ),
         body: SingleChildScrollView(

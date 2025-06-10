@@ -4,7 +4,13 @@ import 'package:hcs/src/theme/app_colors.dart';
 class DropDownField extends StatefulWidget {
   final bool enabled;
   final List<String> items;
-  const DropDownField({super.key, this.enabled = true, required this.items});
+  final String? initialSelect;
+  const DropDownField({
+    super.key,
+    this.enabled = true,
+    required this.items,
+    this.initialSelect,
+  });
 
   @override
   State<DropDownField> createState() => _DropDownFieldState();
@@ -13,6 +19,11 @@ class DropDownField extends StatefulWidget {
 class _DropDownFieldState extends State<DropDownField> {
   // final List<String> _items = ['one', 'two'];
   String? _selected;
+  @override
+  void initState() {
+    super.initState();
+    _selected = widget.initialSelect;
+  }
 
   @override
   Widget build(BuildContext context) {

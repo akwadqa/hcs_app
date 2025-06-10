@@ -9,16 +9,16 @@ import 'package:hcs/src/constants/api_constance.dart';
 import 'package:hcs/src/network/network_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'home_repository.g.dart';
+part 'customer_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-HomeRepository homeRepository(Ref ref) =>
-    HomeRepository(ref.watch(networkServiceProvider()));
+CustomerRepository customerRepository(Ref ref) =>
+    CustomerRepository(ref.watch(networkServiceProvider()));
 
-class HomeRepository {
+class CustomerRepository {
   final NetworkService _networkService;
 
-  HomeRepository(this._networkService);
+  CustomerRepository(this._networkService);
 
   Future<bool> addCustomer({required AddCustomerParams params}) async {
     var formData = FormData.fromMap({

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/Home/Customer/data/models/add_cutomer_mdoel.dart';
-import 'package:hcs/features/Home/Customer/presentation/controllers/home_controller.dart';
+import 'package:hcs/features/Home/Customer/presentation/controllers/customer_controller.dart';
 import 'package:hcs/features/Home/Customer/presentation/widgets/drop_down_textfield.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/manager/app_strings.dart';
@@ -147,12 +147,12 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
       actions: [
         Consumer(
           builder: (context, ref, child) {
-            ref.listen(homeControllerProvider, (prev, next) {
+            ref.listen(customerControllerProvider, (prev, next) {
               if (next.customersStates == RequestStates.loaded) {
                 Navigator.of(context).pop();
               }
             });
-            final asyncAddCutomer = ref.watch(homeControllerProvider);
+            final asyncAddCutomer = ref.watch(customerControllerProvider);
 
             return CustomButton(
               title: AppStrings.save,
@@ -164,7 +164,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                         // Navigator.of(context).pop(_controller.text.trim());
                         Future(
                           () => ref
-                              .read(homeControllerProvider.notifier)
+                              .read(customerControllerProvider.notifier)
                               .addCustomer(
                                 AddCustomerParams(
                                   customerType: customerType,

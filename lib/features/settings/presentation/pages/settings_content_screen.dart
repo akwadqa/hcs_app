@@ -3,7 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/Home/Customer/presentation/controllers/home_controller.dart';
+import 'package:hcs/features/settings/presentation/controller/settings_controller.dart';
 
 @RoutePage()
 class SettingsContentScreen extends ConsumerStatefulWidget {
@@ -17,12 +17,12 @@ class _HomeContentState extends ConsumerState<SettingsContentScreen> {
   @override
   void initState() {
     super.initState();
-    // Future(() => ref.read(homeControllerProvider.notifier).fetchHomeBlocks());
+    // Future(() => ref.read(settingsControllerProvider.notifier).fetchHomeBlocks());
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeState = ref.watch(homeControllerProvider);
+    final homeState = ref.watch(settingsControllerProvider);
 
     return Scaffold(
       // body: homeState.homeStates == RequestStates.loaded
@@ -33,7 +33,7 @@ class _HomeContentState extends ConsumerState<SettingsContentScreen> {
       //     ? AppErrorWidget(
       //         onTap: () => Future(
       //           () =>
-      //               ref.read(homeControllerProvider.notifier).fetchHomeBlocks(),
+      //               ref.read(settingsControllerProvider.notifier).fetchHomeBlocks(),
       //         ),
       //       )
       //     : SizedBox.shrink(),

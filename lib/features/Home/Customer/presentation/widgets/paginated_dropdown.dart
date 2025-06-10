@@ -16,7 +16,7 @@ class PaginatedDropdown extends StatefulWidget {
   final ValueChanged<Customers?>? onChanged;
 
   const PaginatedDropdown({
-    Key? key,
+    super.key,
     required this.customers,
     required this.hasMore,
     required this.isLoading,
@@ -24,7 +24,7 @@ class PaginatedDropdown extends StatefulWidget {
     this.enabled = true,
     this.initialValue,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<PaginatedDropdown> createState() => _PaginatedDropdownState();
@@ -45,6 +45,14 @@ class _PaginatedDropdownState extends State<PaginatedDropdown> {
     _items = List.from(widget.customers);
     _selected = widget.initialValue;
     _scrollController = ScrollController()..addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initOverlay());
+  }
+
+  void _initOverlay() {
+    // This ensures we have a valid context after first render
+    if (mounted) {
+      _openOverlay(); // Will use the safe version
+    }
   }
 
   @override
@@ -70,14 +78,10 @@ class _PaginatedDropdownState extends State<PaginatedDropdown> {
   }
 
   void _openOverlay() {
-    // Add null check and safe casting
     final renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox == null) {
-      // If renderBox is null, schedule the overlay opening for the next frame
+    if (renderBox == null || !mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          _openOverlay();
-        }
+        if (mounted) _openOverlay(); // Retry in next frame
       });
       return;
     }
@@ -127,7 +131,6 @@ class _PaginatedDropdownState extends State<PaginatedDropdown> {
       },
     );
 
-    // Add additional safety check before inserting overlay
     final overlay = Overlay.of(context);
     if (overlay.mounted) {
       overlay.insert(_overlay!);

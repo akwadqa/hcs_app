@@ -3,7 +3,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/Home/Customer/presentation/controllers/home_controller.dart';
+import 'package:hcs/features/Home/Customer/presentation/controllers/customer_controller.dart';
+import 'package:hcs/features/MyOrders/presentation/controllers/myorders_controller.dart';
 
 @RoutePage()
 class MyOrdersContentScreen extends ConsumerStatefulWidget {
@@ -19,12 +20,12 @@ class _HomeContentState extends ConsumerState<MyOrdersContentScreen> {
   @override
   void initState() {
     super.initState();
-    // Future(() => ref.read(homeControllerProvider.notifier).fetchHomeBlocks());
+    // Future(() => ref.read(myOrdersControllerProvider.notifier).fetchHomeBlocks());
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeState = ref.watch(homeControllerProvider);
+    final homeState = ref.watch(myOrdersControllerProvider);
 
     return Scaffold(
       // body: homeState.homeStates == RequestStates.loaded
@@ -35,7 +36,7 @@ class _HomeContentState extends ConsumerState<MyOrdersContentScreen> {
       //     ? AppErrorWidget(
       //         onTap: () => Future(
       //           () =>
-      //               ref.read(homeControllerProvider.notifier).fetchHomeBlocks(),
+      //               ref.read(myOrdersControllerProvider.notifier).fetchHomeBlocks(),
       //         ),
       //       )
       //     : SizedBox.shrink(),

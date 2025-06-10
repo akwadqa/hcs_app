@@ -3,8 +3,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/Home/Customer/presentation/controllers/home_controller.dart';
+import 'package:hcs/features/Home/Customer/presentation/controllers/customer_controller.dart';
 import 'package:hcs/features/Home/Customer/presentation/widgets/service_card.dart';
+import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
@@ -18,18 +19,22 @@ class HomeContentScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeContentState extends ConsumerState<HomeContentScreen> {
-  int selectedIndex = 0;
-  List<String> list = ['On Call', 'Packages', 'Deep Clean', 'Maintenance'];
+  List<ServiceType> list = [
+    ServiceType.onCall,
+    ServiceType.packages,
+    ServiceType.deepClean,
+    ServiceType.maintenance,
+  ];
 
   @override
   void initState() {
     super.initState();
-    Future(() => ref.read(homeControllerProvider.notifier).fetchCostumers());
+    // Future(() => ref.read(customerControllerProvider.notifier).fetchCostumers());
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeState = ref.watch(homeControllerProvider);
+    final homeState = ref.watch(customerControllerProvider);
 
     return Scaffold(
       // body: homeState.homeStates == RequestStates.loaded
@@ -40,12 +45,12 @@ class _HomeContentState extends ConsumerState<HomeContentScreen> {
       //     ? AppErrorWidget(
       //         onTap: () => Future(
       //           () =>
-      //               ref.read(homeControllerProvider.notifier).fetchHomeBlocks(),
+      //               ref.read(customerControllerProvider.notifier).fetchHomeBlocks(),
       //         ),
       //       )
       //     : SizedBox.shrink(),
       body: _buildContent(),
-      appBar: CustomAppbar(title: 'High Class Services', isHome: true),
+      appBar: CustomAppbar(serviceTypeTitle: ServiceType.home, isHome: true),
     );
   }
 
@@ -73,8 +78,14 @@ class _HomeContentState extends ConsumerState<HomeContentScreen> {
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
-                  onTap: () => context.pushRoute(CustomerRoute()),
-                  child: ServiceCard(title: list[index]),
+                  onTap: () => context.pushRoute(
+                    CustomerRoute(
+                      serviceType:
+                          // ServiceType.deepClean,
+                          list[index],
+                    ),
+                  ),
+                  child: ServiceCard(serviceType: list[index]),
                 );
               },
               separatorBuilder: (context, index) {

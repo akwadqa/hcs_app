@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hcs/features/Home/Availability/data/repositories/availability_repository.dart';
 import 'package:hcs/features/Home/Customer/data/models/add_cutomer_mdoel.dart';
 import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
-import 'package:hcs/features/Home/Customer/data/repositories/home_repository.dart';
 import 'package:hcs/features/Home/Customer/presentation/controllers/home_state.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'home_controller.g.dart';
+part 'availability_controller.g.dart';
 
 @riverpod
-class HomeController extends _$HomeController {
+class AvailabilityController extends _$AvailabilityController {
   @override
   HomeState build() => const HomeState(
     //customers
@@ -24,7 +24,7 @@ class HomeController extends _$HomeController {
     state = state.copyWith(customersStates: RequestStates.loading);
 
     try {
-      final homeRepo = ref.read(homeRepositoryProvider);
+      final homeRepo = ref.read(availabilityRepositoryProvider);
       await homeRepo.addCustomer(params: params);
 
       state = state.copyWith(customersStates: RequestStates.loaded);
@@ -45,7 +45,7 @@ class HomeController extends _$HomeController {
     state = state.copyWith(customersStates: RequestStates.loading);
 
     try {
-      final homeRepo = ref.read(homeRepositoryProvider);
+      final homeRepo = ref.read(availabilityRepositoryProvider);
       final customersData = await homeRepo.getCustomers(page: 1);
       // debugPrint("currentCustomersPage #1 : ${state.currentCustomersPage.toString()}");
 
@@ -73,7 +73,7 @@ class HomeController extends _$HomeController {
 
   Future<void> onLoadMoreCostumers() async {
     try {
-      final homeRepo = ref.read(homeRepositoryProvider);
+      final homeRepo = ref.read(availabilityRepositoryProvider);
       final customersData = await homeRepo.getCustomers(
         page: state.currentCustomersPage!,
       );

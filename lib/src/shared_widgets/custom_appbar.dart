@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/shared_widgets/custom_back_arrow_widget.dart';
 import 'package:hcs/gen/assets.gen.dart'; // for your SVG assets
 import 'package:hcs/src/theme/app_colors.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   /// The text to show in the title
-  final String title;
+  final ServiceType serviceTypeTitle;
 
   /// If true, shows [CustomBackArrowWidget] in the leading slot
   final bool hasBackArrow;
@@ -19,7 +20,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   const CustomAppbar({
     super.key,
-    required this.title,
+    required this.serviceTypeTitle,
     this.hasBackArrow = false,
     this.isHome = false,
     this.actions,
@@ -51,7 +52,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 SizedBox(width: 8.w),
                 Text(
-                  title,
+                  "${serviceTypeToString(serviceTypeTitle)} Service",
                   style: Theme.of(context).textTheme.displaySmall!.copyWith(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
@@ -60,7 +61,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
               ],
             )
           : Text(
-              title,
+              "${serviceTypeToString(serviceTypeTitle)} Service",
               style: Theme.of(context).textTheme.displaySmall!.copyWith(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,

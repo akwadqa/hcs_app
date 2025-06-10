@@ -1,4 +1,5 @@
-import 'package:hcs/features/Home/Customer/data/repositories/home_repository.dart';
+import 'package:hcs/features/Home/Customer/data/repositories/customer_repository.dart';
+import 'package:hcs/features/MyOrders/data/repositories/myorders_repository.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/myorders_state.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -20,7 +21,7 @@ class MyOrdersController extends _$MyOrdersController {
   //   state = state.copyWith(myOrdersStates: RequestStates.loading);
 
   //   try {
-  //     final homeRepo = ref.read(homeRepositoryProvider);
+  //     final homeRepo = ref.read(myOrdersRepositoryProvider);
   //     final homeData = await homeRepo.getHomeBlocks();
 
   //     state = state.copyWith(
@@ -40,8 +41,8 @@ class MyOrdersController extends _$MyOrdersController {
     state = state.copyWith(customersStates: RequestStates.loading);
 
     try {
-      final homeRepo = ref.read(homeRepositoryProvider);
-      final creditsData = await homeRepo.getCustomers(page: 1);
+      final homeRepo = ref.read(myOrdersRepositoryProvider);
+      final creditsData = await homeRepo.fetchCreditsByID(page: 1);
       // debugPrint("currentPage #1 : ${state.currentPage.toString()}");
 
       int? nextPage;
@@ -68,8 +69,8 @@ class MyOrdersController extends _$MyOrdersController {
 
   Future<void> onLoadMoreCreditsByID(String itemGroupId) async {
     try {
-      final homeRepo = ref.read(homeRepositoryProvider);
-      final creditsData = await homeRepo.getCustomers(page: state.currentCustomersPage!);
+      final homeRepo = ref.read(myOrdersRepositoryProvider);
+      final creditsData = await homeRepo.fetchCreditsByID(page: state.currentCustomersPage!);
       // debugPrint("currentPage #3 : ${state.currentPage.toString()}");
 
       int? nextPage;
