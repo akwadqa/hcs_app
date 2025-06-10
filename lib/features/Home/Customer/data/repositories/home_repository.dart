@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hcs/features/Home/data/models/add_cutomer_mdoel.dart';
-import 'package:hcs/features/Home/data/models/customers_model.dart';
+import 'package:hcs/features/Home/Customer/data/models/add_cutomer_mdoel.dart';
+import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
 import 'package:hcs/src/constants/api_constance.dart';
 import 'package:hcs/src/network/network_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

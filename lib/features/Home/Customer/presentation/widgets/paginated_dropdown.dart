@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/Home/data/models/customers_model.dart';
+import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 
 /// A dropdown that displays a provided list of customers and triggers
@@ -70,7 +70,18 @@ class _PaginatedDropdownState extends State<PaginatedDropdown> {
   }
 
   void _openOverlay() {
-    final renderBox = context.findRenderObject() as RenderBox;
+    // Add null check and safe casting
+    final renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) {
+      // If renderBox is null, schedule the overlay opening for the next frame
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _openOverlay();
+        }
+      });
+      return;
+    }
+
     _targetWidth = renderBox.size.width;
     _targetHeight = renderBox.size.height;
 
@@ -115,7 +126,12 @@ class _PaginatedDropdownState extends State<PaginatedDropdown> {
         );
       },
     );
-    Overlay.of(context).insert(_overlay!);
+
+    // Add additional safety check before inserting overlay
+    final overlay = Overlay.of(context);
+    if (overlay.mounted) {
+      overlay.insert(_overlay!);
+    }
   }
 
   void _selectItem(Customers c) {
@@ -180,6 +196,7 @@ class _PaginatedDropdownState extends State<PaginatedDropdown> {
 
   @override
   void dispose() {
+    _closeOverlay(); // Clean up overlay on dispose
     _scrollController.dispose();
     super.dispose();
   }

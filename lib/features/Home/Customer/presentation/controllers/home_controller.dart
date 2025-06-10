@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hcs/features/Home/data/models/add_cutomer_mdoel.dart';
-import 'package:hcs/features/Home/data/models/customers_model.dart';
-import 'package:hcs/features/Home/data/repositories/home_repository.dart';
-import 'package:hcs/features/Home/presentation/controllers/home_state.dart';
+import 'package:hcs/features/Home/Customer/data/models/add_cutomer_mdoel.dart';
+import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
+import 'package:hcs/features/Home/Customer/data/repositories/home_repository.dart';
+import 'package:hcs/features/Home/Customer/presentation/controllers/home_state.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

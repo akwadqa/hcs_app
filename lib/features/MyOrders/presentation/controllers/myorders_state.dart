@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:hcs/features/Home/data/models/customers_model.dart';
+import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
 
 import 'package:hcs/src/enums/request_state.dart';
 

@@ -13,13 +13,13 @@ import 'package:auto_route/auto_route.dart' as _i13;
 import 'package:hcs/features/app/intro_screen.dart' as _i5;
 import 'package:hcs/features/app/main_screen.dart' as _i7;
 import 'package:hcs/features/Auth/presentation/pages/login_screen.dart' as _i6;
-import 'package:hcs/features/Home/presentation/pages/customer_screen.dart'
+import 'package:hcs/features/Home/Customer/presentation/pages/customer_screen.dart'
     as _i1;
-import 'package:hcs/features/Home/presentation/pages/employees_screen.dart'
+import 'package:hcs/features/Home/Customer/presentation/pages/employees_screen.dart'
     as _i2;
-import 'package:hcs/features/Home/presentation/pages/home_content.dart' as _i3;
-import 'package:hcs/features/Home/presentation/pages/home_screen.dart' as _i4;
-import 'package:hcs/features/Home/presentation/pages/service_configuration.dart'
+import 'package:hcs/features/Home/Customer/presentation/pages/home_content.dart' as _i3;
+import 'package:hcs/features/Home/Customer/presentation/pages/home_screen.dart' as _i4;
+import 'package:hcs/features/Home/Customer/presentation/pages/service_configuration.dart'
     as _i10;
 import 'package:hcs/features/MyOrders/presentation/pages/myorders_content.dart'
     as _i8;
