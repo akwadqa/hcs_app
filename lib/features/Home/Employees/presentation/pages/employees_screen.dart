@@ -5,48 +5,57 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/Auth/presentation/controller/auth_controller.dart';
-import 'package:hcs/features/Home/Customer/presentation/controllers/customer_controller.dart';
-import 'package:hcs/features/Home/Customer/presentation/widgets/employee_bar_chips.dart';
-import 'package:hcs/features/Home/Customer/presentation/widgets/search_field.dart';
-import 'package:hcs/features/Home/Customer/presentation/widgets/service_category.dart';
+import 'package:hcs/features/Home/Employees/presentation/controllers/employees_controller.dart';
+import 'package:hcs/features/Home/Employees/presentation/widgets/employee_bar_chips.dart';
+import 'package:hcs/features/Home/Employees/presentation/widgets/search_field.dart';
+import 'package:hcs/features/Home/Employees/presentation/widgets/service_category.dart';
+import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 
 @RoutePage()
-class EmployeesScreen extends ConsumerStatefulWidget {
+class EmployeesScreen extends StatefulWidget {
   final ServiceType serviceType;
 
   const EmployeesScreen({super.key, required this.serviceType});
 
   @override
-  ConsumerState<EmployeesScreen> createState() => _EmployeesScreenState();
+  State<EmployeesScreen> createState() => _EmployeesScreenState();
 }
 
-class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
+class _EmployeesScreenState extends State<EmployeesScreen> {
+  late ScrollController _scrollController;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    // Future(() => ref.read(customerControllerProvider.notifier).fetchHomeBlocks());
+
+    // Future(
+    //   () => ref.read(employeesControllerProvider.notifier).fetchEmployees(),
+    // );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeState = ref.watch(customerControllerProvider);
-
     return Scaffold(
-      // body: homeState.homeStates == RequestStates.loaded
+      // body: employeesState.homeStates == RequestStates.loaded
       //     ? _buildContent(homeState.homeBlock!)
-      //     : homeState.homeStates == RequestStates.loading
+      //     : employeesState.homeStates == RequestStates.loading
       //     ? const Center(child: CircularProgressIndicator())
-      //     : homeState.homeStates == RequestStates.error
+      //     : employeesState.homeStates == RequestStates.error
       //     ? AppErrorWidget(
       //         onTap: () => Future(
       //           () =>
-      //               ref.read(customerControllerProvider.notifier).fetchHomeBlocks(),
+      //               ref.read(employeesControllerProvider.notifier).fetchEmployees(),
       //         ),
       //       )
       //     : SizedBox.shrink(),
@@ -93,17 +102,49 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                         16.verticalSpace,
                         SizedBox(
                           height: 304.h,
-                          child: ListView.separated(
-                            itemCount: 5,
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (BuildContext context, int index) {
-                              return EmployeeBarChip(name: '$index');
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                                  return 16.verticalSpace;
+                          child: Consumer(
+                            builder: (context, ref, child) {
+                              final employeesState = ref.watch(
+                                employeesControllerProvider,
+                              );
+                              Future(
+                                () => ref
+                                    .read(employeesControllerProvider.notifier)
+                                    .fetchEmployees(),
+                              );
+                              _scrollController = ScrollController()
+                                ..addListener(() {
+                                  if (_scrollController.position.pixels >=
+                                      _scrollController
+                                              .position
+                                              .maxScrollExtent -
+                                          100) {
+                                    ref
+                                        .read(
+                                          employeesControllerProvider.notifier,
+                                        )
+                                        .onLoadMoreEmployees();
+                                  }
+                                });
+                              return ListView.separated(
+                                itemCount: employeesState.employees.length + 1,
+                                controller: _scrollController,
+
+                                shrinkWrap: true,
+                                physics: BouncingScrollPhysics(),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return EmployeeBarChip(
+                                    name: employeesState
+                                        .employees[index]
+                                        .employeeName,
+                                  );
                                 },
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                      return 16.verticalSpace;
+                                    },
+                              );
+                            },
                           ),
                         ),
                       ],
@@ -116,11 +157,15 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                     ),
                     child: Consumer(
                       builder: (context, ref, child) {
-                        final asyncLogin = ref.watch(authControllerProvider);
+                        final asyncEmployees = ref.watch(
+                          employeesControllerProvider,
+                        );
 
                         return CustomButton(
                           title: tr(context: context, AppStrings.next),
-                          onPressed: asyncLogin is AsyncLoading
+                          onPressed:
+                              asyncEmployees.employeesStates ==
+                                  RequestStates.loading
                               ? null
                               : () {
                                   if (_formKey.currentState!.validate()) {

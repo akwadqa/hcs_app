@@ -9,18 +9,14 @@ class ServiceTypeMenu extends StatelessWidget {
   final ServiceType serviceType;
   ServiceTypeMenu({super.key, required this.serviceType});
 
-  List<ServiceType> serviceTypeList = [
+  List<String> serviceTypeStringList = [
     ServiceType.onCall,
     ServiceType.packages,
     ServiceType.deepClean,
     ServiceType.maintenance,
-  ];
+  ].map((type) => serviceTypeToString(type)).toList();
   @override
   Widget build(BuildContext context) {
-    List<String> serviceTypeStringList = serviceTypeList
-        .map((type) => type.name)
-        .toList();
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,9 +28,9 @@ class ServiceTypeMenu extends StatelessWidget {
         ),
         8.verticalSpace,
         DropDownField(
-          enabled: true,
+          enabled: false,
           items: serviceTypeStringList,
-          initialSelect: serviceTypeToString(serviceType),
+          value: serviceTypeToString(serviceType),
         ),
       ],
     );

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hcs/features/Home/Availability/data/repositories/availability_repository.dart';
-import 'package:hcs/features/Home/Customer/data/models/add_cutomer_mdoel.dart';
-import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
-import 'package:hcs/features/Home/Customer/presentation/controllers/home_state.dart';
+import 'package:hcs/features/Home/Availability/data/models/packages_model.dart';
+import 'package:hcs/features/Home/Availability/data/repositories/availability_repo.dart';
+import 'package:hcs/features/Home/Availability/presentation/controllers/service_config_state.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,92 +10,63 @@ part 'availability_controller.g.dart';
 @riverpod
 class AvailabilityController extends _$AvailabilityController {
   @override
-  HomeState build() => const HomeState(
-    //customers
-    currentCustomersPage: null,
-    customers: [],
-    customersStates: RequestStates.init,
-    customersMessage: '',
-    selectedCustomer: null,
-  );
+  ServiceConfigState build() => const ServiceConfigState();
 
-  Future<void> addCustomer(AddCustomerParams params) async {
-    state = state.copyWith(customersStates: RequestStates.loading);
+  Future<void> resetController(
+    String selectedServiceType,
+    String selectedDate,
+  ) async {
+    debugPrint('selectedServiceType : $selectedServiceType');
+    debugPrint('selectedDate : $selectedDate');
+    debugPrint('selectedPackage : ${state.selectedDate}');
 
-    try {
-      final homeRepo = ref.read(availabilityRepositoryProvider);
-      await homeRepo.addCustomer(params: params);
-
-      state = state.copyWith(customersStates: RequestStates.loaded);
-    } catch (e) {
-      state = state.copyWith(
-        customersStates: RequestStates.error,
-        customersMessage: e.toString(),
-      );
-    }
+    state = state.copyWith(
+      selectedServiceType: selectedServiceType,
+      selectedShiftType: 'Morning',
+      selectedPackage: null,
+      selectedDate: selectedDate,
+      packages: [],
+      packagesStates: RequestStates.init,
+      packagesMessage: '',
+    );
   }
 
-  Future<void> selectCustomer(Customers? selectedCustomer) async {
-    state = state.copyWith(selectedCustomer: selectedCustomer);
-    debugPrint("${state.selectedCustomer.toString()} llll");
+  // selectService(String selectedServiceType) {
+  //   debugPrint('selectedServiceType : $selectedServiceType');
+  //   state = state.copyWith(selectedServiceType: selectedServiceType);
+  // }
+
+  selectShift(String selectedShiftType) {
+    debugPrint('selectedShiftType : $selectedShiftType');
+    state = state.copyWith(selectedShiftType: selectedShiftType);
   }
 
-  Future<void> fetchCostumers() async {
-    state = state.copyWith(customersStates: RequestStates.loading);
-
-    try {
-      final homeRepo = ref.read(availabilityRepositoryProvider);
-      final customersData = await homeRepo.getCustomers(page: 1);
-      // debugPrint("currentCustomersPage #1 : ${state.currentCustomersPage.toString()}");
-
-      int? nextPage;
-      //if there is a second page ?
-      if (customersData.pagination.totalPages > 1) {
-        nextPage = 2;
-      } else {
-        nextPage = null;
-      }
-      state = state.copyWith(
-        currentCustomersPage: nextPage,
-        customers: customersData.data,
-        customersStates: RequestStates.loaded,
-        customersMessage: '',
-      );
-      // debugPrint("currentCustomersPage #2 : ${state.currentCustomersPage.toString()}");
-    } catch (e) {
-      state = state.copyWith(
-        customersStates: RequestStates.error,
-        customersMessage: e.toString(),
-      );
-    }
+  selectDate(String selectedDate) {
+    debugPrint('selectedDate : $selectedDate');
+    state = state.copyWith(selectedDate: selectedDate);
   }
 
-  Future<void> onLoadMoreCostumers() async {
-    try {
-      final homeRepo = ref.read(availabilityRepositoryProvider);
-      final customersData = await homeRepo.getCustomers(
-        page: state.currentCustomersPage!,
-      );
-      // debugPrint("currentCustomersPage #3 : ${state.currentCustomersPage.toString()}");
+  selecPackage(PackagesData selectedPackage) {
+    debugPrint('selectedPackage : ${selectedPackage.toString()}');
+    state = state.copyWith(selectedPackage: selectedPackage);
+  }
 
-      int? nextPage;
-      //if we reach the limit or not ?
-      if (customersData.pagination.totalPages > customersData.pagination.page) {
-        nextPage = customersData.pagination.page + 1;
-      } else {
-        nextPage = null;
-      }
+  Future<void> fetchPackages() async {
+    state = state.copyWith(packagesStates: RequestStates.loading);
+
+    try {
+      final availabilityRepo = ref.read(availabilityRepositoryProvider);
+      final packagesData = await availabilityRepo.getPackages();
+
       state = state.copyWith(
-        currentCustomersPage: nextPage,
-        customers: [...state.customers, ...customersData.data],
-        customersStates: RequestStates.loaded,
-        customersMessage: '',
+        packages: packagesData.data,
+        packagesStates: RequestStates.loaded,
+        packagesMessage: 'loadded successfully',
       );
-      // debugPrint("currentCustomersPage #4 : ${state.currentCustomersPage.toString()}");
     } catch (e) {
       state = state.copyWith(
-        customersStates: RequestStates.error,
-        customersMessage: e.toString(),
+        packagesStates: RequestStates.error,
+        packagesMessage: e.toString(),
       );
     }
   }

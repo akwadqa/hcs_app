@@ -18,12 +18,12 @@ import 'package:hcs/features/Home/Availability/presentation/pages/service_config
     as _i10;
 import 'package:hcs/features/Home/Customer/presentation/pages/customer_screen.dart'
     as _i1;
-import 'package:hcs/features/Home/Customer/presentation/pages/employees_screen.dart'
-    as _i2;
 import 'package:hcs/features/Home/Customer/presentation/pages/home_content.dart'
     as _i3;
 import 'package:hcs/features/Home/Customer/presentation/pages/home_screen.dart'
     as _i4;
+import 'package:hcs/features/Home/Employees/presentation/pages/employees_screen.dart'
+    as _i2;
 import 'package:hcs/features/MyOrders/presentation/pages/myorders_content.dart'
     as _i8;
 import 'package:hcs/features/MyOrders/presentation/pages/myorders_screen.dart'

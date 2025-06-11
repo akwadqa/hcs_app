@@ -1,19 +1,9 @@
-// To parse this JSON data, do
-//
-//     final customersModel = customersModelFromJson(jsonString);
-
 import 'package:json_annotation/json_annotation.dart';
-import 'dart:convert';
 
-part 'customers_model.g.dart';
-
-CustomersModel customersModelFromJson(String str) =>
-    CustomersModel.fromJson(json.decode(str));
-
-String customersModelToJson(CustomersModel data) => json.encode(data.toJson());
+part 'employees_model.g.dart';
 
 @JsonSerializable()
-class CustomersModel {
+class Employees {
   @JsonKey(name: "status_code")
   int statusCode;
   @JsonKey(name: "error")
@@ -23,9 +13,9 @@ class CustomersModel {
   @JsonKey(name: "pagination")
   Pagination pagination;
   @JsonKey(name: "data")
-  List<Customers> data;
+  List<Employee> data;
 
-  CustomersModel({
+  Employees({
     required this.statusCode,
     required this.error,
     required this.message,
@@ -33,25 +23,37 @@ class CustomersModel {
     required this.data,
   });
 
-  factory CustomersModel.fromJson(Map<String, dynamic> json) =>
-      _$CustomersModelFromJson(json);
+  factory Employees.fromJson(Map<String, dynamic> json) =>
+      _$EmployeesFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CustomersModelToJson(this);
+  Map<String, dynamic> toJson() => _$EmployeesToJson(this);
 }
 
 @JsonSerializable()
-class Customers {
-  @JsonKey(name: "customer_id")
-  String customerId;
-  @JsonKey(name: "customer_name")
-  String customerName;
+class Employee {
+  @JsonKey(name: "name")
+  String name;
+  @JsonKey(name: "employee_name")
+  String employeeName;
+  @JsonKey(name: "designation")
+  String designation;
+  @JsonKey(name: "service_cost")
+  int serviceCost;
+  @JsonKey(name: "shift")
+  String shift;
 
-  Customers({required this.customerId, required this.customerName});
+  Employee({
+    required this.name,
+    required this.employeeName,
+    required this.designation,
+    required this.serviceCost,
+    required this.shift,
+  });
 
-  factory Customers.fromJson(Map<String, dynamic> json) =>
-      _$CustomersFromJson(json);
+  factory Employee.fromJson(Map<String, dynamic> json) =>
+      _$EmployeeFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CustomersToJson(this);
+  Map<String, dynamic> toJson() => _$EmployeeToJson(this);
 }
 
 @JsonSerializable()

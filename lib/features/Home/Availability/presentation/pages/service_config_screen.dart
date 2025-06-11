@@ -3,12 +3,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/Auth/presentation/controller/auth_controller.dart';
 import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
+import 'package:hcs/features/Home/Availability/presentation/controllers/service_config_state.dart';
 import 'package:hcs/features/Home/Availability/presentation/widgets/date_selection_widget.dart';
 import 'package:hcs/features/Home/Availability/presentation/widgets/packages_dropdown.dart';
 import 'package:hcs/features/Home/Availability/presentation/widgets/service_type_widget.dart';
 import 'package:hcs/features/Home/Availability/presentation/widgets/shift_type_chips.dart';
+import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/routing/app_router.gr.dart';
@@ -32,27 +33,38 @@ class _ServiceConfigurationScreenState
   @override
   void initState() {
     super.initState();
-    // Future(() => ref.read(availabilityControllerProvider.notifier).fetchHomeBlocks());
+    Future(
+      () => ref.read(availabilityControllerProvider.notifier).fetchPackages(),
+    );
+
+    Future(
+      () => ref
+          .read(availabilityControllerProvider.notifier)
+          .resetController(
+            serviceTypeToString(widget.serviceType),
+            DateFormat.yMd().format(DateTime.now()),
+          ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeState = ref.watch(availabilityControllerProvider);
+    final availabilityState = ref.watch(availabilityControllerProvider);
 
     return Scaffold(
-      // body: homeState.homeStates == RequestStates.loaded
+      // body: availabilityState.packagesStates == RequestStates.loaded
       //     ? _buildContent(homeState.homeBlock!)
-      //     : homeState.homeStates == RequestStates.loading
+      //     : availabilityState.packagesStates == RequestStates.loading
       //     ? const Center(child: CircularProgressIndicator())
-      //     : homeState.homeStates == RequestStates.error
+      //     : availabilityState.packagesStates == RequestStates.error
       //     ? AppErrorWidget(
       //         onTap: () => Future(
       //           () =>
-      //               ref.read(availabilityControllerProvider.notifier).fetchHomeBlocks(),
+      //               ref.read(availabilityControllerProvider.notifier).fetchPackages(),
       //         ),
       //       )
       //     : SizedBox.shrink(),
-      body: _buildContent(),
+      body: _buildContent(availabilityState),
       appBar: CustomAppbar(
         hasBackArrow: true,
         serviceTypeTitle: widget.serviceType,
@@ -60,7 +72,7 @@ class _ServiceConfigurationScreenState
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(ServiceConfigState availabilityState) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Column(
@@ -83,22 +95,51 @@ class _ServiceConfigurationScreenState
                         24.verticalSpace,
 
                         widget.serviceType == ServiceType.packages
-                            ? Column(
-                                children: [
-                                  PackagesDropdown(),
-                                  24.verticalSpace,
-                                ],
+                            ? Consumer(
+                                builder: (context, ref, child) {
+                                  var state = ref.watch(
+                                    availabilityControllerProvider,
+                                  );
+                                  return Column(
+                                    children: [
+                                      PackagesDropdown(
+                                        items: availabilityState.packages,
+                                        selectedPackage: state.selectedPackage,
+                                        onSelected: (p0) {
+                                          Future(
+                                            () => ref
+                                                .read(
+                                                  availabilityControllerProvider
+                                                      .notifier,
+                                                )
+                                                .selecPackage(p0),
+                                          );
+                                        },
+                                      ),
+                                      24.verticalSpace,
+                                    ],
+                                  );
+                                },
                               )
                             : SizedBox.shrink(),
 
                         ShiftTypeChips(),
                         24.verticalSpace,
 
-                        DateFormField(
-                          // labelText: 'Date',
-                          initialDate: DateTime.now(),
-                          onDateSelected: (dt) {
-                            // do something with the chosen date
+                        Consumer(
+                          builder: (context, ref, child) {
+                            return DateFormField(
+                              // labelText: 'Date',
+                              initialDate: DateTime.now(),
+                              onDateSelected: (dt) {
+                                // do something with the chosen date
+                                ref
+                                    .read(
+                                      availabilityControllerProvider.notifier,
+                                    )
+                                    .selectDate(DateFormat.yMd().format(dt));
+                              },
+                            );
                           },
                         ),
                       ],
@@ -110,31 +151,28 @@ class _ServiceConfigurationScreenState
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 25.h, horizontal: 22.w),
-            child: Consumer(
-              builder: (context, ref, child) {
-                final asyncLogin = ref.watch(authControllerProvider);
-
-                return CustomButton(
-                  title: tr(context: context, AppStrings.checkAvailability),
-                  onPressed: asyncLogin is AsyncLoading
-                      ? null
-                      : () {
-                          context.pushRoute(
-                            EmployeesRoute(serviceType: widget.serviceType),
-                          );
-                          if (_formKey.currentState!.validate()) {
-                            // ref
-                            //     .read(authControllerProvider.notifier)
-                            //     .login(
-                            //       LoginParams(
-                            //         email: _emailController.text,
-                            //         pass: _passwordController.text,
-                            //       ),
-                            //     );
-                          }
-                        },
-                );
-              },
+            child: CustomButton(
+              title: widget.serviceType == ServiceType.packages
+                  ? tr(context: context, AppStrings.next)
+                  : tr(context: context, AppStrings.checkAvailability),
+              onPressed:
+                  availabilityState.packagesStates == RequestStates.loading
+                  ? null
+                  : () {
+                      context.pushRoute(
+                        EmployeesRoute(serviceType: widget.serviceType),
+                      );
+                      if (_formKey.currentState!.validate()) {
+                        // ref
+                        //     .read(authControllerProvider.notifier)
+                        //     .login(
+                        //       LoginParams(
+                        //         email: _emailController.text,
+                        //         pass: _passwordController.text,
+                        //       ),
+                        //     );
+                      }
+                    },
             ),
           ),
         ],

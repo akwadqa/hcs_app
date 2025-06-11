@@ -27,3 +27,29 @@ String serviceTypeToString(ServiceType serviceType) {
       return 'Settings';
   }
 }
+
+enum ShiftType { morning, evening, fullDay }
+
+String shiftTypeToString(ShiftType shiftType) {
+  switch (shiftType) {
+    case ShiftType.morning:
+      return 'Morning';
+    case ShiftType.evening:
+      return 'Evening';
+    case ShiftType.fullDay:
+      return 'Full day';
+  }
+}
+
+ShiftType stringToShiftType(String string) {
+  switch (string) {
+    case 'Morning':
+      return ShiftType.morning;
+    case 'Evening':
+      return ShiftType.evening;
+    case 'Full day':
+      return ShiftType.fullDay;
+    default:
+      return ShiftType.fullDay;
+  }
+}

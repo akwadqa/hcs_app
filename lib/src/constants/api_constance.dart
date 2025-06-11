@@ -18,8 +18,21 @@ class ApiConstance {
   ////////////////// *  Customers   /////////////////////
   static String getCustomers(String page) =>
       '$baseUrl/$baseDomain.api.customer.customers?page=$page&limit=10';
-  static String addCustomers=
-      '$baseUrl/$baseDomain.api.customer.customer';
+  static String addCustomers = '$baseUrl/$baseDomain.api.customer.customer';
+
+  ////////////////// *  Availabillty   /////////////////////
+  static String getPackages =
+      '$baseUrl/$baseDomain.api.service_type.service_types';
+
+  ////////////////// *  Employees   /////////////////////
+  static String getEmployees(
+  { required String serviceType,
+  required  String date,
+  required  String shift,
+  required  String? employeeName,
+  required  String page,}
+  ) =>
+      '$baseUrl/$baseDomain.api.employee.employees?service_type=$serviceType&date=$date&shift=$shift&designation=&service_category=&days=&$employeeName&page=$page&limit=10';
 
   ////////////////// *  Register   //////////////////
   // static const String register =

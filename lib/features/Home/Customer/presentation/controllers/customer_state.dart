@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
 import 'package:hcs/src/enums/request_state.dart';
 
-class HomeState extends Equatable {
+class CustomerState extends Equatable {
   //customers
   final int? currentCustomersPage;
   final List<Customers> customers;
@@ -10,7 +10,7 @@ class HomeState extends Equatable {
   final String? customersMessage;
   final Customers? selectedCustomer;
 
-  const HomeState({
+  const CustomerState({
     //customers
     required this.currentCustomersPage,
     required this.customers,
@@ -18,7 +18,7 @@ class HomeState extends Equatable {
     required this.customersMessage,
     required this.selectedCustomer,
   });
-  HomeState copyWith({
+  CustomerState copyWith({
     //customers
     int? currentCustomersPage,
     List<Customers>? customers,
@@ -26,7 +26,7 @@ class HomeState extends Equatable {
     String? customersMessage,
     Customers? selectedCustomer,
   }) {
-    return HomeState(
+    return CustomerState(
       //customers
       currentCustomersPage: currentCustomersPage ?? this.currentCustomersPage,
       customers: customers ?? this.customers,
