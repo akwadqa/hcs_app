@@ -29,10 +29,11 @@ class ApiConstance {
     required String serviceType,
     required String date,
     required String shift,
+    required String? serviceCategory,
     required String? employeeName,
     required String page,
   }) =>
-      '$baseUrl/$baseDomain.api.employee.employees?service_type=$serviceType&date=$date&shift=$shift&designation=&service_category=&days=&$employeeName&page=$page&limit=5';
+      '$baseUrl/$baseDomain.api.employee.employees?service_type=$serviceType&date=$date&shift=$shift&designation=&service_category=$serviceCategory&days=&$employeeName&page=$page&limit=5';
 
   ////////////////// *  Register   //////////////////
   // static const String register =

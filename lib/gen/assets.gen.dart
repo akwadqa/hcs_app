@@ -65,6 +65,13 @@ class $AssetsImagesGen {
   SvgGenImage get myordersSelected =>
       const SvgGenImage('assets/images/myorders_selected.svg');
 
+  /// File path: assets/images/no_data.png
+  AssetGenImage get noData => const AssetGenImage('assets/images/no_data.png');
+
+  /// File path: assets/images/no_data_min.png
+  AssetGenImage get noDataMin =>
+      const AssetGenImage('assets/images/no_data_min.png');
+
   /// File path: assets/images/search.svg
   SvgGenImage get search => const SvgGenImage('assets/images/search.svg');
 
@@ -96,6 +103,8 @@ class $AssetsImagesGen {
     imErrorScreen,
     logo,
     myordersSelected,
+    noData,
+    noDataMin,
     search,
     settingsSelected,
     settingsUnselected,

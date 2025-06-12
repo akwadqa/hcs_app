@@ -9,7 +9,6 @@ import 'package:hcs/features/Home/Customer/presentation/controllers/customer_con
 import 'package:hcs/features/Home/Customer/presentation/controllers/customer_state.dart';
 import 'package:hcs/features/Home/Customer/presentation/widgets/add_customer_dialog.dart';
 import 'package:hcs/features/Home/Customer/presentation/widgets/paginated_dropdown.dart';
-import 'package:hcs/features/Home/Employees/presentation/controllers/employees_controller.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/manager/app_strings.dart';
@@ -40,14 +39,14 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final CustomerState = ref.watch(customerControllerProvider);
+    final customerState = ref.watch(customerControllerProvider);
 
     return Scaffold(
-      body: CustomerState.customersStates == RequestStates.loaded
-          ? _buildContent(CustomerState)
-          : CustomerState.customersStates == RequestStates.loading
+      body: customerState.customersStates == RequestStates.loaded
+          ? _buildContent(customerState)
+          : customerState.customersStates == RequestStates.loading
           ? const Center(child: CircularProgressIndicator())
-          : CustomerState.customersStates == RequestStates.error
+          : customerState.customersStates == RequestStates.error
           ? AppErrorWidget(
               onTap: () => Future(
                 () => ref
@@ -64,7 +63,7 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
     );
   }
 
-  Widget _buildContent(CustomerState CustomerState) {
+  Widget _buildContent(CustomerState customerState) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Column(
@@ -87,13 +86,13 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
                   key: _formKey,
                   child: Consumer(
                     builder: (context, ref, child) {
-                      if (CustomerState.customersStates ==
+                      if (customerState.customersStates ==
                           RequestStates.loaded) {
                         return PaginatedDropdown(
-                          customers: CustomerState.customers,
-                          hasMore: CustomerState.currentCustomersPage != null,
+                          customers: customerState.customers,
+                          hasMore: customerState.currentCustomersPage != null,
                           isLoading:
-                              CustomerState.customersStates ==
+                              customerState.customersStates ==
                               RequestStates.loading,
                           onLoadMore: () => ref
                               .read(customerControllerProvider.notifier)
@@ -110,10 +109,10 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
                             debugPrint('$cust koko cust ');
                           },
                         );
-                      } else if (CustomerState.customersStates ==
+                      } else if (customerState.customersStates ==
                           RequestStates.loading) {
                         return const CircularProgressIndicator();
-                      } else if (CustomerState.customersStates ==
+                      } else if (customerState.customersStates ==
                           RequestStates.error) {
                         return AppErrorWidget(
                           onTap: () => ref

@@ -5,9 +5,9 @@ import 'package:hcs/src/enums/request_state.dart';
 class ServiceConfigState extends Equatable {
   //service config
   final String? selectedServiceType;
-  final String? selectedShiftType;
+  final String selectedShiftType;
   final PackagesData? selectedPackage;
-  final String? selectedDate;
+  final String selectedDate;
   final List<PackagesData> packages;
   final RequestStates packagesStates;
   final String? packagesMessage;
@@ -17,7 +17,7 @@ class ServiceConfigState extends Equatable {
     this.selectedServiceType,
     this.selectedShiftType = 'Morning',
     this.selectedPackage,
-    this.selectedDate,
+    this.selectedDate ='',
 
     this.packages = const [],
     this.packagesStates = RequestStates.init,

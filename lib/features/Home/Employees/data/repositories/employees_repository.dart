@@ -2,6 +2,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/Home/Employees/data/models/employees_model.dart';
+import 'package:hcs/features/Home/Employees/data/models/get_employees_params.dart';
 import 'package:hcs/src/constants/api_constance.dart';
 import 'package:hcs/src/network/network_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -17,14 +18,17 @@ class EmployeesRepository {
 
   EmployeesRepository(this._networkService);
 
-  Future<Employees> getEmployees({required int page}) async {
+  Future<Employees> getEmployees({
+    required GetEmployeesParams getEmployeesParams,
+  }) async {
     final response = await _networkService.get(
       ApiConstance.getEmployees(
-        serviceType: 'Daily',
-        date: '16-06-2025',
-        shift: 'Full Day',
+        serviceType: getEmployeesParams.serviceType,
+        date: getEmployeesParams.date,
+        shift: getEmployeesParams.shift,
+        serviceCategory: getEmployeesParams.serviceCategory,
         employeeName: null,
-        page: page.toString(),
+        page: getEmployeesParams.page.toString(),
       ),
     );
     // final data = json.encode(response.data);

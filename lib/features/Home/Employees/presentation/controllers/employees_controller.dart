@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
 import 'package:hcs/features/Home/Employees/data/models/employees_model.dart';
+import 'package:hcs/features/Home/Employees/data/models/get_employees_params.dart';
 import 'package:hcs/features/Home/Employees/data/repositories/employees_repository.dart';
 import 'package:hcs/features/Home/Employees/presentation/controllers/employees_state.dart';
 import 'package:hcs/src/enums/request_state.dart';
@@ -12,8 +14,29 @@ class EmployeesController extends _$EmployeesController {
   @override
   EmployeesState build() => EmployeesState();
 
-  Future<void> selectEmployee(List<Employee>? selectedEmployee) async {
-    state = state.copyWith(selectedEmployees: selectedEmployee);
+  Future<void> selectServiceCategory(String serviceCategory) async {
+    state = state.copyWith(serviceCategory: serviceCategory);
+
+    debugPrint("${state.serviceCategory.toString()} llll serviceCategory");
+  }
+
+  Future<void> selectEmployee(Employee selectedEmployee) async {
+    state = state.copyWith(
+      selectedEmployees: [...state.selectedEmployees, selectedEmployee],
+    );
+
+    debugPrint("${state.selectedEmployees.toString()} llll");
+  }
+
+  Future<void> unSelectEmployee(Employee unSelectedEmployee) async {
+    List<Employee> employeeList = List.from(state.selectedEmployees);
+    int index = employeeList.indexWhere(
+      (element) => element.employeeName == unSelectedEmployee.employeeName,
+    );
+    if (index != -1) {
+      employeeList.removeAt(index);
+    }
+    state = state.copyWith(selectedEmployees: employeeList);
     debugPrint("${state.selectedEmployees.toString()} llll");
   }
 
@@ -22,7 +45,17 @@ class EmployeesController extends _$EmployeesController {
 
     try {
       final employeesRepo = ref.read(employeesRepositoryProvider);
-      final employeesData = await employeesRepo.getEmployees(page: 1);
+      final availabilityController = ref.read(availabilityControllerProvider);
+      final employeesData = await employeesRepo.getEmployees(
+        getEmployeesParams: GetEmployeesParams(
+          serviceType: availabilityController.selectedPackage?.id ?? 'Daily',
+          date: availabilityController.selectedDate,
+          shift: availabilityController.selectedShiftType,
+          serviceCategory: state.serviceCategory,
+          employeeName: null,
+          page: 1,
+        ),
+      );
 
       int? nextPage;
       //if there is a second page ?
@@ -48,8 +81,17 @@ class EmployeesController extends _$EmployeesController {
   Future<void> onLoadMoreEmployees() async {
     try {
       final employeesRepo = ref.read(employeesRepositoryProvider);
+      final availabilityController = ref.read(availabilityControllerProvider);
+
       final employeesData = await employeesRepo.getEmployees(
-        page: state.currentEmployeesPage!,
+        getEmployeesParams: GetEmployeesParams(
+          serviceType: availabilityController.selectedServiceType ?? 'Daily',
+          date: availabilityController.selectedDate,
+          shift: availabilityController.selectedShiftType,
+          serviceCategory: state.serviceCategory,
+          employeeName: null,
+          page: state.currentEmployeesPage!,
+        ),
       );
 
       int? nextPage;

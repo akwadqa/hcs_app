@@ -6,9 +6,9 @@ class ImagePickerService {
   /// Defaults to [ImageSource.gallery] if no source is provided.
   static Future<File?> pickImage(
       {ImageSource source = ImageSource.gallery}) async {
-    final ImagePicker _picker = ImagePicker();
+    final ImagePicker picker = ImagePicker();
 
-    final XFile? pickedFile = await _picker.pickImage(source: source);
+    final XFile? pickedFile = await picker.pickImage(source: source);
     if (pickedFile != null) {
       return File(pickedFile.path);
     }

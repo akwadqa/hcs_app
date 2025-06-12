@@ -15,6 +15,7 @@ class ServiceTypeMenu extends StatelessWidget {
     ServiceType.deepClean,
     ServiceType.maintenance,
   ].map((type) => serviceTypeToString(type)).toList();
+  
   @override
   Widget build(BuildContext context) {
     return Column(

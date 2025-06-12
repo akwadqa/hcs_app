@@ -8,6 +8,7 @@ import 'package:hcs/features/Home/Employees/presentation/controllers/employees_c
 import 'package:hcs/features/Home/Employees/presentation/widgets/employee_bar_chips.dart';
 import 'package:hcs/features/Home/Employees/presentation/widgets/search_field.dart';
 import 'package:hcs/features/Home/Employees/presentation/widgets/service_category.dart';
+import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/manager/app_strings.dart';
@@ -33,9 +34,10 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
     super.initState();
 
     // تحميل البيانات عند أول فتح للشاشة
-    Future.microtask(() {
-      ref.read(employeesControllerProvider.notifier).fetchEmployees();
-    });
+    // Future.microtask(() {
+    // ref.read(employeesControllerProvider.notifier).selectServiceCategory(serv);
+    // ref.read(employeesControllerProvider.notifier).fetchEmployees();
+    // });
 
     // pagination listener only once:
     _scrollController.addListener(() {
@@ -105,7 +107,9 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                           style: Theme.of(context).textTheme.displayMedium!,
                         ),
                         16.verticalSpace,
-                        ServiceCategoryChips(),
+                        ServiceCategoryChips(
+                          selectedChip: serviceTypeToString(widget.serviceType),
+                        ),
                         44.verticalSpace,
                         Text(
                           context.tr(AppStrings.employees),
@@ -121,6 +125,9 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                               );
                               if (employeesState.employeesStates ==
                                   RequestStates.loaded) {
+                                if (employeesState.employees.isEmpty) {
+                                  return Assets.images.noData.image();
+                                }
                                 return ListView.separated(
                                   controller: _scrollController,
                                   itemCount:
@@ -137,13 +144,15 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                                                     .currentEmployeesPage ==
                                                 null
                                             ? Text('No More Employees')
-                                            : CircularProgressIndicator(),
+                                            : Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
                                       );
                                     } else {
                                       return EmployeeBarChip(
-                                        name: employeesState
-                                            .employees[index]
-                                            .employeeName,
+                                        employee:
+                                            employeesState.employees[index],
                                       );
                                     }
                                   },
@@ -153,7 +162,7 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                                   RequestStates.error) {
                                 Text("Error Accoure");
                               }
-                              return CircularProgressIndicator();
+                              return Center(child: CircularProgressIndicator());
                             },
                           ),
                         ),

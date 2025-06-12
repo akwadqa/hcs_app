@@ -53,3 +53,18 @@ ShiftType stringToShiftType(String string) {
       return ShiftType.fullDay;
   }
 }
+
+enum ServiceCategory { onCall, stayIn, company, packages }
+
+String serviceCategoryToString(ServiceCategory serviceCategory) {
+  switch (serviceCategory) {
+    case ServiceCategory.onCall:
+      return 'On Call';
+    case ServiceCategory.stayIn:
+      return 'Stay in';
+    case ServiceCategory.company:
+      return 'Company';
+    case ServiceCategory.packages:
+      return 'Packages';
+  }
+}

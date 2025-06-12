@@ -14,7 +14,7 @@ extension ConvertToMaterial on Color {
       800: Color.fromRGBO(136, 14, 79, .9),
       900: Color.fromRGBO(136, 14, 79, 1),
     };
-    return MaterialColor(value, values);
+    return MaterialColor(toARGB32() , values); //toARGB32() was value
   }
 }
 

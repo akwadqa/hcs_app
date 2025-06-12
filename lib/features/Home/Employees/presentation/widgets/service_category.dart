@@ -1,22 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hcs/features/Home/Employees/presentation/controllers/employees_controller.dart';
+import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 
-class ServiceCategoryChips extends StatefulWidget {
-  const ServiceCategoryChips({super.key});
+class ServiceCategoryChips extends ConsumerStatefulWidget {
+  final String selectedChip;
+  const ServiceCategoryChips({super.key, required this.selectedChip});
 
   @override
   _ServiceCategoryChipsState createState() => _ServiceCategoryChipsState();
 }
 
-class _ServiceCategoryChipsState extends State<ServiceCategoryChips> {
-  final List<String> _options = ['On Call', 'Stay in', 'Company', 'Package'];
+class _ServiceCategoryChipsState extends ConsumerState<ServiceCategoryChips> {
+  late List<String> serviceCategoryStringList;
+  late int _selectedIndex;
 
-  int _selectedIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    serviceCategoryStringList = [
+      ServiceCategory.onCall,
+      ServiceCategory.stayIn,
+      ServiceCategory.company,
+      ServiceCategory.packages,
+    ].map((type) => serviceCategoryToString(type)).toList();
+
+    _selectedIndex = serviceCategoryStringList.indexOf(widget.selectedChip);
+    if (_selectedIndex == -1) {
+      _selectedIndex = 0; // fallback if selectedChip is not found
+    }
+    Future.microtask(() {
+      ref
+          .read(employeesControllerProvider.notifier)
+          .selectServiceCategory(serviceCategoryStringList[_selectedIndex]);
+      ref.read(employeesControllerProvider.notifier).fetchEmployees();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Wrap inside a fixed-height container if needed
     return GridView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -26,11 +50,21 @@ class _ServiceCategoryChipsState extends State<ServiceCategoryChips> {
         mainAxisSpacing: 16.h,
         childAspectRatio: 165.w / 80.h,
       ),
-      itemCount: _options.length,
+      itemCount: serviceCategoryStringList.length,
       itemBuilder: (context, index) {
         final bool isSelected = index == _selectedIndex;
         return GestureDetector(
-          onTap: () => setState(() => _selectedIndex = index),
+          onTap: () {
+            setState(() => _selectedIndex = index);
+            Future.microtask(() {
+              ref
+                  .read(employeesControllerProvider.notifier)
+                  .selectServiceCategory(
+                    serviceCategoryStringList[_selectedIndex],
+                  );
+              ref.read(employeesControllerProvider.notifier).fetchEmployees();
+            });
+          },
           child: Container(
             alignment: Alignment.center,
             width: 165.w,
@@ -40,7 +74,7 @@ class _ServiceCategoryChipsState extends State<ServiceCategoryChips> {
               borderRadius: BorderRadius.circular(8.r),
             ),
             child: Text(
-              _options[index],
+              serviceCategoryStringList[index],
               style: Theme.of(
                 context,
               ).textTheme.displayLarge!.copyWith(fontWeight: FontWeight.w500),
