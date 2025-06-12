@@ -9,7 +9,6 @@ import 'package:hcs/features/Home/Customer/presentation/widgets/drop_down_textfi
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
-import 'package:hcs/src/shared_widgets/notify_snackbar.dart';
 import 'package:hcs/src/shared_widgets/rich_text.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 

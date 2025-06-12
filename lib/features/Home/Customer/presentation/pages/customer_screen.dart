@@ -9,6 +9,7 @@ import 'package:hcs/features/Home/Customer/presentation/controllers/customer_con
 import 'package:hcs/features/Home/Customer/presentation/controllers/customer_state.dart';
 import 'package:hcs/features/Home/Customer/presentation/widgets/add_customer_dialog.dart';
 import 'package:hcs/features/Home/Customer/presentation/widgets/paginated_dropdown.dart';
+import 'package:hcs/features/Home/Employees/presentation/controllers/employees_controller.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/manager/app_strings.dart';
@@ -86,7 +87,8 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
                   key: _formKey,
                   child: Consumer(
                     builder: (context, ref, child) {
-                      if (CustomerState.customersStates == RequestStates.loaded) {
+                      if (CustomerState.customersStates ==
+                          RequestStates.loaded) {
                         return PaginatedDropdown(
                           customers: CustomerState.customers,
                           hasMore: CustomerState.currentCustomersPage != null,

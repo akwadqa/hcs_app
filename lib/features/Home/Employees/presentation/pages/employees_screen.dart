@@ -4,7 +4,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/Auth/presentation/controller/auth_controller.dart';
 import 'package:hcs/features/Home/Employees/presentation/controllers/employees_controller.dart';
 import 'package:hcs/features/Home/Employees/presentation/widgets/employee_bar_chips.dart';
 import 'package:hcs/features/Home/Employees/presentation/widgets/search_field.dart';
@@ -16,27 +15,54 @@ import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 
 @RoutePage()
-class EmployeesScreen extends StatefulWidget {
+class EmployeesScreen extends ConsumerStatefulWidget {
   final ServiceType serviceType;
 
   const EmployeesScreen({super.key, required this.serviceType});
 
   @override
-  State<EmployeesScreen> createState() => _EmployeesScreenState();
+  ConsumerState<EmployeesScreen> createState() => _EmployeesScreenState();
 }
 
-class _EmployeesScreenState extends State<EmployeesScreen> {
-  late ScrollController _scrollController;
+class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
+  final ScrollController _scrollController = ScrollController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
 
-    // Future(
-    //   () => ref.read(employeesControllerProvider.notifier).fetchEmployees(),
-    // );
+    // تحميل البيانات عند أول فتح للشاشة
+    Future.microtask(() {
+      ref.read(employeesControllerProvider.notifier).fetchEmployees();
+    });
+
+    // pagination listener only once:
+    _scrollController.addListener(() {
+      final max = _scrollController.position.maxScrollExtent;
+      final pos = _scrollController.position.pixels;
+      final nextPage = ref
+          .read(employeesControllerProvider)
+          .currentEmployeesPage;
+
+      if (pos == max && nextPage != null) {
+        ref.read(employeesControllerProvider.notifier).onLoadMoreEmployees();
+      }
+    });
   }
+
+  // void _onScroll() {
+  //   final state = ref.read(employeesControllerProvider);
+  //   final controller = ref.read(employeesControllerProvider.notifier);
+
+  //   // تحميل المزيد إذا لم نصل للنهاية وإذا لم يكن يحمل حاليًا
+  //   if (_scrollController.position.pixels >=
+  //           _scrollController.position.maxScrollExtent - 100 &&
+  //       state.currentEmployeesPage != null &&
+  //       state.employeesStates != RequestStates.loading) {
+  //     controller.onLoadMoreEmployees();
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -47,18 +73,6 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // body: employeesState.homeStates == RequestStates.loaded
-      //     ? _buildContent(homeState.homeBlock!)
-      //     : employeesState.homeStates == RequestStates.loading
-      //     ? const Center(child: CircularProgressIndicator())
-      //     : employeesState.homeStates == RequestStates.error
-      //     ? AppErrorWidget(
-      //         onTap: () => Future(
-      //           () =>
-      //               ref.read(employeesControllerProvider.notifier).fetchEmployees(),
-      //         ),
-      //       )
-      //     : SizedBox.shrink(),
       body: _buildContent(),
       appBar: CustomAppbar(
         hasBackArrow: true,
@@ -72,7 +86,6 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-
         children: [
           Expanded(
             child: SingleChildScrollView(
@@ -80,7 +93,6 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
               physics: BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-
                 children: [
                   Form(
                     key: _formKey,
@@ -107,43 +119,41 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                               final employeesState = ref.watch(
                                 employeesControllerProvider,
                               );
-                              Future(
-                                () => ref
-                                    .read(employeesControllerProvider.notifier)
-                                    .fetchEmployees(),
-                              );
-                              _scrollController = ScrollController()
-                                ..addListener(() {
-                                  if (_scrollController.position.pixels >=
-                                      _scrollController
-                                              .position
-                                              .maxScrollExtent -
-                                          100) {
-                                    ref
-                                        .read(
-                                          employeesControllerProvider.notifier,
-                                        )
-                                        .onLoadMoreEmployees();
-                                  }
-                                });
-                              return ListView.separated(
-                                itemCount: employeesState.employees.length + 1,
-                                controller: _scrollController,
-
-                                shrinkWrap: true,
-                                physics: BouncingScrollPhysics(),
-                                itemBuilder: (BuildContext context, int index) {
-                                  return EmployeeBarChip(
-                                    name: employeesState
-                                        .employees[index]
-                                        .employeeName,
-                                  );
-                                },
-                                separatorBuilder:
-                                    (BuildContext context, int index) {
-                                      return 16.verticalSpace;
-                                    },
-                              );
+                              if (employeesState.employeesStates ==
+                                  RequestStates.loaded) {
+                                return ListView.separated(
+                                  controller: _scrollController,
+                                  itemCount:
+                                      employeesState.employees.length + 1,
+                                  shrinkWrap: true,
+                                  physics: BouncingScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    if (index ==
+                                        employeesState.employees.length) {
+                                      // عرض مؤشر تحميل أو لا شيء
+                                      return Center(
+                                        child:
+                                            employeesState
+                                                    .currentEmployeesPage ==
+                                                null
+                                            ? Text('No More Employees')
+                                            : CircularProgressIndicator(),
+                                      );
+                                    } else {
+                                      return EmployeeBarChip(
+                                        name: employeesState
+                                            .employees[index]
+                                            .employeeName,
+                                      );
+                                    }
+                                  },
+                                  separatorBuilder: (_, __) => 16.verticalSpace,
+                                );
+                              } else if (employeesState.employeesStates ==
+                                  RequestStates.error) {
+                                Text("Error Accoure");
+                              }
+                              return CircularProgressIndicator();
                             },
                           ),
                         ),
@@ -169,14 +179,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                               ? null
                               : () {
                                   if (_formKey.currentState!.validate()) {
-                                    // ref
-                                    //     .read(authControllerProvider.notifier)
-                                    //     .login(
-                                    //       LoginParams(
-                                    //         email: _emailController.text,
-                                    //         pass: _passwordController.text,
-                                    //       ),
-                                    //     );
+                                    // تنفيذ الخطوة التالية
                                   }
                                 },
                         );

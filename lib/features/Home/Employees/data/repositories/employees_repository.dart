@@ -1,10 +1,6 @@
 // home_repository.dart
-import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hcs/features/Home/Customer/data/models/add_cutomer_mdoel.dart';
-import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
 import 'package:hcs/features/Home/Employees/data/models/employees_model.dart';
 import 'package:hcs/src/constants/api_constance.dart';
 import 'package:hcs/src/network/network_service.dart';
