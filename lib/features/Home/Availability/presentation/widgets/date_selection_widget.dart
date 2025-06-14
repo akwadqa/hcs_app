@@ -45,7 +45,9 @@ class _DateFormFieldState extends State<DateFormField> {
     super.initState();
     _pickedDate = widget.initialDate;
     _controller = TextEditingController(
-      text: _pickedDate == null ? '' : DateFormat.yMd().format(_pickedDate!),
+      text: _pickedDate == null
+          ? ''
+          : DateFormat('yyyy-MM-dd').format(_pickedDate!),
     );
   }
 
@@ -67,7 +69,7 @@ class _DateFormFieldState extends State<DateFormField> {
     if (chosen != null) {
       setState(() {
         _pickedDate = chosen;
-        _controller.text = DateFormat.yMd().format(chosen);
+        _controller.text = DateFormat('yyyy-MM-dd').format(chosen);
       });
       if (widget.onDateSelected != null) {
         widget.onDateSelected!(chosen);

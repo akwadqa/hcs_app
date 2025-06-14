@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:hcs/features/Home/Employees/data/models/employees_model.dart';
 
 class SubmitServiceParams {
   final String customer;
@@ -7,7 +10,7 @@ class SubmitServiceParams {
   final String serviceType;
   final String shiftType;
   final List<String>? days;
-  final String employees;
+  final List<Employee> employees;
   final String paymentMethod;
 
   SubmitServiceParams({
@@ -28,8 +31,17 @@ class SubmitServiceParams {
       'date': date,
       'service_type': serviceType,
       'shift_type': shiftType,
-      'days': days,
-      'employees': employees,
+      'days': days, // Keep as-is; if backend expects string, only then encode
+      'employees': employees
+          .map(
+            (e) => {
+              'employee_name': e.employeeName,
+              'occupation': e.designation,
+              'monthly_contract_amount': e.serviceCost,
+              'shift': e.shift,
+            },
+          )
+          .toList(),
       'payment_method': paymentMethod,
     };
   }

@@ -10,6 +10,7 @@ import 'package:hcs/features/Home/Driver_Payment/presentation/widgets/paginated_
 import 'package:hcs/features/Home/Driver_Payment/presentation/widgets/payment_method_chips.dart';
 import 'package:hcs/features/Home/Driver_Payment/presentation/widgets/yes_no_answer.dart';
 import 'package:hcs/features/Home/Submit_Service/presentation/submit_service_controller.dart';
+import 'package:hcs/features/Home/Submit_Service/presentation/submit_service_state.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/manager/app_strings.dart';
@@ -39,6 +40,34 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
     Future(
       () => ref.read(driversPaymentControllerProvider.notifier).fetchDrivers(),
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.listen<SubmitServiceState>(submitServiceControllerProvider, (
+        previous,
+        next,
+      ) {
+        if (next.submitServiceStates == RequestStates.loaded) {
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: const Text('Success'),
+              content: const Text('Service submitted successfully.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        if (next.submitServiceStates == RequestStates.error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(next.submitServiceMessage ?? 'Error')),
+          );
+        }
+      });
+    });
   }
 
   @override

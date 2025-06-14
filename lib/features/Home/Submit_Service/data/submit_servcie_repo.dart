@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/models/drivers_model.dart';
 import 'package:hcs/features/Home/Submit_Service/data/models/submit_service_params.dart';
@@ -18,24 +19,27 @@ class SubmitServiceRepository {
   SubmitServiceRepository(this._networkService);
 
   Future<Drivers> submitService(SubmitServiceParams params) async {
-    var dataMap = <String, dynamic>{
-      'customer': params.customer,
-      'driver': params.driver,
-      'date': params.date,
-      'service_type': params.serviceType,
-      'shift_type': params.shiftType,
-      // 'days': params.days,
-      'employees': params.employees,
-      'payment_method': params.paymentMethod,
-    };
+    // var dataMap = <String, dynamic>{
+    //   'customer': params.customer,
+    //   'driver': params.driver,
+    //   'date': params.date,
+    //   'service_type': params.serviceType,
+    //   'shift_type': params.shiftType,
+    //   'payment_method': params.paymentMethod,
+    //   // Stringify list of employee maps
+    //   'employees': params.employees.map((e) => e.toJson()).toList().toString(),
+    // };
 
-    if (params.serviceType != 'Daily') dataMap['days'] = params.days;
+    // if (params.serviceType != 'Daily') {
+    //   dataMap['days'] = params.days?.toString(); // ensure it's stringified
+    // }
 
-    var formData = FormData.fromMap(dataMap);
+    // var formData = FormData.fromMap(dataMap);
+    debugPrint("htr ${params.toMap().toString()}");
 
     final response = await _networkService.post(
       ApiConstance.submitService(),
-      formData,
+      params.toMap(),
     );
 
     if (response.statusCode == 200) {

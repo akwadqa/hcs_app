@@ -15,20 +15,25 @@ class AvailabilityController extends _$AvailabilityController {
   Future<void> resetController(
     String selectedServiceType,
     String selectedDate,
+    // PackagesData? selectedPackage,
   ) async {
-    debugPrint('selectedServiceType : $selectedServiceType');
-    debugPrint('selectedDate : $selectedDate');
-    debugPrint('selectedPackage : ${state.selectedDate}');
-
     state = state.copyWith(
       selectedServiceType: selectedServiceType,
       selectedShiftType: 'Morning',
-      selectedPackage: null,
+      selectedPackage: PackagesData(
+        id: "Daily",
+        serviceItem: 'STO-ITEM-2025-00005',
+        serviceCost: 200,
+        numberOfVisits: null,
+      ),
       selectedDate: selectedDate,
       packages: [],
       packagesStates: RequestStates.init,
       packagesMessage: '',
     );
+    debugPrint('selectedServiceType : $selectedServiceType');
+    debugPrint('selectedDate : $selectedDate');
+    debugPrint('selectedPackage : ${state.selectedPackage}');
   }
 
   // selectService(String selectedServiceType) {

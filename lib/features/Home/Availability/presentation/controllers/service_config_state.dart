@@ -17,7 +17,7 @@ class ServiceConfigState extends Equatable {
     this.selectedServiceType,
     this.selectedShiftType = 'Morning',
     this.selectedPackage,
-    this.selectedDate ='',
+    this.selectedDate = '',
 
     this.packages = const [],
     this.packagesStates = RequestStates.init,

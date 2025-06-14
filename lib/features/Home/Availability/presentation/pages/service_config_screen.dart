@@ -42,7 +42,7 @@ class _ServiceConfigurationScreenState
           .read(availabilityControllerProvider.notifier)
           .resetController(
             serviceTypeToString(widget.serviceType),
-            DateFormat.yMd().format(DateTime.now()),
+            DateFormat('yyyy-MM-dd').format(DateTime.now()), // Updated format
           ),
     );
   }
@@ -133,11 +133,15 @@ class _ServiceConfigurationScreenState
                               initialDate: DateTime.now(),
                               onDateSelected: (dt) {
                                 // do something with the chosen date
+                                final formattedDate = DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(dt);
+                                debugPrint('Selected date: $formattedDate');
                                 ref
                                     .read(
                                       availabilityControllerProvider.notifier,
                                     )
-                                    .selectDate(DateFormat.yMd().format(dt));
+                                    .selectDate(formattedDate);
                               },
                             );
                           },
