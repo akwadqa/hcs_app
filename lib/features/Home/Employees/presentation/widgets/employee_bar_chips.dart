@@ -9,15 +9,15 @@ import 'package:hcs/src/theme/app_colors.dart';
 class EmployeeBarChip extends StatefulWidget {
   final Employee employee;
   final VoidCallback? onTap;
-
-  const EmployeeBarChip({super.key, required this.employee, this.onTap});
+   bool enabled;
+   EmployeeBarChip({super.key, required this.employee, this.onTap, required this.enabled});
 
   @override
   State<EmployeeBarChip> createState() => _EmployeeBarChipState();
 }
 
 class _EmployeeBarChipState extends State<EmployeeBarChip> {
-  bool enabled = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +26,13 @@ class _EmployeeBarChipState extends State<EmployeeBarChip> {
         final controller = ref.read(employeesControllerProvider.notifier);
         return GestureDetector(
           onTap: () {
-            if (!enabled) {
+            if (!widget.enabled) {
               controller.selectEmployee(widget.employee);
             } else {
                 controller.unSelectEmployee(widget.employee);
             }
             setState(() {
-              enabled = !enabled;
+              widget.enabled = !widget.enabled;
             });
           },
 
@@ -42,16 +42,16 @@ class _EmployeeBarChipState extends State<EmployeeBarChip> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.r),
-              color: enabled ? Colors.white : AppColors.unSelectedGrey,
+              color: widget.enabled ? Colors.white : AppColors.unSelectedGrey,
               border: Border.all(
-                style: enabled ? BorderStyle.solid : BorderStyle.none,
+                style: widget.enabled ? BorderStyle.solid : BorderStyle.none,
                 color: AppColors.primary,
               ),
             ),
             child: Text(
               widget.employee.employeeName,
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                color: enabled ? AppColors.blackText : AppColors.unSelectedText,
+                color: widget.enabled ? AppColors.blackText : AppColors.unSelectedText,
               ),
             ),
           ),

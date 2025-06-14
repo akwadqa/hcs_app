@@ -13,6 +13,11 @@
   "serviceCategory": "Service Category",
   "employees": "Employees",
   "packages": "packages",
+  "driverName": "Driver Name",
+  "discountType": "Discount Type",
+  "discountPercentage": "Discount Percentage",
+  "areCleaningSuppliesAvaliable": "Are cleaning supplies avaliable?",
+  "submit": "Submit",
   
   
 

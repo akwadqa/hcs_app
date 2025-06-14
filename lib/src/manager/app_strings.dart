@@ -6,8 +6,8 @@ class AppStrings {
   static const String pressToRefreash = 'PressToRefreash';
   static const String emptyData = 'emptyData';
   static const String next = 'next';
+  static const String submit = 'submit';
   static const String checkAvailability = 'checkAvailability';
-  
 
   //validation
   static const String enterValidUsername = 'enterValidUsername';
@@ -34,8 +34,11 @@ class AppStrings {
   static const String serviceCategory = 'serviceCategory';
   static const String employees = 'employees';
   static const String packages = 'Packages';
-
-  
+  static const String driverName = 'driverName';
+  static const String discountType = 'discountType';
+  static const String discountPercentage = 'discountPercentage';
+  static const String areCleaningSuppliesAvaliable =
+      'areCleaningSuppliesAvaliable';
 
   //My Orders
   static const String myOrders = 'myOrders';

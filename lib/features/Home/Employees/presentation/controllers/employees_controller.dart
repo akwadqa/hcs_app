@@ -15,17 +15,27 @@ class EmployeesController extends _$EmployeesController {
   EmployeesState build() => EmployeesState();
 
   Future<void> selectServiceCategory(String serviceCategory) async {
-    state = state.copyWith(serviceCategory: serviceCategory);
+    state = state.copyWith(
+      serviceCategory: serviceCategory,
+      selectedEmployees: [],
+    );
 
     debugPrint("${state.serviceCategory.toString()} llll serviceCategory");
   }
 
   Future<void> selectEmployee(Employee selectedEmployee) async {
-    state = state.copyWith(
-      selectedEmployees: [...state.selectedEmployees, selectedEmployee],
+    List<Employee> employeesList = List.from(state.selectedEmployees);
+    int index = employeesList.indexWhere(
+      (element) => element.employeeName == selectedEmployee.employeeName,
     );
+    if (index == -1) {
+      employeesList.add(selectedEmployee);
+      state = state.copyWith(selectedEmployees: employeesList);
+    }
 
-    debugPrint("${state.selectedEmployees.toString()} llll");
+    debugPrint(
+      "${state.selectedEmployees.toString()} ${state.selectedEmployees.length} llll",
+    );
   }
 
   Future<void> unSelectEmployee(Employee unSelectedEmployee) async {
@@ -46,6 +56,10 @@ class EmployeesController extends _$EmployeesController {
     try {
       final employeesRepo = ref.read(employeesRepositoryProvider);
       final availabilityController = ref.read(availabilityControllerProvider);
+
+      debugPrint(
+        '${availabilityController.selectedPackage?.id} selectedPackage',
+      );
       final employeesData = await employeesRepo.getEmployees(
         getEmployeesParams: GetEmployeesParams(
           serviceType: availabilityController.selectedPackage?.id ?? 'Daily',
@@ -82,10 +96,12 @@ class EmployeesController extends _$EmployeesController {
     try {
       final employeesRepo = ref.read(employeesRepositoryProvider);
       final availabilityController = ref.read(availabilityControllerProvider);
-
+      debugPrint(
+        '${availabilityController.selectedPackage?.id} selectedPackage',
+      );
       final employeesData = await employeesRepo.getEmployees(
         getEmployeesParams: GetEmployeesParams(
-          serviceType: availabilityController.selectedServiceType ?? 'Daily',
+          serviceType: availabilityController.selectedPackage?.id ?? 'Daily',
           date: availabilityController.selectedDate,
           shift: availabilityController.selectedShiftType,
           serviceCategory: state.serviceCategory,

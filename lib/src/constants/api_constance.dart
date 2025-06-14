@@ -35,6 +35,14 @@ class ApiConstance {
   }) =>
       '$baseUrl/$baseDomain.api.employee.employees?service_type=$serviceType&date=$date&shift=$shift&designation=&service_category=$serviceCategory&days=&$employeeName&page=$page&limit=5';
 
+  ////////////////// *  Drivers   /////////////////////
+  static String getDrivers(String page) =>
+      '$baseUrl/$baseDomain.api.driver.drivers?page=$page&limit=10';
+
+  ////////////////// *  SubmitService   /////////////////////
+  static String submitService() =>
+      '$baseUrl/$baseDomain.api.service_order.service_order';
+
   ////////////////// *  Register   //////////////////
   // static const String register =
   //     '$baseUrl/$baseDomain.api.authentication.register';

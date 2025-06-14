@@ -12,6 +12,7 @@ import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/manager/app_strings.dart';
+import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 
@@ -144,15 +145,17 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                                                     .currentEmployeesPage ==
                                                 null
                                             ? Text('No More Employees')
-                                            : Center(
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              ),
+                                            : CircularProgressIndicator(),
                                       );
                                     } else {
                                       return EmployeeBarChip(
                                         employee:
                                             employeesState.employees[index],
+                                        enabled: employeesState
+                                            .selectedEmployees
+                                            .contains(
+                                              employeesState.employees[index],
+                                            ),
                                       );
                                     }
                                   },
@@ -187,9 +190,12 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                                   RequestStates.loading
                               ? null
                               : () {
-                                  if (_formKey.currentState!.validate()) {
-                                    // تنفيذ الخطوة التالية
-                                  }
+                                  context.pushRoute(
+                                    DriverPaymentRoute(
+                                      serviceType: widget.serviceType,
+                                    ),
+                                  );
+                                  if (_formKey.currentState!.validate()) {}
                                 },
                         );
                       },

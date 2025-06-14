@@ -68,3 +68,15 @@ String serviceCategoryToString(ServiceCategory serviceCategory) {
       return 'Packages';
   }
 }
+
+//Payment Enums
+enum PaymentMethod { online, cash }
+
+String paymentMethodToString(PaymentMethod paymentMethod) {
+  switch (paymentMethod) {
+    case PaymentMethod.online:
+      return 'Online';
+    case PaymentMethod.cash:
+      return 'Cash';
+  }
+}

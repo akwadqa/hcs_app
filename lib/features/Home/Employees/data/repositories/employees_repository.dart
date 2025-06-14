@@ -1,5 +1,6 @@
 // home_repository.dart
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/Home/Employees/data/models/employees_model.dart';
 import 'package:hcs/features/Home/Employees/data/models/get_employees_params.dart';
@@ -21,6 +22,9 @@ class EmployeesRepository {
   Future<Employees> getEmployees({
     required GetEmployeesParams getEmployeesParams,
   }) async {
+    debugPrint(
+      '${getEmployeesParams.serviceType} getEmployeesParams.serviceType',
+    );
     final response = await _networkService.get(
       ApiConstance.getEmployees(
         serviceType: getEmployeesParams.serviceType,

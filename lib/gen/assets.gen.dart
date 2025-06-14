@@ -42,6 +42,13 @@ class $AssetsImagesGen {
   /// File path: assets/images/calendar.svg
   SvgGenImage get calendar => const SvgGenImage('assets/images/calendar.svg');
 
+  /// File path: assets/images/cash.svg
+  SvgGenImage get cash => const SvgGenImage('assets/images/cash.svg');
+
+  /// File path: assets/images/credit_card.svg
+  SvgGenImage get creditCard =>
+      const SvgGenImage('assets/images/credit_card.svg');
+
   /// File path: assets/images/dummycard.png
   AssetGenImage get dummycard =>
       const AssetGenImage('assets/images/dummycard.png');
@@ -91,12 +98,18 @@ class $AssetsImagesGen {
   AssetGenImage get splashBackground =>
       const AssetGenImage('assets/images/splash_background.png');
 
+  /// File path: assets/images/successful.svg
+  SvgGenImage get successful =>
+      const SvgGenImage('assets/images/successful.svg');
+
   /// List of all assets
   List<dynamic> get values => [
     back,
     background,
     background11,
     calendar,
+    cash,
+    creditCard,
     dummycard,
     homeSelected,
     homeUnselected,
@@ -110,6 +123,7 @@ class $AssetsImagesGen {
     settingsUnselected,
     smallLogo,
     splashBackground,
+    successful,
   ];
 }
 

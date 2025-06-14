@@ -78,13 +78,17 @@ class _HomeContentState extends ConsumerState<HomeContentScreen> {
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
-                  onTap: () => context.pushRoute(
-                    CustomerRoute(
-                      serviceType:
-                          // ServiceType.deepClean,
-                          list[index],
-                    ),
-                  ),
+                  onTap: () =>
+                      //  context.pushRoute(
+                      //   DriverPaymentRoute(serviceType: list[index]),
+                      // ),
+                      context.pushRoute(
+                        CustomerRoute(
+                          serviceType:
+                              // ServiceType.deepClean,
+                              list[index],
+                        ),
+                      ),
                   child: ServiceCard(serviceType: list[index]),
                 );
               },

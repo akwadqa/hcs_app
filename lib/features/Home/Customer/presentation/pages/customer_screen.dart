@@ -16,6 +16,7 @@ import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
+import 'package:hcs/src/shared_widgets/dropdown_generic.dart';
 
 @RoutePage()
 class CustomerScreen extends ConsumerStatefulWidget {
@@ -89,6 +90,7 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
                       if (customerState.customersStates ==
                           RequestStates.loaded) {
                         return PaginatedDropdown(
+                          key: UniqueKey(),
                           customers: customerState.customers,
                           hasMore: customerState.currentCustomersPage != null,
                           isLoading:

@@ -1,27 +1,29 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'employees_controller.dart';
+part of 'driver_payment_repo.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$employeesControllerHash() =>
-    r'4f0591536c46edd2614b90f415d3ec1eb42da0cc';
+String _$driverPaymentRepositoryHash() =>
+    r'0bfa93dd78e133af8bb12a4517f41f177633aadc';
 
-/// See also [EmployeesController].
-@ProviderFor(EmployeesController)
-final employeesControllerProvider =
-    AutoDisposeNotifierProvider<EmployeesController, EmployeesState>.internal(
-      EmployeesController.new,
-      name: r'employeesControllerProvider',
+/// See also [driverPaymentRepository].
+@ProviderFor(driverPaymentRepository)
+final driverPaymentRepositoryProvider =
+    Provider<DriverPaymentRepository>.internal(
+      driverPaymentRepository,
+      name: r'driverPaymentRepositoryProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$employeesControllerHash,
+          : _$driverPaymentRepositoryHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$EmployeesController = AutoDisposeNotifier<EmployeesState>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef DriverPaymentRepositoryRef = ProviderRef<DriverPaymentRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

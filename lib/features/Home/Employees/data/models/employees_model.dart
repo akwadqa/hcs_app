@@ -32,17 +32,17 @@ class Employees {
 @JsonSerializable()
 class Employee {
   @JsonKey(name: "name")
-  String name;
+  final String name;
   @JsonKey(name: "employee_name")
-  String employeeName;
+  final String employeeName;
   @JsonKey(name: "designation")
-  String designation;
+  final String designation;
   @JsonKey(name: "service_cost")
-  int serviceCost;
+  final int serviceCost;
   @JsonKey(name: "shift")
-  String shift;
+  final String shift;
 
-  Employee({
+  const Employee({
     required this.name,
     required this.employeeName,
     required this.designation,
@@ -54,6 +54,17 @@ class Employee {
       _$EmployeeFromJson(json);
 
   Map<String, dynamic> toJson() => _$EmployeeToJson(this);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Employee &&
+          runtimeType == other.runtimeType &&
+          employeeName == other.employeeName &&
+          shift == other.shift;
+
+  @override
+  int get hashCode => employeeName.hashCode ^ shift.hashCode;
 }
 
 @JsonSerializable()
