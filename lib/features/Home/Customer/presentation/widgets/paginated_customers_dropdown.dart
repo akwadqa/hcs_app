@@ -6,7 +6,7 @@ import 'package:hcs/src/theme/app_colors.dart';
 /// A dropdown that displays a provided list of customers and triggers
 /// Riverpod's loadMore when scrolled to the end, keeping the overlay open and
 /// dynamically updating as new data arrives.
-class PaginatedDropdown extends StatefulWidget {
+class PaginatedCustomerDropdown extends StatefulWidget {
   final List<Customers> customers;
   final bool hasMore;
   final bool isLoading;
@@ -15,7 +15,7 @@ class PaginatedDropdown extends StatefulWidget {
   final Customers? initialValue;
   final ValueChanged<Customers?>? onChanged;
 
-  const PaginatedDropdown({
+  const PaginatedCustomerDropdown({
     super.key,
     required this.customers,
     required this.hasMore,
@@ -27,10 +27,11 @@ class PaginatedDropdown extends StatefulWidget {
   });
 
   @override
-  State<PaginatedDropdown> createState() => _PaginatedDropdownState();
+  State<PaginatedCustomerDropdown> createState() =>
+      _PaginatedCustomerDropdownState();
 }
 
-class _PaginatedDropdownState extends State<PaginatedDropdown> {
+class _PaginatedCustomerDropdownState extends State<PaginatedCustomerDropdown> {
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlay;
   late List<Customers> _items;
@@ -56,7 +57,7 @@ class _PaginatedDropdownState extends State<PaginatedDropdown> {
   }
 
   @override
-  void didUpdateWidget(covariant PaginatedDropdown oldWidget) {
+  void didUpdateWidget(covariant PaginatedCustomerDropdown oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.customers != widget.customers) {
       _items = List.from(widget.customers);
@@ -114,7 +115,7 @@ class _PaginatedDropdownState extends State<PaginatedDropdown> {
                     }
                     final cust = _items[index];
                     return ListTile(
-                      title: Text(_capitalize(cust.customerName)),
+                      title: Text(cust.customerName),
                       onTap: widget.enabled
                           ? () {
                               _selectItem(cust);
@@ -193,9 +194,6 @@ class _PaginatedDropdownState extends State<PaginatedDropdown> {
       ),
     );
   }
-
-  String _capitalize(String s) =>
-      s.isEmpty ? s : (s[0].toUpperCase() + s.substring(1));
 
   @override
   void dispose() {

@@ -37,7 +37,7 @@ String shiftTypeToString(ShiftType shiftType) {
     case ShiftType.evening:
       return 'Evening';
     case ShiftType.fullDay:
-      return 'Full day';
+      return 'Full Day';
   }
 }
 
@@ -47,25 +47,25 @@ ShiftType stringToShiftType(String string) {
       return ShiftType.morning;
     case 'Evening':
       return ShiftType.evening;
-    case 'Full day':
+    case 'Full Day':
       return ShiftType.fullDay;
     default:
       return ShiftType.fullDay;
   }
 }
 
-enum ServiceCategory { onCall, stayIn, company, packages }
+enum ServiceCategory { onCall, stayIn, company, flexible }
 
 String serviceCategoryToString(ServiceCategory serviceCategory) {
   switch (serviceCategory) {
     case ServiceCategory.onCall:
-      return 'On Call';
+      return 'on Call';
     case ServiceCategory.stayIn:
-      return 'Stay in';
+      return 'Stay - In';
     case ServiceCategory.company:
       return 'Company';
-    case ServiceCategory.packages:
-      return 'Packages';
+    case ServiceCategory.flexible:
+      return 'Flexible';
   }
 }
 

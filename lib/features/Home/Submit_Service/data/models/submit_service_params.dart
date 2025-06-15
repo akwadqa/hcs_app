@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:hcs/features/Home/Employees/data/models/employees_model.dart';
 
@@ -26,6 +24,7 @@ class SubmitServiceParams {
 
   Map<String, dynamic> toMap() {
     return {
+      'customer_name': 'Amin Test',
       'customer': customer,
       'driver': driver,
       'date': date,
@@ -35,7 +34,7 @@ class SubmitServiceParams {
       'employees': employees
           .map(
             (e) => {
-              'employee_name': e.employeeName,
+              'employee_name': e.name,
               'occupation': e.designation,
               'monthly_contract_amount': e.serviceCost,
               'shift': e.shift,

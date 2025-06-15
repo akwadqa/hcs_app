@@ -24,7 +24,7 @@ class _ServiceCategoryChipsState extends ConsumerState<ServiceCategoryChips> {
       ServiceCategory.onCall,
       ServiceCategory.stayIn,
       ServiceCategory.company,
-      ServiceCategory.packages,
+      ServiceCategory.flexible,
     ].map((type) => serviceCategoryToString(type)).toList();
 
     _selectedIndex = serviceCategoryStringList.indexOf(widget.selectedChip);
@@ -32,9 +32,15 @@ class _ServiceCategoryChipsState extends ConsumerState<ServiceCategoryChips> {
       _selectedIndex = 0; // fallback if selectedChip is not found
     }
     Future.microtask(() {
-      ref
-          .read(employeesControllerProvider.notifier)
-          .selectServiceCategory(serviceCategoryStringList[_selectedIndex]);
+      _selectedIndex == 0 || _selectedIndex == 1
+          ? ref
+                .read(employeesControllerProvider.notifier)
+                .selectServiceCategory(serviceCategoryStringList[1])
+          : ref
+                .read(employeesControllerProvider.notifier)
+                .selectServiceCategory(
+                  serviceCategoryStringList[_selectedIndex],
+                );
       ref.read(employeesControllerProvider.notifier).fetchEmployees();
     });
   }
@@ -57,11 +63,15 @@ class _ServiceCategoryChipsState extends ConsumerState<ServiceCategoryChips> {
           onTap: () {
             setState(() => _selectedIndex = index);
             Future.microtask(() {
-              ref
-                  .read(employeesControllerProvider.notifier)
-                  .selectServiceCategory(
-                    serviceCategoryStringList[_selectedIndex],
-                  );
+              _selectedIndex == 0 || _selectedIndex == 1
+                  ? ref
+                        .read(employeesControllerProvider.notifier)
+                        .selectServiceCategory(serviceCategoryStringList[1])
+                  : ref
+                        .read(employeesControllerProvider.notifier)
+                        .selectServiceCategory(
+                          serviceCategoryStringList[_selectedIndex],
+                        );
               ref.read(employeesControllerProvider.notifier).fetchEmployees();
             });
           },

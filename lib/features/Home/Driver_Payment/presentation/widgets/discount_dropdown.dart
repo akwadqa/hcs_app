@@ -24,7 +24,7 @@ class DiscountDropdown extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          context.tr(AppStrings.driverName),
+          context.tr(AppStrings.discountType),
           style: Theme.of(context).textTheme.displayMedium!,
         ),
         8.verticalSpace,

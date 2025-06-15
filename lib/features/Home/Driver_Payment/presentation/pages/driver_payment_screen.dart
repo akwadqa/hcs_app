@@ -164,37 +164,39 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
               YesNoAnswes(),
               50.verticalSpace,
 
-              Padding(
-                padding: EdgeInsets.only(bottom: 25.h, left: 47.w, right: 47.w),
-                child: Consumer(
-                  builder: (context, ref, child) {
-                    final submitServiceState = ref.watch(
-                      submitServiceControllerProvider,
-                    );
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 25.h),
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final submitServiceState = ref.watch(
+                        submitServiceControllerProvider,
+                      );
 
-                    return CustomButton(
-                      title: tr(context: context, AppStrings.submit),
-                      onPressed:
-                          submitServiceState.submitServiceStates ==
-                              RequestStates.loading
-                          ? null
-                          : () {
-                              ref
-                                  .watch(
-                                    submitServiceControllerProvider.notifier,
-                                  )
-                                  .submitService();
-                              // Validate the form before navigating
-                              // if (_formKey.currentState!.validate()) {
-                              //   context.pushRoute(
-                              //     ServiceConfigurationRoute(
-                              //       serviceType: widget.serviceType,
-                              //     ),
-                              //   );
-                              // }
-                            },
-                    );
-                  },
+                      return CustomButton(
+                        title: tr(context: context, AppStrings.submit),
+                        onPressed:
+                            submitServiceState.submitServiceStates ==
+                                RequestStates.loading
+                            ? null
+                            : () {
+                                ref
+                                    .watch(
+                                      submitServiceControllerProvider.notifier,
+                                    )
+                                    .submitService();
+                                // Validate the form before navigating
+                                // if (_formKey.currentState!.validate()) {
+                                //   context.pushRoute(
+                                //     ServiceConfigurationRoute(
+                                //       serviceType: widget.serviceType,
+                                //     ),
+                                //   );
+                                // }
+                              },
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

@@ -24,7 +24,8 @@ class PaginatedDriverDropdown extends StatefulWidget {
   });
 
   @override
-  State<PaginatedDriverDropdown> createState() => _PaginatedDriverDropdownState();
+  State<PaginatedDriverDropdown> createState() =>
+      _PaginatedDriverDropdownState();
 }
 
 class _PaginatedDriverDropdownState extends State<PaginatedDriverDropdown> {
@@ -110,7 +111,7 @@ class _PaginatedDriverDropdownState extends State<PaginatedDriverDropdown> {
                     }
                     final driver = _items[index];
                     return ListTile(
-                      title: Text(_capitalize(driver.fullName)),
+                      title: Text(driver.fullName),
                       onTap: widget.enabled
                           ? () {
                               _selectItem(driver);
@@ -189,8 +190,6 @@ class _PaginatedDriverDropdownState extends State<PaginatedDriverDropdown> {
       ),
     );
   }
-
-  String _capitalize(String s) => s.isEmpty ? s : (s[0].toUpperCase() + s.substring(1));
 
   @override
   void dispose() {

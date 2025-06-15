@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
 import 'package:hcs/features/Home/Driver_Payment/presentation/controllers/drivers_payment_controllers.dart';
 import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/enums/service_type.dart';

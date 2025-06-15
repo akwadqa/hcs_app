@@ -19,7 +19,15 @@ class EmployeesState extends Equatable {
     this.employees = const [],
     this.employeesStates = RequestStates.init,
     this.employeesMessage = '',
-    this.selectedEmployees = const [],
+    this.selectedEmployees = const [
+      Employee(
+        name: "29906400056",
+        employeeName: "Sonam Zangmo",
+        designation: "Waitress",
+        serviceCost: 100,
+        shift: "Full Day",
+      ),
+    ],
 
     //service category
     this.serviceCategory = '',
