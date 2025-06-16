@@ -39,6 +39,8 @@ class ApiConstance {
   static String getDrivers(String page) =>
       '$baseUrl/$baseDomain.api.driver.drivers?page=$page&limit=10';
 
+  static String getDiscoutType() =>
+      '$baseUrl/$baseDomain.api.discount_type.discount_types';
   ////////////////// *  SubmitService   /////////////////////
   static String submitService() =>
       '$baseUrl/$baseDomain.api.service_order.service_order';

@@ -17,7 +17,7 @@ class PaymentMethodChips extends StatefulWidget {
 
 class _PaymentMethodChipsState extends State<PaymentMethodChips> {
   final List<String> _options = [
-    PaymentMethod.online,
+    PaymentMethod.link,
     PaymentMethod.cash,
   ].map((type) => paymentMethodToString(type)).toList();
 

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hcs/features/Home/Driver_Payment/data/models/discount_type.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/models/drivers_model.dart';
 import 'package:hcs/src/constants/api_constance.dart';
 import 'package:hcs/src/network/network_service.dart';
@@ -24,6 +25,16 @@ class DriverPaymentRepository {
       return Drivers.fromJson(response.data);
     } else {
       throw Exception(response.message ?? 'Failed to Get Drivers');
+    }
+  }
+
+  Future<DiscountTypes> getDiscountType() async {
+    final response = await _networkService.get(ApiConstance.getDiscoutType());
+
+    if (response.statusCode == 200) {
+      return DiscountTypes.fromJson(response.data);
+    } else {
+      throw Exception(response.message ?? 'Failed to Get DiscountTypes');
     }
   }
 }

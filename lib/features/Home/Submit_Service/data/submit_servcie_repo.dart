@@ -18,7 +18,7 @@ class SubmitServiceRepository {
 
   SubmitServiceRepository(this._networkService);
 
-  Future<Drivers> submitService(SubmitServiceParams params) async {
+  Future<bool> submitService(SubmitServiceParams params) async {
     // var dataMap = <String, dynamic>{
     //   'customer': params.customer,
     //   'driver': params.driver,
@@ -43,7 +43,7 @@ class SubmitServiceRepository {
     );
 
     if (response.statusCode == 200) {
-      return Drivers.fromJson(response.data);
+      return true;
     } else {
       throw Exception(response.message ?? 'Failed to Get Drivers');
     }

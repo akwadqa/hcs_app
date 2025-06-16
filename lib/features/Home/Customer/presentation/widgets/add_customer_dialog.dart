@@ -81,7 +81,10 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
             children: [
               StarredText('Customer Type'),
               8.verticalSpace,
-              DropDownField(items: ['Company', 'Individual', 'Staff']),
+              DropDownField(
+                items: ['Company', 'Individual', 'On Call'],
+                enabled: true,
+              ),
               24.verticalSpace,
               StarredText('Customer Name'),
               8.verticalSpace,

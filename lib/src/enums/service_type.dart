@@ -33,9 +33,9 @@ enum ShiftType { morning, evening, fullDay }
 String shiftTypeToString(ShiftType shiftType) {
   switch (shiftType) {
     case ShiftType.morning:
-      return 'Morning';
+      return 'Morning Shift';
     case ShiftType.evening:
-      return 'Evening';
+      return 'Evening Shift';
     case ShiftType.fullDay:
       return 'Full Day';
   }
@@ -70,12 +70,12 @@ String serviceCategoryToString(ServiceCategory serviceCategory) {
 }
 
 //Payment Enums
-enum PaymentMethod { online, cash }
+enum PaymentMethod { link, cash }
 
 String paymentMethodToString(PaymentMethod paymentMethod) {
   switch (paymentMethod) {
-    case PaymentMethod.online:
-      return 'Online';
+    case PaymentMethod.link:
+      return 'Link';
     case PaymentMethod.cash:
       return 'Cash';
   }

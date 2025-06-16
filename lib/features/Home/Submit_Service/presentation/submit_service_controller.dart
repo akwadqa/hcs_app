@@ -49,20 +49,7 @@ class SubmitServiceController extends _$SubmitServiceController {
       debugPrint(
         '${driverPaymentController.selectedPaymentMethod!} 3y2 selectedPaymentMethod',
       );
-      // // ✅ Show dialog on success
-      // showDialog(
-      //   context: context,
-      //   builder: (_) => AlertDialog(
-      //     title: Assets.images.successful.svg(),
-      //     content: Text(
-      //       'Service has been \n requested successfully.',
-      //       textAlign: TextAlign.center,
-      //       style: Theme.of(
-      //         context,
-      //       ).textTheme.displayMedium!.copyWith(fontSize: 20.sp),
-      //     ),
-      //   ),
-      // );
+
       final submitServiceData = await submitServiceRepo.submitService(
         SubmitServiceParams(
           customer: customerController.selectedCustomer!.customerId,
