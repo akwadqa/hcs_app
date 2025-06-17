@@ -28,12 +28,17 @@ class ApiConstance {
   static String getEmployees({
     required String serviceType,
     required String date,
+    required List<String> days,
     required String shift,
     required String? serviceCategory,
     required String? employeeName,
     required String page,
-  }) =>
-      '$baseUrl/$baseDomain.api.employee.employees?service_type=$serviceType&date=$date&shift=$shift&designation=&service_category=$serviceCategory&days=&$employeeName&page=$page&limit=5';
+  }) {
+    print(
+      'fagwaha $baseUrl/$baseDomain.api.employee.employees?service_type=$serviceType&date=$date&shift=$shift&designation=&service_category=$serviceCategory&days=$days&$employeeName&page=$page&limit=5',
+    );
+    return '$baseUrl/$baseDomain.api.employee.employees?service_type=$serviceType&date=$date&shift=$shift&designation=&service_category=$serviceCategory&days=$days&$employeeName&page=$page&limit=5';
+  }
 
   ////////////////// *  Drivers   /////////////////////
   static String getDrivers(String page) =>
@@ -44,25 +49,4 @@ class ApiConstance {
   ////////////////// *  SubmitService   /////////////////////
   static String submitService() =>
       '$baseUrl/$baseDomain.api.service_order.service_order';
-
-  ////////////////// *  Register   //////////////////
-  // static const String register =
-  //     '$baseUrl/$baseDomain.api.authentication.register';
-
-  ////////////////// *  Home   /////////////////////
-  // static const String home =
-  //     '$baseUrl/${baseDomain}_api.home_block.home_blocks';
-
-  ////////////////// *  Search   /////////////////////
-  // static String searchItemGroupByID(String? itemGroupId) {
-  //   if (itemGroupId != null && itemGroupId.isNotEmpty) {
-  //     return '$baseUrl/jocards.${baseDomain}_api.item_group.item_groups?item_group_id=$itemGroupId';
-  //   } else {
-  //     return '$baseUrl/jocards.${baseDomain}_api.item_group.item_groups';
-  //   }
-  // }
-
-  ////////////////// *  Profile   /////////////////////
-  // static const String profile =
-  //     '$baseUrl/jocards.${baseDomain}_api.profile.profile';
 }

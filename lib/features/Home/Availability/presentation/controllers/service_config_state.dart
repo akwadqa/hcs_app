@@ -3,7 +3,6 @@ import 'package:hcs/features/Home/Availability/data/models/packages_model.dart';
 import 'package:hcs/src/enums/request_state.dart';
 
 class ServiceConfigState extends Equatable {
-  //service config
   final String? selectedServiceType;
   final String selectedShiftType;
   final PackagesData? selectedPackage;
@@ -11,20 +10,24 @@ class ServiceConfigState extends Equatable {
   final List<PackagesData> packages;
   final RequestStates packagesStates;
   final String? packagesMessage;
+  final List<String> selectedDays; // New field
+  final String firstVisitDate;
+  final String lastVisitDate;
 
   const ServiceConfigState({
-    //service config
     this.selectedServiceType,
-    this.selectedShiftType = 'Morning',
+    this.selectedShiftType = 'Morning Shift',
     this.selectedPackage,
     this.selectedDate = '',
-
     this.packages = const [],
     this.packagesStates = RequestStates.init,
     this.packagesMessage = '',
+    this.selectedDays = const [],
+    this.firstVisitDate = '',
+    this.lastVisitDate = '',
   });
+
   ServiceConfigState copyWith({
-    //customers
     String? selectedServiceType,
     String? selectedShiftType,
     PackagesData? selectedPackage,
@@ -32,9 +35,11 @@ class ServiceConfigState extends Equatable {
     List<PackagesData>? packages,
     RequestStates? packagesStates,
     String? packagesMessage,
+    List<String>? selectedDays,
+    String? firstVisitDate,
+    String? lastVisitDate,
   }) {
     return ServiceConfigState(
-      //service config
       selectedServiceType: selectedServiceType ?? this.selectedServiceType,
       selectedShiftType: selectedShiftType ?? this.selectedShiftType,
       selectedPackage: selectedPackage ?? this.selectedPackage,
@@ -42,17 +47,22 @@ class ServiceConfigState extends Equatable {
       packages: packages ?? this.packages,
       packagesStates: packagesStates ?? this.packagesStates,
       packagesMessage: packagesMessage ?? this.packagesMessage,
+      selectedDays: selectedDays ?? this.selectedDays,
+      firstVisitDate: firstVisitDate ?? this.firstVisitDate,
+      lastVisitDate: lastVisitDate ?? this.lastVisitDate,
     );
   }
 
   @override
   List<Object?> get props => [
-    //service config
     selectedServiceType,
     selectedShiftType,
     selectedPackage,
     selectedDate,
     packages,
     packagesStates,
+    selectedDays,
+    firstVisitDate,
+    lastVisitDate,
   ];
 }

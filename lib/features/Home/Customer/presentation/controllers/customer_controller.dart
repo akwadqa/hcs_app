@@ -59,6 +59,7 @@ class CustomerController extends _$CustomerController {
       state = state.copyWith(
         currentCustomersPage: nextPage,
         customers: customersData.data,
+        selectedCustomer: customersData.data[0],
         customersStates: RequestStates.loaded,
         customersMessage: '',
       );

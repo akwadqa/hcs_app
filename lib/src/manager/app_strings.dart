@@ -39,7 +39,9 @@ class AppStrings {
   static const String discountPercentage = 'discountPercentage';
   static const String areCleaningSuppliesAvaliable =
       'areCleaningSuppliesAvaliable';
-
+  static const String chooseDays = 'chooseDays';
+  static const String firstVisitDate = 'firstVisitDate';
+  static const String toDate = 'toDate';
   //My Orders
   static const String myOrders = 'myOrders';
   static const String topUp = 'topUp';

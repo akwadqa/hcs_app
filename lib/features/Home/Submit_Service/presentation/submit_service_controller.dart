@@ -57,7 +57,7 @@ class SubmitServiceController extends _$SubmitServiceController {
           date: availabilityController.selectedDate,
           serviceType: availabilityController.selectedPackage!.id,
           shiftType: availabilityController.selectedShiftType,
-          days: [],
+          days: availabilityController.selectedDays,
           employees: employeesController.selectedEmployees,
           paymentMethod: driverPaymentController.selectedPaymentMethod!,
         ),

@@ -64,6 +64,7 @@ class EmployeesController extends _$EmployeesController {
         getEmployeesParams: GetEmployeesParams(
           serviceType: availabilityController.selectedPackage?.id ?? 'Daily',
           date: availabilityController.selectedDate,
+          days: availabilityController.selectedDays,
           shift: availabilityController.selectedShiftType,
           serviceCategory: state.serviceCategory,
           employeeName: null,
@@ -103,6 +104,7 @@ class EmployeesController extends _$EmployeesController {
         getEmployeesParams: GetEmployeesParams(
           serviceType: availabilityController.selectedPackage?.id ?? 'Daily',
           date: availabilityController.selectedDate,
+          days: availabilityController.selectedDays,
           shift: availabilityController.selectedShiftType,
           serviceCategory: state.serviceCategory,
           employeeName: null,

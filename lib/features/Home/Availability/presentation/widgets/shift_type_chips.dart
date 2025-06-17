@@ -7,28 +7,29 @@ import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 
-class ShiftTypeChips extends StatefulWidget {
+/// ShiftTypeChips now reads initial selectedState from Riverpod
+/// and updates purely via provider state, no internal index needed.
+class ShiftTypeChips extends ConsumerWidget {
   const ShiftTypeChips({super.key});
 
   @override
-  _ShiftTypeChipsState createState() => _ShiftTypeChipsState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Options labels
+    final options = [
+      ShiftType.morning,
+      ShiftType.evening,
+      ShiftType.fullDay,
+    ].map(shiftTypeToString).toList();
 
-class _ShiftTypeChipsState extends State<ShiftTypeChips> {
-  final List<String> _options = [
-    ShiftType.morning,
-    ShiftType.evening,
-    ShiftType.fullDay,
-  ].map((type) => shiftTypeToString(type)).toList();
-  int _selectedIndex = 0; // default to first
+    // Current selected from state
+    final selectedShift = ref.watch(
+      availabilityControllerProvider.select((s) => s.selectedShiftType),
+    );
+    final notifier = ref.read(availabilityControllerProvider.notifier);
 
-  @override
-  Widget build(BuildContext context) {
-    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-
       children: [
         Text(
           context.tr(AppStrings.shiftType),
@@ -38,44 +39,33 @@ class _ShiftTypeChipsState extends State<ShiftTypeChips> {
         Wrap(
           spacing: 19.w,
           runSpacing: 16.h,
-          children: List.generate(_options.length, (i) {
-            final bool isSelected = i == _selectedIndex;
-            return Consumer(
-              builder: (context, ref, child) {
-                var availabilityController = ref.read(
-                  availabilityControllerProvider.notifier,
-                );
-
-                return GestureDetector(
-                  onTap: () {
-                    setState(() => _selectedIndex = i);
-                    availabilityController.selectShift(_options[i]);
-                  },
-                  child: Container(
-                    // padding: EdgeInsets.symmetric(horizontal: 50.w, vertical: 12.h),
-                    alignment: Alignment.center,
-                    width: 162.w,
-                    height: 48.h,
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? Colors.white
-                          : AppColors.unSelectedGrey,
-                      border: isSelected
-                          ? Border.all(color: AppColors.blueText, width: 0.5)
-                          : null,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Text(
-                      _options[i],
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: isSelected
-                            ? AppColors.blueText
-                            : AppColors.unSelectedText,
-                      ),
-                    ),
+          children: List.generate(options.length, (i) {
+            final label = options[i];
+            final isSelected = label == selectedShift;
+            return GestureDetector(
+              onTap: () => notifier.selectShift(label),
+              child: Container(
+                alignment: Alignment.center,
+                width: 162.w,
+                height: 48.h,
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? AppColors.white
+                      : AppColors.unSelectedGrey,
+                  border: isSelected
+                      ? Border.all(color: AppColors.blueText, width: 0.5)
+                      : null,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: isSelected
+                        ? AppColors.blueText
+                        : AppColors.unSelectedText,
                   ),
-                );
-              },
+                ),
+              ),
             );
           }),
         ),

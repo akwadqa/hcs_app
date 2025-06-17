@@ -24,8 +24,7 @@ import 'package:hcs/src/theme/app_colors.dart';
 
 @RoutePage()
 class DriverPaymentScreen extends ConsumerStatefulWidget {
-  final ServiceType serviceType;
-  const DriverPaymentScreen({super.key, required this.serviceType});
+  const DriverPaymentScreen({super.key});
 
   @override
   ConsumerState<DriverPaymentScreen> createState() =>
@@ -51,10 +50,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
     final driversPaymentState = ref.watch(driversPaymentControllerProvider);
 
     return Scaffold(
-      appBar: CustomAppbar(
-        hasBackArrow: true,
-        serviceTypeTitle: widget.serviceType,
-      ),
+      appBar: CustomAppbar(hasBackArrow: true),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Padding(

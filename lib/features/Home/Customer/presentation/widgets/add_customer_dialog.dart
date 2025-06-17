@@ -83,6 +83,8 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
               8.verticalSpace,
               DropDownField(
                 items: ['Company', 'Individual', 'On Call'],
+                value: 'Company',
+                onChanged: (p0) {},
                 enabled: true,
               ),
               24.verticalSpace,

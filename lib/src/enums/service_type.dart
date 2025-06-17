@@ -28,6 +28,27 @@ String serviceTypeToString(ServiceType serviceType) {
   }
 }
 
+ServiceType stringToServiceType(String string) {
+  switch (string) {
+    case 'On Call':
+      return ServiceType.onCall;
+    case 'Packages':
+      return ServiceType.packages;
+    case 'Deep Clean':
+      return ServiceType.deepClean;
+    case 'Maintenance':
+      return ServiceType.maintenance;
+    case 'High Class Services':
+      return ServiceType.home;
+    case 'My Orders':
+      return ServiceType.myOrders;
+    case 'Settings':
+      return ServiceType.settings;
+    default:
+      return ServiceType.home;
+  }
+}
+
 enum ShiftType { morning, evening, fullDay }
 
 String shiftTypeToString(ShiftType shiftType) {

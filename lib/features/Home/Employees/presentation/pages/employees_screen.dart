@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
 import 'package:hcs/features/Home/Employees/presentation/controllers/employees_controller.dart';
 import 'package:hcs/features/Home/Employees/presentation/widgets/employee_bar_chips.dart';
 import 'package:hcs/features/Home/Employees/presentation/widgets/search_field.dart';
@@ -18,9 +19,7 @@ import 'package:hcs/src/shared_widgets/custom_button.dart';
 
 @RoutePage()
 class EmployeesScreen extends ConsumerStatefulWidget {
-  final ServiceType serviceType;
-
-  const EmployeesScreen({super.key, required this.serviceType});
+  const EmployeesScreen({super.key});
 
   @override
   ConsumerState<EmployeesScreen> createState() => _EmployeesScreenState();
@@ -33,12 +32,6 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
   @override
   void initState() {
     super.initState();
-
-    // تحميل البيانات عند أول فتح للشاشة
-    // Future.microtask(() {
-    // ref.read(employeesControllerProvider.notifier).selectServiceCategory(serv);
-    // ref.read(employeesControllerProvider.notifier).fetchEmployees();
-    // });
 
     // pagination listener only once:
     _scrollController.addListener(() {
@@ -54,19 +47,6 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
     });
   }
 
-  // void _onScroll() {
-  //   final state = ref.read(employeesControllerProvider);
-  //   final controller = ref.read(employeesControllerProvider.notifier);
-
-  //   // تحميل المزيد إذا لم نصل للنهاية وإذا لم يكن يحمل حاليًا
-  //   if (_scrollController.position.pixels >=
-  //           _scrollController.position.maxScrollExtent - 100 &&
-  //       state.currentEmployeesPage != null &&
-  //       state.employeesStates != RequestStates.loading) {
-  //     controller.onLoadMoreEmployees();
-  //   }
-  // }
-
   @override
   void dispose() {
     _scrollController.dispose();
@@ -77,10 +57,7 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildContent(),
-      appBar: CustomAppbar(
-        hasBackArrow: true,
-        serviceTypeTitle: widget.serviceType,
-      ),
+      appBar: CustomAppbar(hasBackArrow: true),
     );
   }
 
@@ -108,8 +85,17 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                           style: Theme.of(context).textTheme.displayMedium!,
                         ),
                         16.verticalSpace,
-                        ServiceCategoryChips(
-                          selectedChip: serviceTypeToString(widget.serviceType),
+                        Consumer(
+                          builder: (context, ref, child) {
+                            var selectedServiceType = ref.watch(
+                              availabilityControllerProvider.select(
+                                (value) => value.selectedServiceType,
+                              ),
+                            );
+                            return ServiceCategoryChips(
+                              selectedChip: selectedServiceType!,
+                            );
+                          },
                         ),
                         44.verticalSpace,
                         Text(
@@ -192,7 +178,6 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                               : () {
                                   context.pushRoute(
                                     DriverPaymentRoute(
-                                      serviceType: widget.serviceType,
                                     ),
                                   );
                                   if (_formKey.currentState!.validate()) {}

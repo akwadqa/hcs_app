@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hcs/features/Home/Availability/data/models/packages_model.dart';
 import 'package:hcs/features/Home/Availability/data/repositories/availability_repo.dart';
@@ -19,27 +20,35 @@ class AvailabilityController extends _$AvailabilityController {
   ) async {
     state = state.copyWith(
       selectedServiceType: selectedServiceType,
-      selectedShiftType: 'Morning',
-      selectedPackage: PackagesData(
-        id: "Daily",
-        serviceItem: 'STO-ITEM-2025-00005',
-        serviceCost: 200,
-        numberOfVisits: null,
-      ),
-      selectedDate: selectedDate,
+      // selectedShiftType: 'Morning Shift',
+      // selectedDate: selectedDate,
       packages: [],
       packagesStates: RequestStates.init,
       packagesMessage: '',
+      selectedDays: [],
+      firstVisitDate: '',
+      lastVisitDate: '',
     );
     debugPrint('selectedServiceType : $selectedServiceType');
     debugPrint('selectedDate : $selectedDate');
     debugPrint('selectedPackage : ${state.selectedPackage}');
   }
 
-  // selectService(String selectedServiceType) {
-  //   debugPrint('selectedServiceType : $selectedServiceType');
-  //   state = state.copyWith(selectedServiceType: selectedServiceType);
-  // }
+  selectService(String selectedServiceType) {
+    debugPrint('selectedServiceType : $selectedServiceType');
+    state = state.copyWith(selectedServiceType: selectedServiceType);
+  }
+
+  toggleDaySelection(String day) {
+    final currentDays = List<String>.from(state.selectedDays);
+    final isSelected = currentDays.contains(day);
+
+    isSelected ? currentDays.remove(day) : currentDays.add(day);
+
+    state = state.copyWith(selectedDays: currentDays);
+    calculateVisitDates();
+    debugPrint('Selected days: ${state.selectedDays}');
+  }
 
   selectShift(String selectedShiftType) {
     debugPrint('selectedShiftType : $selectedShiftType');
@@ -57,14 +66,29 @@ class AvailabilityController extends _$AvailabilityController {
   }
 
   Future<void> fetchPackages() async {
-    state = state.copyWith(packagesStates: RequestStates.loading);
+    state = state.copyWith(
+      packagesStates: RequestStates.loading,
+      selectedShiftType: 'Morning Shift',
+      selectedDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      selectedDays: [],
+      firstVisitDate: '',
+      lastVisitDate: '',
+    );
 
     try {
       final availabilityRepo = ref.read(availabilityRepositoryProvider);
       final packagesData = await availabilityRepo.getPackages();
+      PackagesData selectPackage = packagesData.data.firstWhere(
+        (element) => element.id == 'Daily',
+      );
 
       state = state.copyWith(
         packages: packagesData.data,
+
+        //? TODO في حال صار مشكلة بال Daily ب on call
+        //لاني عم اختار غير Daily
+        //هون لما تجي الداتا
+        selectedPackage: selectPackage,
         packagesStates: RequestStates.loaded,
         packagesMessage: 'loadded successfully',
       );
@@ -74,5 +98,56 @@ class AvailabilityController extends _$AvailabilityController {
         packagesMessage: e.toString(),
       );
     }
+  }
+
+  calculateVisitDates() {
+    DateTime startDate = DateFormat('yyyy-MM-dd').parse(state.selectedDate);
+    List<String> selectedDays = List.from(state.selectedDays);
+    int? visitsRemaining = int.tryParse(state.selectedPackage!.numberOfVisits!);
+    print("hq1 visits: $visitsRemaining");
+
+    // قائمة للأيام المختارة في الأسبوع
+    final weekDays = {
+      'Saturday': DateTime.saturday,
+      'Sunday': DateTime.sunday,
+      'Monday': DateTime.monday,
+      'Tuesday': DateTime.tuesday,
+      'Wednesday': DateTime.wednesday,
+      'Thursday': DateTime.thursday,
+      'Friday': DateTime.friday,
+    };
+
+    List<DateTime> visitDates = [];
+    DateTime currentDate =
+        startDate; // البحث عن أول يوم يتطابق مع الأيام المختارة
+
+    //check how many Vists in month // if null skip it
+    if (visitsRemaining != null) {
+      while (visitsRemaining! > 0) {
+        if (selectedDays.contains(
+          weekDays.entries
+              .firstWhere((entry) => entry.value == currentDate.weekday)
+              .key,
+        )) {
+          visitDates.add(currentDate);
+          visitsRemaining--;
+        }
+        currentDate = currentDate.add(
+          Duration(days: 1),
+        ); // الانتقال إلى اليوم التالي
+      }
+    }
+    // الحصول على أول زيارة وآخر زيارة
+    String firstVisitDate = DateFormat('yyyy-MM-dd').format(visitDates.first);
+    String lastVisitDate = DateFormat('yyyy-MM-dd').format(visitDates.last);
+
+    print("hq1 First Visit Date: $firstVisitDate");
+    print("hq1 Last Visit Date: $lastVisitDate");
+    print("hq1 visitDates: $visitDates");
+
+    state = state.copyWith(
+      firstVisitDate: firstVisitDate,
+      lastVisitDate: lastVisitDate,
+    );
   }
 }

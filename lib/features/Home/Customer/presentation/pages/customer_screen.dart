@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/Auth/presentation/controller/auth_controller.dart';
 import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
 import 'package:hcs/features/Home/Customer/presentation/controllers/customer_controller.dart';
 import 'package:hcs/features/Home/Customer/presentation/controllers/customer_state.dart';
@@ -56,10 +55,7 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
             )
           : SizedBox.shrink(),
       // body: _buildContent(CustomerState),
-      appBar: CustomAppbar(
-        hasBackArrow: true,
-        serviceTypeTitle: widget.serviceType,
-      ),
+      appBar: CustomAppbar(hasBackArrow: true),
     );
   }
 
@@ -153,20 +149,20 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
             padding: EdgeInsets.only(bottom: 25.h),
             child: Consumer(
               builder: (context, ref, child) {
-                final authState = ref.watch(authControllerProvider);
+                final selectedCustomerState = ref.watch(
+                  customerControllerProvider.select(
+                    (value) => value.selectedCustomer,
+                  ),
+                );
 
                 return CustomButton(
                   title: tr(context: context, AppStrings.next),
-                  onPressed: authState is AsyncLoading
+                  onPressed: selectedCustomerState == null
                       ? null
                       : () {
                           // Validate the form before navigating
                           if (_formKey.currentState!.validate()) {
-                            context.pushRoute(
-                              ServiceConfigurationRoute(
-                                serviceType: widget.serviceType,
-                              ),
-                            );
+                            context.pushRoute(ServiceConfigurationRoute());
                           }
                         },
                 );

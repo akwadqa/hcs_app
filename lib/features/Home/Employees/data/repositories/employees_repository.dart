@@ -25,12 +25,15 @@ class EmployeesRepository {
     debugPrint(
       '${getEmployeesParams.serviceType} getEmployeesParams.serviceType',
     );
+
+    debugPrint('${getEmployeesParams.days} ffddfdfdfdf');
     final response = await _networkService.get(
       ApiConstance.getEmployees(
         serviceType: getEmployeesParams.serviceType,
         date: getEmployeesParams.date,
         shift: getEmployeesParams.shift,
         serviceCategory: getEmployeesParams.serviceCategory,
+        days: getEmployeesParams.days,
         employeeName: null,
         page: getEmployeesParams.page.toString(),
       ),
