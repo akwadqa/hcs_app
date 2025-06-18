@@ -44,9 +44,19 @@ class AvailabilityController extends _$AvailabilityController {
     final isSelected = currentDays.contains(day);
 
     isSelected ? currentDays.remove(day) : currentDays.add(day);
+    debugPrint('Selected days: before ${currentDays}');
 
-    state = state.copyWith(selectedDays: currentDays);
-    calculateVisitDates();
+    if (currentDays.isNotEmpty) {
+      state = state.copyWith(selectedDays: currentDays);
+      calculateVisitDates();
+    } else {
+      state = state.copyWith(
+        selectedDays: currentDays,
+        firstVisitDate: '',
+        lastVisitDate: '',
+      );
+    }
+
     debugPrint('Selected days: ${state.selectedDays}');
   }
 
@@ -104,6 +114,7 @@ class AvailabilityController extends _$AvailabilityController {
     DateTime startDate = DateFormat('yyyy-MM-dd').parse(state.selectedDate);
     List<String> selectedDays = List.from(state.selectedDays);
     int? visitsRemaining = int.tryParse(state.selectedPackage!.numberOfVisits!);
+
     print("hq1 visits: $visitsRemaining");
 
     // قائمة للأيام المختارة في الأسبوع
