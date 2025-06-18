@@ -9,9 +9,10 @@ class EmployeesState extends Equatable {
   final RequestStates employeesStates;
   final String? employeesMessage;
   final List<Employee> selectedEmployees;
+  final String employeeSearchedFor;
 
   //service category
-  final String? serviceCategory;
+  final String serviceCategory;
 
   const EmployeesState({
     //employees
@@ -20,9 +21,9 @@ class EmployeesState extends Equatable {
     this.employeesStates = RequestStates.init,
     this.employeesMessage = '',
     this.selectedEmployees = const [],
-
+    this.employeeSearchedFor = '',
     //service category
-    this.serviceCategory = '',
+    this.serviceCategory = 'Stay - In',
   });
   EmployeesState copyWith({
     //employees
@@ -31,6 +32,7 @@ class EmployeesState extends Equatable {
     RequestStates? employeesStates,
     String? employeesMessage,
     List<Employee>? selectedEmployees,
+    String? employeeSearchedFor,
 
     //service category
     String? serviceCategory,
@@ -42,7 +44,7 @@ class EmployeesState extends Equatable {
       employeesStates: employeesStates ?? this.employeesStates,
       employeesMessage: employeesMessage ?? this.employeesMessage,
       selectedEmployees: selectedEmployees ?? this.selectedEmployees,
-
+      employeeSearchedFor: employeeSearchedFor ?? this.employeeSearchedFor,
       //service category
       serviceCategory: serviceCategory ?? this.serviceCategory,
     );
@@ -54,6 +56,6 @@ class EmployeesState extends Equatable {
     currentEmployeesPage,
     employees,
     employeesStates,
-    employeesMessage, selectedEmployees, serviceCategory,
+    employeesMessage, selectedEmployees, employeeSearchedFor, serviceCategory,
   ];
 }

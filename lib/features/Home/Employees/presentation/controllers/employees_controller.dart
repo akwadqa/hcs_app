@@ -14,7 +14,7 @@ class EmployeesController extends _$EmployeesController {
   @override
   EmployeesState build() => EmployeesState();
 
-  Future<void> selectServiceCategory(String serviceCategory) async {
+  selectServiceCategory(String serviceCategory) {
     state = state.copyWith(
       serviceCategory: serviceCategory,
       selectedEmployees: [],
@@ -23,7 +23,15 @@ class EmployeesController extends _$EmployeesController {
     debugPrint("${state.serviceCategory.toString()} llll serviceCategory");
   }
 
-  Future<void> selectEmployee(Employee selectedEmployee) async {
+  searchEmployee(String employeeName) {
+    state = state.copyWith(employeeSearchedFor: employeeName);
+
+    debugPrint(
+      "${state.employeeSearchedFor.toString()} llll employeeSearchedFor",
+    );
+  }
+
+  selectEmployee(Employee selectedEmployee) {
     List<Employee> employeesList = List.from(state.selectedEmployees);
     int index = employeesList.indexWhere(
       (element) => element.employeeName == selectedEmployee.employeeName,
@@ -38,7 +46,7 @@ class EmployeesController extends _$EmployeesController {
     );
   }
 
-  Future<void> unSelectEmployee(Employee unSelectedEmployee) async {
+  unSelectEmployee(Employee unSelectedEmployee) {
     List<Employee> employeeList = List.from(state.selectedEmployees);
     int index = employeeList.indexWhere(
       (element) => element.employeeName == unSelectedEmployee.employeeName,
@@ -67,7 +75,7 @@ class EmployeesController extends _$EmployeesController {
           days: availabilityController.selectedDays,
           shift: availabilityController.selectedShiftType,
           serviceCategory: state.serviceCategory,
-          employeeName: null,
+          employeeName: state.employeeSearchedFor,
           page: 1,
         ),
       );
@@ -107,7 +115,7 @@ class EmployeesController extends _$EmployeesController {
           days: availabilityController.selectedDays,
           shift: availabilityController.selectedShiftType,
           serviceCategory: state.serviceCategory,
-          employeeName: null,
+          employeeName: state.employeeSearchedFor,
           page: state.currentEmployeesPage!,
         ),
       );

@@ -5,13 +5,13 @@ import 'package:hcs/features/Home/Availability/presentation/controllers/availabi
 import 'package:hcs/src/theme/app_colors.dart';
 
 final List<String> weekDays = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
+  'sunday',
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
 ];
 
 class DaysSelectionChips extends ConsumerWidget {

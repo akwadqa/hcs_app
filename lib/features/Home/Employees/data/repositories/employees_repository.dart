@@ -34,7 +34,7 @@ class EmployeesRepository {
         shift: getEmployeesParams.shift,
         serviceCategory: getEmployeesParams.serviceCategory,
         days: getEmployeesParams.days,
-        employeeName: null,
+        employeeName: getEmployeesParams.employeeName,
         page: getEmployeesParams.page.toString(),
       ),
     );

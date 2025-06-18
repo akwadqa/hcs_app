@@ -108,13 +108,13 @@ class AvailabilityController extends _$AvailabilityController {
 
     // قائمة للأيام المختارة في الأسبوع
     final weekDays = {
-      'Saturday': DateTime.saturday,
-      'Sunday': DateTime.sunday,
-      'Monday': DateTime.monday,
-      'Tuesday': DateTime.tuesday,
-      'Wednesday': DateTime.wednesday,
-      'Thursday': DateTime.thursday,
-      'Friday': DateTime.friday,
+      'saturday': DateTime.saturday,
+      'sunday': DateTime.sunday,
+      'monday': DateTime.monday,
+      'tuesday': DateTime.tuesday,
+      'wednesday': DateTime.wednesday,
+      'thursday': DateTime.thursday,
+      'friday': DateTime.friday,
     };
 
     List<DateTime> visitDates = [];

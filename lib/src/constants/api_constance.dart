@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class ApiConstance {
   static const String baseUrl = "https://highclass.akwad.qa/api/method";
   static const String baseDomain = "highclass";
@@ -25,19 +27,46 @@ class ApiConstance {
       '$baseUrl/$baseDomain.api.service_type.service_types';
 
   ////////////////// *  Employees   /////////////////////
+
   static String getEmployees({
     required String serviceType,
     required String date,
     required List<String> days,
     required String shift,
-    required String? serviceCategory,
-    required String? employeeName,
+    String? serviceCategory,
+    String? employeeName,
     required String page,
   }) {
-    print(
-      'fagwaha $baseUrl/$baseDomain.api.employee.employees?service_type=$serviceType&date=$date&shift=$shift&designation=&service_category=$serviceCategory&days=$days&$employeeName&page=$page&limit=5',
-    );
-    return '$baseUrl/$baseDomain.api.employee.employees?service_type=$serviceType&date=$date&shift=$shift&designation=&service_category=$serviceCategory&days=$days&$employeeName&page=$page&limit=5';
+    // return 'https://highclass.akwad.qa/api/method/highclass.api.employee.employees?service_type=Flexible – 8 visits/month&date=2025-06-28&shift=Full Day&designation=&service_category=Company&days=["monday", "wednesday"]&page=1&limit=10';
+    final Map<String, String> queryParams = {
+      'service_type': serviceType,
+      'date': date,
+      'shift': shift,
+      'designation': '',
+      'page': page,
+      'limit': '10',
+    };
+
+    if (serviceCategory != null && serviceCategory.isNotEmpty) {
+      queryParams['service_category'] = serviceCategory;
+    }
+
+    if (days.isNotEmpty) {
+      queryParams['days'] = days.isEmpty ? '' : '$days';
+      // ensures ["monday", "wednesday"]
+      print('sddssd ${queryParams['days']}');
+    }
+
+    if (employeeName != null && employeeName.isNotEmpty) {
+      queryParams['employee_name'] = employeeName;
+    }
+
+    final uri = Uri.parse(
+      '$baseUrl/$baseDomain.api.employee.employees',
+    ).replace(queryParameters: queryParams);
+
+    print('Request URL: $uri');
+    return uri.toString();
   }
 
   ////////////////// *  Drivers   /////////////////////

@@ -11,7 +11,6 @@ import 'package:hcs/features/Home/Employees/presentation/widgets/search_field.da
 import 'package:hcs/features/Home/Employees/presentation/widgets/service_category.dart';
 import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/enums/request_state.dart';
-import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
@@ -82,7 +81,7 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                         24.verticalSpace,
                         Text(
                           context.tr(AppStrings.serviceCategory),
-                          style: Theme.of(context).textTheme.displayMedium!,
+                          style: Theme.of(context).textTheme.displayMedium,
                         ),
                         16.verticalSpace,
                         Consumer(
@@ -100,7 +99,7 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                         44.verticalSpace,
                         Text(
                           context.tr(AppStrings.employees),
-                          style: Theme.of(context).textTheme.displayMedium!,
+                          style: Theme.of(context).textTheme.displayMedium,
                         ),
                         16.verticalSpace,
                         SizedBox(
@@ -176,11 +175,8 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                                   RequestStates.loading
                               ? null
                               : () {
-                                  context.pushRoute(
-                                    DriverPaymentRoute(
-                                    ),
-                                  );
-                                  if (_formKey.currentState!.validate()) {}
+                                  context.pushRoute(DriverPaymentRoute());
+                                  // if (_formKey.currentState!.validate()) {}
                                 },
                         );
                       },

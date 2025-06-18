@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hcs/features/Home/Employees/presentation/controllers/employees_controller.dart';
 import 'package:hcs/gen/assets.gen.dart';
 
 /// A reusable search input styled like the app's TextFormField theme.
-class SearchField extends StatelessWidget {
+class SearchField extends ConsumerWidget {
   final TextEditingController? controller;
   final String hintText;
   final VoidCallback? onClear;
@@ -18,15 +20,20 @@ class SearchField extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var epmloyeeNotifier = ref.read(employeesControllerProvider.notifier);
     return TextFormField(
       controller: controller,
-      onChanged: onChanged,
+      // onChanged: onChanged,
+      onFieldSubmitted: (value) {
+        epmloyeeNotifier.searchEmployee(value);
+      },
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
         isDense: true,
         contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+
         prefixIcon: Assets.images.search.svg(
           width: 16,
           height: 16,
