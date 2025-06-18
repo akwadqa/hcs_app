@@ -103,22 +103,22 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                           style: Theme.of(context).textTheme.displayMedium,
                         ),
                         16.verticalSpace,
-                        SizedBox(
-                          height: 304.h,
-                          child: Consumer(
-                            builder: (context, ref, child) {
-                              final employeesState = ref.watch(
-                                employeesControllerProvider,
-                              );
-                              debugPrint(
-                                'rebuilding listview now ... ${employeesState.employeesStates}',
-                              );
-                              if (employeesState.employeesStates ==
-                                  RequestStates.loaded) {
-                                if (employeesState.employees.isEmpty) {
-                                  return Assets.images.noData.image();
-                                }
-                                return ListView.separated(
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final employeesState = ref.watch(
+                              employeesControllerProvider,
+                            );
+                            debugPrint(
+                              'rebuilding listview now ... ${employeesState.employeesStates}',
+                            );
+                            if (employeesState.employeesStates ==
+                                RequestStates.loaded) {
+                              if (employeesState.employees.isEmpty) {
+                                return Assets.images.noData.image();
+                              }
+                              return SizedBox(
+                                height: 304.h,
+                                child: ListView.separated(
                                   controller: _scrollController,
                                   itemCount:
                                       employeesState.employees.length + 1,
@@ -131,7 +131,12 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                                       if (employeesState.currentEmployeesPage ==
                                           null) {
                                         return Center(
-                                          child: Text('No More Employees'),
+                                          child: Text(
+                                            'No More Employees',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyMedium,
+                                          ),
                                         );
                                       } else {
                                         return Center(
@@ -151,26 +156,22 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                                     }
                                   },
                                   separatorBuilder: (_, __) => 16.verticalSpace,
-                                );
-                              } else if (employeesState.employeesStates ==
-                                  RequestStates.error) {
-                                return AppErrorWidget(
-                                  onTap: () => ref
-                                      .read(
-                                        employeesControllerProvider.notifier,
-                                      )
-                                      .fetchEmployees(),
-                                );
-                              } else if (employeesState.employeesStates ==
-                                  RequestStates.loading) {
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
+                                ),
+                              );
+                            } else if (employeesState.employeesStates ==
+                                RequestStates.error) {
+                              return AppErrorWidget(
+                                onTap: () => ref
+                                    .read(employeesControllerProvider.notifier)
+                                    .fetchEmployees(),
+                              );
+                            } else if (employeesState.employeesStates ==
+                                RequestStates.loading) {
+                              return Center(child: CircularProgressIndicator());
+                            }
 
-                              return SizedBox.shrink();
-                            },
-                          ),
+                            return SizedBox.shrink();
+                          },
                         ),
                       ],
                     ),

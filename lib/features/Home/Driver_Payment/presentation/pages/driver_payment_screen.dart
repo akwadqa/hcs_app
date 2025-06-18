@@ -215,6 +215,9 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                       final submitServiceState = ref.watch(
                         submitServiceControllerProvider,
                       );
+                      final drvierDiscontState = ref.watch(
+                        driversPaymentControllerProvider,
+                      );
 
                       ref.listen<SubmitServiceState>(
                         submitServiceControllerProvider,
@@ -260,7 +263,9 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                         title: tr(context: context, AppStrings.submit),
                         onPressed:
                             submitServiceState.submitServiceStates ==
-                                RequestStates.loading
+                                    RequestStates.loading ||
+                                drvierDiscontState.selectedDiscount == null ||
+                                drvierDiscontState.selectedDriver == null
                             ? null
                             : () {
                                 ref

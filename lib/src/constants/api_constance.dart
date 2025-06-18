@@ -68,8 +68,7 @@ class ApiConstance {
     // print('Request URL: $uri');
     print('Request URL: $uri');
 
-    return 'fasnfbskabfla';
-    // return uri.toString();
+    return uri.toString();
   }
 
   ////////////////// *  Drivers   /////////////////////

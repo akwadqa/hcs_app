@@ -18,7 +18,7 @@ class AppErrorWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Assets.images.imErrorScreen.image(),
+          Assets.images.error404.image(),
           20.verticalSpace,
           Text(
             context.tr(AppStrings.pressToRefreash),

@@ -28,9 +28,6 @@ class $AssetsFontsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/back.zip
-  String get back => 'assets/images/back.zip';
-
   /// File path: assets/images/background.png
   AssetGenImage get background =>
       const AssetGenImage('assets/images/background.png');
@@ -52,6 +49,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/dummycard.png
   AssetGenImage get dummycard =>
       const AssetGenImage('assets/images/dummycard.png');
+
+  /// File path: assets/images/error404.png
+  AssetGenImage get error404 =>
+      const AssetGenImage('assets/images/error404.png');
 
   /// File path: assets/images/home_selected.svg
   SvgGenImage get homeSelected =>
@@ -104,13 +105,13 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<dynamic> get values => [
-    back,
     background,
     background11,
     calendar,
     cash,
     creditCard,
     dummycard,
+    error404,
     homeSelected,
     homeUnselected,
     imErrorScreen,
