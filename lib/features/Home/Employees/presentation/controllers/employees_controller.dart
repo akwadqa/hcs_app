@@ -24,7 +24,7 @@ class EmployeesController extends _$EmployeesController {
   }
 
   searchEmployee(String employeeName) {
-    state.copyWith(employeeSearchedFor: employeeName);
+    state = state.copyWith(employeeSearchedFor: employeeName);
     fetchEmployees();
     debugPrint(
       "${state.employeeSearchedFor.toString()} llll employeeSearchedFor",

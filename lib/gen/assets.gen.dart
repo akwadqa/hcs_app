@@ -62,10 +62,6 @@ class $AssetsImagesGen {
   SvgGenImage get homeUnselected =>
       const SvgGenImage('assets/images/home_unselected.svg');
 
-  /// File path: assets/images/im_error_screen.png
-  AssetGenImage get imErrorScreen =>
-      const AssetGenImage('assets/images/im_error_screen.png');
-
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
 
@@ -114,7 +110,6 @@ class $AssetsImagesGen {
     error404,
     homeSelected,
     homeUnselected,
-    imErrorScreen,
     logo,
     myordersSelected,
     noData,

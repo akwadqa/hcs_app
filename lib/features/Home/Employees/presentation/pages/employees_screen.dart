@@ -114,7 +114,7 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                             if (employeesState.employeesStates ==
                                 RequestStates.loaded) {
                               if (employeesState.employees.isEmpty) {
-                                return Assets.images.noData.image();
+                                return Assets.images.noDataMin.image();
                               }
                               return SizedBox(
                                 height: 304.h,
