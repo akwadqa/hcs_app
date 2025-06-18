@@ -39,7 +39,7 @@ class EmployeesState extends Equatable {
   }) {
     return EmployeesState(
       //employees
-      currentEmployeesPage: currentEmployeesPage ?? this.currentEmployeesPage,
+      currentEmployeesPage: currentEmployeesPage,
       employees: employees ?? this.employees,
       employeesStates: employeesStates ?? this.employeesStates,
       employeesMessage: employeesMessage ?? this.employeesMessage,

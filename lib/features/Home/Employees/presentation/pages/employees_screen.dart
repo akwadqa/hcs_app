@@ -109,6 +109,9 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                               final employeesState = ref.watch(
                                 employeesControllerProvider,
                               );
+                              debugPrint(
+                                'rebuilding listview now ... ${employeesState.employeesStates}',
+                              );
                               if (employeesState.employeesStates ==
                                   RequestStates.loaded) {
                                 if (employeesState.employees.isEmpty) {
@@ -123,15 +126,17 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                                   itemBuilder: (context, index) {
                                     if (index ==
                                         employeesState.employees.length) {
-                                      // عرض مؤشر تحميل أو لا شيء
-                                      return Center(
-                                        child:
-                                            employeesState
-                                                    .currentEmployeesPage ==
-                                                null
-                                            ? Text('No More Employees')
-                                            : CircularProgressIndicator(),
-                                      );
+                                      // Check if currentEmployeesPage is null and state is loaded
+                                      if (employeesState.currentEmployeesPage ==
+                                          null) {
+                                        return Center(
+                                          child: Text('No More Employees'),
+                                        );
+                                      } else {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
                                     } else {
                                       return EmployeeBarChip(
                                         employee:
@@ -149,8 +154,14 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                               } else if (employeesState.employeesStates ==
                                   RequestStates.error) {
                                 Text("Error Accoure");
+                              } else if (employeesState.employeesStates ==
+                                  RequestStates.loading) {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
                               }
-                              return Center(child: CircularProgressIndicator());
+
+                              return SizedBox.shrink();
                             },
                           ),
                         ),

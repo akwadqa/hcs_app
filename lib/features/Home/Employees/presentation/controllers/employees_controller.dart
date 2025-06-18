@@ -24,8 +24,8 @@ class EmployeesController extends _$EmployeesController {
   }
 
   searchEmployee(String employeeName) {
-    state = state.copyWith(employeeSearchedFor: employeeName);
-
+    state.copyWith(employeeSearchedFor: employeeName);
+    fetchEmployees();
     debugPrint(
       "${state.employeeSearchedFor.toString()} llll employeeSearchedFor",
     );
@@ -68,6 +68,7 @@ class EmployeesController extends _$EmployeesController {
       debugPrint(
         '${availabilityController.selectedPackage?.id} selectedPackage',
       );
+
       final employeesData = await employeesRepo.getEmployees(
         getEmployeesParams: GetEmployeesParams(
           serviceType: availabilityController.selectedPackage?.id ?? 'Daily',
