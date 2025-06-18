@@ -118,6 +118,7 @@ class DriversPaymentController extends _$DriversPaymentController {
       }
       state = state.copyWith(
         currentDriversPage: nextPage,
+        selectedDriver: driverPaymentData.data[0],
         drivers: driverPaymentData.data,
         driversStates: RequestStates.loaded,
         driversMessage: '',

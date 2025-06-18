@@ -13,6 +13,7 @@ import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/routing/app_router.gr.dart';
+import 'package:hcs/src/shared_widgets/app_error_widget.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 
@@ -153,7 +154,13 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                                 );
                               } else if (employeesState.employeesStates ==
                                   RequestStates.error) {
-                                Text("Error Accoure");
+                                return AppErrorWidget(
+                                  onTap: () => ref
+                                      .read(
+                                        employeesControllerProvider.notifier,
+                                      )
+                                      .fetchEmployees(),
+                                );
                               } else if (employeesState.employeesStates ==
                                   RequestStates.loading) {
                                 return Center(
@@ -175,15 +182,15 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                     ),
                     child: Consumer(
                       builder: (context, ref, child) {
-                        final asyncEmployees = ref.watch(
-                          employeesControllerProvider,
+                        final selectedEmployees = ref.watch(
+                          employeesControllerProvider.select(
+                            (value) => value.selectedEmployees,
+                          ),
                         );
 
                         return CustomButton(
                           title: tr(context: context, AppStrings.next),
-                          onPressed:
-                              asyncEmployees.employeesStates ==
-                                  RequestStates.loading
+                          onPressed: selectedEmployees.isEmpty
                               ? null
                               : () {
                                   context.pushRoute(DriverPaymentRoute());

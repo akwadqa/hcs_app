@@ -8,14 +8,9 @@ import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 
-class PaymentMethodChips extends StatefulWidget {
-  const PaymentMethodChips({super.key});
+class PaymentMethodChips extends ConsumerWidget {
+  PaymentMethodChips({super.key});
 
-  @override
-  _PaymentMethodChipsState createState() => _PaymentMethodChipsState();
-}
-
-class _PaymentMethodChipsState extends State<PaymentMethodChips> {
   final List<String> _options = [
     PaymentMethod.link,
     PaymentMethod.cash,
@@ -26,10 +21,14 @@ class _PaymentMethodChipsState extends State<PaymentMethodChips> {
     Assets.images.cash,
   ];
 
-  int _selectedIndex = 0; // default to first
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var paymentMethodState = ref.watch(
+      driversPaymentControllerProvider.select(
+        (value) => value.selectedPaymentMethod,
+      ),
+    );
+    final notifier = ref.read(driversPaymentControllerProvider.notifier);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -44,18 +43,12 @@ class _PaymentMethodChipsState extends State<PaymentMethodChips> {
           spacing: 19.w,
           runSpacing: 16.h,
           children: List.generate(_options.length, (i) {
-            final bool isSelected = i == _selectedIndex;
+            final bool isSelected = _options[i] == paymentMethodState;
             return Consumer(
               builder: (context, ref, child) {
-                //TODO MAKE STATE FOR IT AND CHANGE CONTROLLER USE HERE
-                var driversPaymentController = ref.read(
-                  driversPaymentControllerProvider.notifier,
-                );
-
                 return GestureDetector(
                   onTap: () {
-                    setState(() => _selectedIndex = i);
-                    driversPaymentController.selectPaymentMethod(_options[i]);
+                    notifier.selectPaymentMethod(_options[i]);
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(

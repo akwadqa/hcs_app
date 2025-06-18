@@ -147,11 +147,13 @@ class _ServiceConfigurationScreenState
                 padding: EdgeInsets.symmetric(vertical: 25.h, horizontal: 22.w),
                 child: Consumer(
                   builder: (context, ref, child) {
-                    var availabilityState = ref.watch(
-                      availabilityControllerProvider,
-                    );
+                    // var availabilityState = ref.watch(
+                    //   availabilityControllerProvider,
+                    // );
                     var selectedPackageState = ref.watch(
-                      availabilityControllerProvider.select((value) => value.selectedPackage,),
+                      availabilityControllerProvider.select(
+                        (value) => value.selectedPackage,
+                      ),
                     );
                     var selectedServiceType = ref.watch(
                       availabilityControllerProvider.select(
@@ -164,20 +166,12 @@ class _ServiceConfigurationScreenState
                               ServiceType.packages
                           ? tr(context: context, AppStrings.next)
                           : tr(context: context, AppStrings.checkAvailability),
-                      onPressed:
-                          availabilityState.packagesStates ==
-                              RequestStates.loading
+                      onPressed: selectedPackageState == null
                           ? null
                           : () {
-                              selectedPackageState?.id == 'Daily'
-                                  ? context.pushRoute(
-                                      EmployeesRoute(
-                                      ),
-                                    )
-                                  : context.pushRoute(
-                                      DaysSelectionRoute(
-                                      ),
-                                    );
+                              selectedPackageState.id == 'Daily'
+                                  ? context.pushRoute(EmployeesRoute())
+                                  : context.pushRoute(DaysSelectionRoute());
                               if (_formKey.currentState!.validate()) {}
                             },
                     );

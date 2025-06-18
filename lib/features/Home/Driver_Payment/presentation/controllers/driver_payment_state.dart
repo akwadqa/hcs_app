@@ -10,7 +10,7 @@ class DriverPaymentState extends Equatable {
   final RequestStates driversStates;
   final String? driversMessage;
   final Driver? selectedDriver;
-  final String? selectedPaymentMethod;
+  final String selectedPaymentMethod;
   //
   final RequestStates discountStates;
   final List<Discount> discountType;
@@ -25,7 +25,7 @@ class DriverPaymentState extends Equatable {
     this.driversStates = RequestStates.init,
     this.driversMessage = '',
     this.selectedDriver,
-    this.selectedPaymentMethod,
+    this.selectedPaymentMethod = 'Link',
     //
     this.discountStates = RequestStates.init,
     this.selectedDiscount,

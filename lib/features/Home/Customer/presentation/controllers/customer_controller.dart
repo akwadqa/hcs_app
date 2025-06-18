@@ -27,7 +27,8 @@ class CustomerController extends _$CustomerController {
       final homeRepo = ref.read(customerRepositoryProvider);
       await homeRepo.addCustomer(params: params);
 
-      state = state.copyWith(customersStates: RequestStates.loaded);
+      fetchCostumers();
+      // state = state.copyWith(customersStates: RequestStates.loaded);
     } catch (e) {
       state = state.copyWith(
         customersStates: RequestStates.error,

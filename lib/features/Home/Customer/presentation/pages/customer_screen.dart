@@ -26,7 +26,6 @@ class CustomerScreen extends ConsumerStatefulWidget {
 }
 
 class _CustomerScreenState extends ConsumerState<CustomerScreen> {
-  final _formKey = GlobalKey<FormState>();
   Customers? _chosenCustomer;
   @override
   void initState() {
@@ -78,52 +77,47 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
                   ),
                 ),
                 8.verticalSpace,
-                Form(
-                  key: _formKey,
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      if (customerState.customersStates ==
-                          RequestStates.loaded) {
-                        return PaginatedCustomerDropdown(
-                          customers: customerState.customers,
-                          hasMore: customerState.currentCustomersPage != null,
-                          isLoading:
-                              customerState.customersStates ==
-                              RequestStates.loading,
-                          onLoadMore: () => ref
+                Consumer(
+                  builder: (context, ref, child) {
+                    if (customerState.customersStates == RequestStates.loaded) {
+                      return PaginatedCustomerDropdown(
+                        customers: customerState.customers,
+                        hasMore: customerState.currentCustomersPage != null,
+                        isLoading:
+                            customerState.customersStates ==
+                            RequestStates.loading,
+                        onLoadMore: () => ref
+                            .read(customerControllerProvider.notifier)
+                            .onLoadMoreCostumers(),
+                        initialValue: ref
+                            .read(customerControllerProvider)
+                            .selectedCustomer,
+                        onChanged: (cust) {
+                          setState(() => _chosenCustomer = cust);
+                          ref
                               .read(customerControllerProvider.notifier)
-                              .onLoadMoreCostumers(),
-                          initialValue: ref
-                              .read(customerControllerProvider)
-                              .selectedCustomer,
-                          onChanged: (cust) {
-                            setState(() => _chosenCustomer = cust);
-                            ref
-                                .read(customerControllerProvider.notifier)
-                                .selectCustomer(cust);
-                            debugPrint('$_chosenCustomer koko _chosenCustomer');
-                            debugPrint('$cust koko cust ');
-                          },
-                        );
-                      } else if (customerState.customersStates ==
-                          RequestStates.loading) {
-                        return const CircularProgressIndicator();
-                      } else if (customerState.customersStates ==
-                          RequestStates.error) {
-                        return AppErrorWidget(
-                          onTap: () => ref
-                              .read(customerControllerProvider.notifier)
-                              .fetchCostumers(),
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    },
-                  ),
+                              .selectCustomer(cust);
+                          debugPrint('$_chosenCustomer koko _chosenCustomer');
+                          debugPrint('$cust koko cust ');
+                        },
+                      );
+                    } else if (customerState.customersStates ==
+                        RequestStates.loading) {
+                      return const CircularProgressIndicator();
+                    } else if (customerState.customersStates ==
+                        RequestStates.error) {
+                      return AppErrorWidget(
+                        onTap: () => ref
+                            .read(customerControllerProvider.notifier)
+                            .fetchCostumers(),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
                 ),
                 20.verticalSpace,
-                // The "Add Customer" button should be placed here
-                // so it's part of the main content area.
+
                 SizedBox(
                   height: 48.h,
                   child: TextButton(
@@ -144,7 +138,6 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
               ],
             ),
           ),
-          // The "Next" button is kept at the bottom, outside the Expanded.
           Padding(
             padding: EdgeInsets.only(bottom: 25.h),
             child: Consumer(
@@ -160,10 +153,7 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
                   onPressed: selectedCustomerState == null
                       ? null
                       : () {
-                          // Validate the form before navigating
-                          if (_formKey.currentState!.validate()) {
-                            context.pushRoute(ServiceConfigurationRoute());
-                          }
+                          context.pushRoute(ServiceConfigurationRoute());
                         },
                 );
               },

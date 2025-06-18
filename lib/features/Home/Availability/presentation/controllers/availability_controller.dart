@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 import 'package:hcs/features/Home/Availability/data/models/packages_model.dart';
 import 'package:hcs/features/Home/Availability/data/repositories/availability_repo.dart';
 import 'package:hcs/features/Home/Availability/presentation/controllers/service_config_state.dart';
@@ -13,38 +12,14 @@ class AvailabilityController extends _$AvailabilityController {
   @override
   ServiceConfigState build() => const ServiceConfigState();
 
-  Future<void> resetController(
-    String selectedServiceType,
-    String selectedDate,
-    // PackagesData? selectedPackage,
-  ) async {
-    state = state.copyWith(
-      selectedServiceType: selectedServiceType,
-      // selectedShiftType: 'Morning Shift',
-      // selectedDate: selectedDate,
-      packages: [],
-      packagesStates: RequestStates.init,
-      packagesMessage: '',
-      selectedDays: [],
-      firstVisitDate: '',
-      lastVisitDate: '',
-    );
-    debugPrint('selectedServiceType : $selectedServiceType');
-    debugPrint('selectedDate : $selectedDate');
-    debugPrint('selectedPackage : ${state.selectedPackage}');
-  }
-
   selectService(String selectedServiceType) {
-    debugPrint('selectedServiceType : $selectedServiceType');
     state = state.copyWith(selectedServiceType: selectedServiceType);
   }
 
   toggleDaySelection(String day) {
     final currentDays = List<String>.from(state.selectedDays);
     final isSelected = currentDays.contains(day);
-
     isSelected ? currentDays.remove(day) : currentDays.add(day);
-    debugPrint('Selected days: before ${currentDays}');
 
     if (currentDays.isNotEmpty) {
       state = state.copyWith(selectedDays: currentDays);
@@ -56,22 +31,17 @@ class AvailabilityController extends _$AvailabilityController {
         lastVisitDate: '',
       );
     }
-
-    debugPrint('Selected days: ${state.selectedDays}');
   }
 
   selectShift(String selectedShiftType) {
-    debugPrint('selectedShiftType : $selectedShiftType');
     state = state.copyWith(selectedShiftType: selectedShiftType);
   }
 
   selectDate(String selectedDate) {
-    debugPrint('selectedDate : $selectedDate');
     state = state.copyWith(selectedDate: selectedDate);
   }
 
   selecPackage(PackagesData selectedPackage) {
-    debugPrint('selectedPackage : ${selectedPackage.toString()}');
     state = state.copyWith(selectedPackage: selectedPackage);
   }
 
@@ -88,16 +58,14 @@ class AvailabilityController extends _$AvailabilityController {
     try {
       final availabilityRepo = ref.read(availabilityRepositoryProvider);
       final packagesData = await availabilityRepo.getPackages();
+
+      //this auto select Daily it because the flow of (on Call) depend on it
       PackagesData selectPackage = packagesData.data.firstWhere(
         (element) => element.id == 'Daily',
       );
 
       state = state.copyWith(
         packages: packagesData.data,
-
-        //? TODO في حال صار مشكلة بال Daily ب on call
-        //لاني عم اختار غير Daily
-        //هون لما تجي الداتا
         selectedPackage: selectPackage,
         packagesStates: RequestStates.loaded,
         packagesMessage: 'loadded successfully',
@@ -114,8 +82,6 @@ class AvailabilityController extends _$AvailabilityController {
     DateTime startDate = DateFormat('yyyy-MM-dd').parse(state.selectedDate);
     List<String> selectedDays = List.from(state.selectedDays);
     int? visitsRemaining = int.tryParse(state.selectedPackage!.numberOfVisits!);
-
-    print("hq1 visits: $visitsRemaining");
 
     // قائمة للأيام المختارة في الأسبوع
     final weekDays = {
@@ -151,10 +117,6 @@ class AvailabilityController extends _$AvailabilityController {
     // الحصول على أول زيارة وآخر زيارة
     String firstVisitDate = DateFormat('yyyy-MM-dd').format(visitDates.first);
     String lastVisitDate = DateFormat('yyyy-MM-dd').format(visitDates.last);
-
-    print("hq1 First Visit Date: $firstVisitDate");
-    print("hq1 Last Visit Date: $lastVisitDate");
-    print("hq1 visitDates: $visitDates");
 
     state = state.copyWith(
       firstVisitDate: firstVisitDate,
