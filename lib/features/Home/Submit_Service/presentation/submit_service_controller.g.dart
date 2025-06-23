@@ -7,7 +7,7 @@ part of 'submit_service_controller.dart';
 // **************************************************************************
 
 String _$submitServiceControllerHash() =>
-    r'0b3b133dafff44b8765399a1b7098b754d676c09';
+    r'93f0a349c36fd6329322a06024b7c836cdfe29be';
 
 /// See also [SubmitServiceController].
 @ProviderFor(SubmitServiceController)

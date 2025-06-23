@@ -11,14 +11,7 @@ part 'customer_controller.g.dart';
 @riverpod
 class CustomerController extends _$CustomerController {
   @override
-  CustomerState build() => const CustomerState(
-    //customers
-    currentCustomersPage: null,
-    customers: [],
-    customersStates: RequestStates.init,
-    customersMessage: '',
-    selectedCustomer: null,
-  );
+  CustomerState build() => const CustomerState();
 
   Future<void> addCustomer(AddCustomerParams params) async {
     state = state.copyWith(customersStates: RequestStates.loading);
@@ -39,7 +32,7 @@ class CustomerController extends _$CustomerController {
 
   Future<void> selectCustomer(Customers? selectedCustomer) async {
     state = state.copyWith(selectedCustomer: selectedCustomer);
-    debugPrint("${state.selectedCustomer.toString()} llll");
+    debugPrint("cttt 0 controller ${selectedCustomer?.customerName}");
   }
 
   Future<void> fetchCostumers() async {
@@ -94,7 +87,9 @@ class CustomerController extends _$CustomerController {
         customersStates: RequestStates.loaded,
         customersMessage: '',
       );
-      // debugPrint("currentCustomersPage #4 : ${state.currentCustomersPage.toString()}");
+      debugPrint(
+        "page= customers.length #4 : ${state.customers.length.toString()}",
+      );
     } catch (e) {
       state = state.copyWith(
         customersStates: RequestStates.error,

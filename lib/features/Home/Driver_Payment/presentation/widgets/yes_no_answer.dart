@@ -2,24 +2,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
+import 'package:hcs/features/Home/Driver_Payment/presentation/controllers/drivers_payment_controllers.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 
-class YesNoAnswes extends StatefulWidget {
-  const YesNoAnswes({super.key});
+class AreCleaningSuppliesAvailable extends ConsumerWidget {
+  const AreCleaningSuppliesAvailable({super.key});
 
   @override
-  _YesNoAnswesState createState() => _YesNoAnswesState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final List<String> options = ['yes', 'no'];
 
-class _YesNoAnswesState extends State<YesNoAnswes> {
-  final List<String> _options = ['Yes', 'No'];
-
-  int _selectedIndex = 0; // default to first
-
-  @override
-  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -33,48 +26,44 @@ class _YesNoAnswesState extends State<YesNoAnswes> {
         Wrap(
           spacing: 19.w,
           runSpacing: 16.h,
-          children: List.generate(_options.length, (i) {
-            final bool isSelected = i == _selectedIndex;
-            return Consumer(
-              builder: (context, ref, child) {
-                //TODO MAKE STATE FOR IT AND CHANGE CONTROLLER USE HERE
-                var availabilityController = ref.read(
-                  availabilityControllerProvider.notifier,
-                );
+          children: List.generate(options.length, (i) {
+            var notifier = ref.read(driversPaymentControllerProvider.notifier);
+            var withCleaningSupplies = ref.read(
+              driversPaymentControllerProvider.select(
+                (value) => value.withCleaningSupplies,
+              ),
+            );
+            final bool isSelected = options[i] == withCleaningSupplies;
 
-                return GestureDetector(
-                  onTap: () {
-                    setState(() => _selectedIndex = i);
-                    // availabilityController.selectShift(_options[i]);
-                  },
-                  child: Container(
-                    // padding: EdgeInsets.symmetric(
-                    //   horizontal: 40.w,
-                    //   vertical: 10.h,
-                    // ),
-                    alignment: Alignment.center,
-                    width: 162.w,
-                    height: 50.h,
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? Colors.white
-                          : AppColors.unSelectedGrey,
-                      border: isSelected
-                          ? Border.all(color: AppColors.blueText, width: 0.5)
-                          : null,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Text(
-                      _options[i],
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: isSelected
-                            ? AppColors.blackText
-                            : AppColors.unSelectedText,
-                      ),
-                    ),
-                  ),
-                );
+            return GestureDetector(
+              onTap: () {
+                // setState(() => _selectedIndex = i);
+                notifier.withCleaningSupplies(options[i]);
               },
+              child: Container(
+                // padding: EdgeInsets.symmetric(
+                //   horizontal: 40.w,
+                //   vertical: 10.h,
+                // ),
+                alignment: Alignment.center,
+                width: 162.w,
+                height: 50.h,
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.white : AppColors.unSelectedGrey,
+                  border: isSelected
+                      ? Border.all(color: AppColors.blueText, width: 0.5)
+                      : null,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Text(
+                  options[i],
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: isSelected
+                        ? AppColors.blackText
+                        : AppColors.unSelectedText,
+                  ),
+                ),
+              ),
             );
           }),
         ),

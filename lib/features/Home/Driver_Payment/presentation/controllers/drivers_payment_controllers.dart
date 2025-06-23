@@ -15,6 +15,13 @@ class DriversPaymentController extends _$DriversPaymentController {
   @override
   DriverPaymentState build() => const DriverPaymentState();
 
+  Future<void> withCleaningSupplies(String choice) async {
+    state = state.copyWith(withCleaningSupplies: choice);
+    debugPrint(
+      "${state.withCleaningSupplies.toString()} withCleaningSupplies llll",
+    );
+  }
+
   Future<void> selectPaymentMethod(String? selectedPaymentMethod) async {
     state = state.copyWith(selectedPaymentMethod: selectedPaymentMethod);
     debugPrint(

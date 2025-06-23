@@ -19,7 +19,7 @@ class ApiConstance {
 
   ////////////////// *  Customers   /////////////////////
   static String getCustomers(String page) =>
-      '$baseUrl/$baseDomain.api.customer.customers?page=$page&limit=10';
+      '$baseUrl/$baseDomain.api.customer.customers?page=$page&limit=25';
   static String addCustomers = '$baseUrl/$baseDomain.api.customer.customer';
 
   ////////////////// *  Availabillty   /////////////////////

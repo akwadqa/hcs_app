@@ -58,18 +58,34 @@ class AvailabilityController extends _$AvailabilityController {
     try {
       final availabilityRepo = ref.read(availabilityRepositoryProvider);
       final packagesData = await availabilityRepo.getPackages();
+      PackagesData selectPackage;
 
-      //this auto select Daily it because the flow of (on Call) depend on it
-      PackagesData selectPackage = packagesData.data.firstWhere(
-        (element) => element.id == 'Daily',
-      );
+      //when service type is Packages so filter the list to x visits / month
+      if (state.selectedServiceType == 'Packages') {
+        List<PackagesData> filteredPackages = packagesData.data
+            .where((element) => element.numberOfVisits != null)
+            .toList();
+        state = state.copyWith(
+          packages: filteredPackages,
+          selectedPackage: filteredPackages[0],
+          packagesStates: RequestStates.loaded,
+          packagesMessage: 'loadded successfully',
+        );
+      }
+      //otherwise no filter apllied
+      else {
+        //this auto select Daily it because the flow of (on Call) depend on it
+        selectPackage = packagesData.data.firstWhere(
+          (element) => element.id == 'Daily',
+        );
 
-      state = state.copyWith(
-        packages: packagesData.data,
-        selectedPackage: selectPackage,
-        packagesStates: RequestStates.loaded,
-        packagesMessage: 'loadded successfully',
-      );
+        state = state.copyWith(
+          packages: packagesData.data,
+          selectedPackage: selectPackage,
+          packagesStates: RequestStates.loaded,
+          packagesMessage: 'loadded successfully',
+        );
+      }
     } catch (e) {
       state = state.copyWith(
         packagesStates: RequestStates.error,

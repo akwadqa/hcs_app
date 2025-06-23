@@ -29,13 +29,14 @@ abstract class AppColors {
 
   static const Color scaffoldColor = Color(0xFFE9EFFE);
   static const Color dialogColor = Color(0xFFF0F4FE);
+  static const Color tabBarColor = Color(0xFFE8F6FF);
 
   static const Color primary = Color(0xFF1E71A3); //#1E71A3
   static const Color greyText = Color(0xFF7C7F88); //#7C7F88
   static const Color blackText = Color(0xFF363A46); // #363A46
   static const Color blueTitle = Color(0xFF1E7BE2); //#1E7BE2
   static const Color blueText = Color(0xFF1E71A3); //#1E71A3
-  static const Color greenText = Color(0xFF0BA366);
+  static const Color greenText = Color(0xFF0BA366); //#0BA366
 
   static const Color red = Color(0xFFF0453F);
   static const Color unSelectedText = Color(0xFF878787); //#878787
@@ -45,7 +46,6 @@ abstract class AppColors {
   static const Color disabledButtonBackground = Color(0xB871A3B2);
   static const Color backArrow = Color(0xB8034C78);
   static const Color dividerGrey = Color(0xffC2C2C2);
-
 
   //////////////////////////////////*
   static const Color primaryLight = Color(0x6E6A43BC);

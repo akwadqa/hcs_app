@@ -21,9 +21,14 @@
   "chooseDays":"Choose Days",
   "firstVisitDate":"First Visit Date",
   "toDate":"To Date",
-  
-  
-
+  "orderDetails":"Order Details",
+  "pleaseEnterCustomerName":"Please Enter Customer Name",
+  "pleaseEnterQatarId":"Please Enter Qatar Id",
+  "invalidQatarId":"Invalid Qatar Id",
+  "pleaseEnterPhoneNumber":"Please Enter Phone Number",
+  "invalidPhoneNumber":"Invalid Phone Number 00974 XXX XXX XXX",
+  "pleaseEnterUserName":"Please Enter UserName",
+  "enterValidUserName":"Enter Valid User Name",
   
   "password": "Password",
   "login": "Login",

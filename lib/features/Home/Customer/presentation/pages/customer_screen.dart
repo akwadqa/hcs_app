@@ -77,45 +77,7 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
                   ),
                 ),
                 8.verticalSpace,
-                Consumer(
-                  builder: (context, ref, child) {
-                    if (customerState.customersStates == RequestStates.loaded) {
-                      return PaginatedCustomerDropdown(
-                        customers: customerState.customers,
-                        hasMore: customerState.currentCustomersPage != null,
-                        isLoading:
-                            customerState.customersStates ==
-                            RequestStates.loading,
-                        onLoadMore: () => ref
-                            .read(customerControllerProvider.notifier)
-                            .onLoadMoreCostumers(),
-                        initialValue: ref
-                            .read(customerControllerProvider)
-                            .selectedCustomer,
-                        onChanged: (cust) {
-                          setState(() => _chosenCustomer = cust);
-                          ref
-                              .read(customerControllerProvider.notifier)
-                              .selectCustomer(cust);
-                          debugPrint('$_chosenCustomer koko _chosenCustomer');
-                          debugPrint('$cust koko cust ');
-                        },
-                      );
-                    } else if (customerState.customersStates ==
-                        RequestStates.loading) {
-                      return const CircularProgressIndicator();
-                    } else if (customerState.customersStates ==
-                        RequestStates.error) {
-                      return AppErrorWidget(
-                        onTap: () => ref
-                            .read(customerControllerProvider.notifier)
-                            .fetchCostumers(),
-                      );
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
+                PaginatedCustomerDropdown(),
                 20.verticalSpace,
 
                 SizedBox(

@@ -8,37 +8,60 @@ import 'package:hcs/gen/assets.gen.dart'; // for your SVG assets
 import 'package:hcs/src/theme/app_colors.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
-  /// If true, shows [CustomBackArrowWidget] in the leading slot
   final bool hasBackArrow;
-
-  /// If true, shows the home‐style title row: [logo + title], and hides leading/actions
   final bool isHome;
-
-  /// Optional list of action widgets (e.g. icons/buttons) to show
+  final bool withTabs;
+  final String? title;
   final List<Widget>? actions;
+  final TabController? tabController;
 
   const CustomAppbar({
     super.key,
     this.hasBackArrow = false,
     this.isHome = false,
+    this.withTabs = false,
     this.actions,
+    this.title,
+    this.tabController,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      // only show back arrow if requested, and not on home
+      key: UniqueKey(),
       leading: isHome
           ? null
           : hasBackArrow
           ? const CustomBackArrowWidget()
           : null,
-      // centerTitle must be true to keep our custom title centered
       centerTitle: true,
       backgroundColor: AppColors.white,
       elevation: 0,
+      bottom: withTabs && tabController != null
+          ? PreferredSize(
+              preferredSize: Size.fromHeight(48.h),
+              child: Container(
+                color: AppColors.tabBarColor,
+                child: TabBar(
+                  controller: tabController,
+                  labelColor: AppColors.blueTitle,
+                  unselectedLabelColor: AppColors.greyText,
+                  indicatorColor: AppColors.blueTitle,
+                  labelStyle: Theme.of(context).textTheme.displayMedium,
+                  unselectedLabelStyle: Theme.of(
+                    context,
+                  ).textTheme.displayMedium,
 
-      // if home: show logo + title; else just the text title
+                  tabs: const [
+                    Tab(text: 'Accept'),
+                    Tab(text: 'Pending'),
+                    Tab(text: 'Canceled'),
+                  ],
+                ),
+              ),
+            )
+          : null,
+
       title: Consumer(
         builder: (context, ref, child) {
           var selectedServiceTypeState = ref.watch(
@@ -46,7 +69,15 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
               (value) => value.selectedServiceType,
             ),
           );
-          return isHome
+          return title != null
+              ? Text(
+                  title!,
+                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+              : isHome
               ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -58,7 +89,6 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                     SizedBox(width: 8.w),
                     Text(
                       "${serviceTypeToString(ServiceType.home)} Service",
-
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
@@ -75,12 +105,11 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                 );
         },
       ),
-
-      // only show actions if NOT home
       actions: isHome ? null : actions,
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize =>
+      Size.fromHeight(withTabs ? kToolbarHeight + 48 : kToolbarHeight);
 }

@@ -12,11 +12,11 @@ class CustomerState extends Equatable {
 
   const CustomerState({
     //customers
-    required this.currentCustomersPage,
-    required this.customers,
-    required this.customersStates,
-    required this.customersMessage,
-    required this.selectedCustomer,
+    this.currentCustomersPage,
+    this.customers = const [],
+    this.customersStates = RequestStates.init,
+    this.customersMessage = '',
+    this.selectedCustomer,
   });
   CustomerState copyWith({
     //customers

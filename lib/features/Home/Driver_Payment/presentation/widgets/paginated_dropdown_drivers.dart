@@ -1,76 +1,75 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/models/drivers_model.dart';
+import 'package:hcs/features/Home/Driver_Payment/presentation/controllers/drivers_payment_controllers.dart';
 
-class PaginatedDriverDropdown extends StatefulWidget {
-  final List<Driver> drivers;
-  final bool hasMore;
-  final bool isLoading;
-  final VoidCallback onLoadMore;
+class PaginatedDriverDropdown extends ConsumerStatefulWidget {
   final bool enabled;
-  final Driver? initialValue;
   final ValueChanged<Driver?>? onChanged;
 
   const PaginatedDriverDropdown({
     super.key,
-    required this.drivers,
-    required this.hasMore,
-    required this.isLoading,
-    required this.onLoadMore,
     this.enabled = true,
-    this.initialValue,
     this.onChanged,
   });
 
   @override
-  State<PaginatedDriverDropdown> createState() =>
+  ConsumerState<PaginatedDriverDropdown> createState() =>
       _PaginatedDriverDropdownState();
 }
 
-class _PaginatedDriverDropdownState extends State<PaginatedDriverDropdown> {
+class _PaginatedDriverDropdownState
+    extends ConsumerState<PaginatedDriverDropdown> {
+  Timer? _loadMoreTimer;
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlay;
-  late List<Driver> _items;
-  Driver? _selected;
   late ScrollController _scrollController;
+  late TextEditingController _searchController;
+  String _searchTerm = '';
   late double _targetWidth;
   late double _targetHeight;
 
   @override
   void initState() {
     super.initState();
-    _items = List.from(widget.drivers);
-    _selected = widget.initialValue;
     _scrollController = ScrollController()..addListener(_onScroll);
+    _searchController = TextEditingController()..addListener(_onSearchChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) => _initOverlay());
   }
 
-  void _initOverlay() {
-    if (mounted) {
-      _openOverlay();
-    }
+  @override
+  void dispose() {
+    _loadMoreTimer?.cancel();
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    _closeOverlay();
+    _scrollController.dispose();
+    super.dispose();
   }
 
-  @override
-  void didUpdateWidget(covariant PaginatedDriverDropdown oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.drivers != widget.drivers) {
-      _items = List.from(widget.drivers);
-      if (_overlay != null) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _overlay?.markNeedsBuild();
-        });
-      }
-    }
+  void _onSearchChanged() {
+    setState(() => _searchTerm = _searchController.text.toLowerCase());
+    _overlay?.markNeedsBuild();
+  }
+
+  void _initOverlay() {
+    if (mounted) _openOverlay();
   }
 
   void _onScroll() {
+    final driverState = ref.read(driversPaymentControllerProvider);
+    final hasMore = driverState.currentDriversPage != null;
+
     if (_scrollController.position.pixels >
             _scrollController.position.maxScrollExtent - 100 &&
-        !widget.isLoading &&
-        widget.hasMore) {
-      widget.onLoadMore();
+        hasMore) {
+      _loadMoreTimer?.cancel();
+      _loadMoreTimer = Timer(const Duration(milliseconds: 500), () {
+        ref.read(driversPaymentControllerProvider.notifier).onLoadMoreDrivers();
+      });
     }
   }
 
@@ -88,66 +87,106 @@ class _PaginatedDriverDropdownState extends State<PaginatedDriverDropdown> {
 
     _overlay = OverlayEntry(
       builder: (context) {
-        return Positioned(
-          width: _targetWidth,
-          child: CompositedTransformFollower(
-            link: _layerLink,
-            showWhenUnlinked: false,
-            offset: Offset(0, _targetHeight + 5),
-            child: Material(
-              elevation: 4,
-              borderRadius: BorderRadius.circular(8),
-              child: SizedBox(
-                height: 300.h,
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: _items.length + (widget.hasMore ? 1 : 0),
-                  itemBuilder: (_, index) {
-                    if (index >= _items.length) {
-                      return const Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                    final driver = _items[index];
-                    return ListTile(
-                      title: Text(driver.fullName),
-                      onTap: widget.enabled
-                          ? () {
-                              _selectItem(driver);
-                              _closeOverlay();
-                            }
-                          : null,
-                    );
-                  },
+        return Consumer(
+          builder: (context, ref, child) {
+            final driverState = ref.watch(driversPaymentControllerProvider);
+            final filteredItems = driverState.drivers
+                .where(
+                  (driver) =>
+                      driver.fullName.toLowerCase().contains(_searchTerm),
+                )
+                .toList();
+
+            return Positioned(
+              width: _targetWidth,
+              child: CompositedTransformFollower(
+                link: _layerLink,
+                showWhenUnlinked: false,
+                offset: Offset(0, _targetHeight + 5),
+                child: Material(
+                  elevation: 4,
+                  borderRadius: BorderRadius.circular(8),
+                  child: SizedBox(
+                    height: 300.h,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: 'Search drivers...',
+                              prefixIcon: const Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              isDense: true,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            controller: _scrollController,
+                            itemCount:
+                                filteredItems.length +
+                                (driverState.currentDriversPage != null
+                                    ? 1
+                                    : 0),
+                            itemBuilder: (_, index) {
+                              if (index >= filteredItems.length) {
+                                return const Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              }
+                              final driver = filteredItems[index];
+                              return ListTile(
+                                title: Text(driver.fullName),
+                                onTap: widget.enabled
+                                    ? () {
+                                        _selectItem(driver);
+                                        _closeOverlay();
+                                      }
+                                    : null,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
 
-    final overlay = Overlay.of(context);
-    if (overlay.mounted) {
-      overlay.insert(_overlay!);
-    }
+    Overlay.of(context).insert(_overlay!);
   }
 
   void _selectItem(Driver d) {
-    setState(() {
-      _selected = d;
-    });
+    ref.read(driversPaymentControllerProvider.notifier).selectDriver(d);
     widget.onChanged?.call(d);
   }
 
   void _closeOverlay() {
     _overlay?.remove();
     _overlay = null;
+    _searchController.clear();
+    _searchTerm = '';
   }
 
   @override
   Widget build(BuildContext context) {
+    final selectedDriver = ref.watch(
+      driversPaymentControllerProvider.select((state) => state.selectedDriver),
+    );
+
     return CompositedTransformTarget(
       link: _layerLink,
       child: GestureDetector(
@@ -162,7 +201,7 @@ class _PaginatedDriverDropdownState extends State<PaginatedDriverDropdown> {
             : null,
         child: InputDecorator(
           decoration: InputDecoration(
-            hintText: _selected?.fullName ?? 'Select Driver',
+            hintText: selectedDriver?.fullName ?? 'Select Driver',
             isDense: true,
             enabled: widget.enabled,
             filled: true,
@@ -174,7 +213,7 @@ class _PaginatedDriverDropdownState extends State<PaginatedDriverDropdown> {
             children: [
               Expanded(
                 child: Text(
-                  _selected?.fullName ?? '',
+                  selectedDriver?.fullName ?? '',
                   style: Theme.of(context).inputDecorationTheme.hintStyle!
                       .copyWith(color: AppColors.blackText),
                   overflow: TextOverflow.ellipsis,
@@ -189,12 +228,5 @@ class _PaginatedDriverDropdownState extends State<PaginatedDriverDropdown> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _closeOverlay();
-    _scrollController.dispose();
-    super.dispose();
   }
 }

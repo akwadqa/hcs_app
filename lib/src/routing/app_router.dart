@@ -29,6 +29,7 @@ class AppRouter extends RootStackRouter {
               page: MyOrdersRoute.page,
               children: [
                 AutoRoute(initial: true, page: MyOrdersContentRoute.page),
+                AutoRoute(page: OrderDetailsRoute.page),
               ],
             ),
             AutoRoute(

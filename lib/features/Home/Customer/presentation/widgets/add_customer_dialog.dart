@@ -3,11 +3,13 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
 import 'package:hcs/features/Home/Customer/data/models/add_cutomer_mdoel.dart';
 import 'package:hcs/features/Home/Customer/presentation/controllers/customer_controller.dart';
 import 'package:hcs/features/Home/Customer/presentation/widgets/drop_down_textfield.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/manager/app_strings.dart';
+import 'package:hcs/src/manager/validator.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 import 'package:hcs/src/shared_widgets/rich_text.dart';
 import 'package:hcs/src/theme/app_colors.dart';
@@ -21,7 +23,8 @@ class AddCustomerDialog extends StatefulWidget {
 
 class _AddCustomerDialogState extends State<AddCustomerDialog> {
   final _formKey = GlobalKey<FormState>();
-  String? customerType;
+  String? customerType = 'Individual';
+  String? customerArea = 'Al Shamal';
   final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerQID = TextEditingController();
   final TextEditingController _controllerPhone = TextEditingController();
@@ -83,8 +86,10 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
               8.verticalSpace,
               DropDownField(
                 items: ['Company', 'Individual', 'On Call'],
-                value: 'Company',
-                onChanged: (p0) {},
+                value: 'Individual',
+                onChanged: (p0) {
+                  customerType = p0;
+                },
                 enabled: true,
               ),
               24.verticalSpace,
@@ -94,14 +99,36 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                 controller: _controllerName,
                 keyboardType: TextInputType.name,
                 decoration: const InputDecoration(hintText: "Name"),
+                validator: (name) =>
+                    Validator.validateCustomerName(name, context),
               ),
-              24.verticalSpace,
-              StarredText('Customer QID'),
-              8.verticalSpace,
-              TextFormField(
-                controller: _controllerQID,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(hintText: "12345678"),
+
+              Consumer(
+                builder: (context, ref, child) {
+                  var isPackages = ref.watch(
+                    availabilityControllerProvider.select(
+                      (value) => value.selectedServiceType == 'Packages',
+                    ),
+                  );
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      24.verticalSpace,
+                      StarredText('Customer QID', withStar: isPackages),
+                      8.verticalSpace,
+                      TextFormField(
+                        controller: _controllerQID,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(hintText: "12345678"),
+                        validator: isPackages
+                            ? (qatarId) =>
+                                  Validator.validateQatarId(qatarId, context)
+                            : null,
+                      ),
+                    ],
+                  );
+                },
               ),
               24.verticalSpace,
               StarredText('Phone Number'),
@@ -110,17 +137,38 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                 controller: _controllerPhone,
                 keyboardType: TextInputType.phone,
                 decoration: const InputDecoration(hintText: "0974 6666 3333"),
+                validator: (phoneNumber) =>
+                    Validator.validateQatarPhone(phoneNumber, context),
               ),
               24.verticalSpace,
-              StarredText('Area'),
+              StarredText('Area', withStar: false),
               8.verticalSpace,
-              TextFormField(
-                controller: _controllerArea,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(hintText: "Area"),
+              DropDownField(
+                items: [
+                  'Al Shamal',
+                  'Al Khor',
+                  'Al Wakrah',
+                  'Ar Rayyan',
+                  'Ad Dawhah (Doha)',
+                  'Al Daayen',
+                  'Umm Salal',
+                  'Al-Shahaniya',
+                ],
+                value: 'Al Shamal',
+                onChanged: (p0) {
+                  customerArea = p0;
+
+                  print('ioioioi $customerArea');
+                },
+                enabled: true,
               ),
+              // TextFormField(
+              //   controller: _controllerArea,
+              //   keyboardType: TextInputType.number,
+              //   decoration: const InputDecoration(hintText: "Area"),
+              // ),
               24.verticalSpace,
-              StarredText('Zone'),
+              StarredText('Zone', withStar: false),
               8.verticalSpace,
               TextFormField(
                 controller: _controllerZone,
@@ -128,9 +176,10 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                 decoration: const InputDecoration(hintText: "Zone"),
               ),
               24.verticalSpace,
-              Text(
+              StarredText(
                 'Location',
-                style: Theme.of(context).textTheme.displayMedium,
+                withStar: false,
+                // style: Theme.of(context).textTheme.displayMedium,
               ),
               8.verticalSpace,
               TextFormField(
@@ -175,6 +224,9 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                                   customerName: _controllerName.text,
                                   customerQid: _controllerQID.text,
                                   customerPhone: _controllerPhone.text,
+                                  customerArea: customerArea,
+                                  customerZone: _controllerZone.text,
+                                  customerLocation: _controllerLocation.text,
                                 ),
                               ),
                         );

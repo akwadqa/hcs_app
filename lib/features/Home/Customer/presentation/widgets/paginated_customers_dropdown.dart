@@ -1,80 +1,75 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
 import 'package:hcs/src/theme/app_colors.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hcs/features/Home/Customer/presentation/controllers/customer_controller.dart';
 
-/// A dropdown that displays a provided list of customers and triggers
-/// Riverpod's loadMore when scrolled to the end, keeping the overlay open and
-/// dynamically updating as new data arrives.
-class PaginatedCustomerDropdown extends StatefulWidget {
-  final List<Customers> customers;
-  final bool hasMore;
-  final bool isLoading;
-  final VoidCallback onLoadMore;
+class PaginatedCustomerDropdown extends ConsumerStatefulWidget {
   final bool enabled;
-  final Customers? initialValue;
   final ValueChanged<Customers?>? onChanged;
 
   const PaginatedCustomerDropdown({
     super.key,
-    required this.customers,
-    required this.hasMore,
-    required this.isLoading,
-    required this.onLoadMore,
     this.enabled = true,
-    this.initialValue,
     this.onChanged,
   });
 
   @override
-  State<PaginatedCustomerDropdown> createState() =>
+  ConsumerState<PaginatedCustomerDropdown> createState() =>
       _PaginatedCustomerDropdownState();
 }
 
-class _PaginatedCustomerDropdownState extends State<PaginatedCustomerDropdown> {
+class _PaginatedCustomerDropdownState
+    extends ConsumerState<PaginatedCustomerDropdown> {
+  Timer? _loadMoreTimer;
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlay;
-  late List<Customers> _items;
-  Customers? _selected;
   late ScrollController _scrollController;
+  late TextEditingController _searchController;
+  String _searchTerm = '';
   late double _targetWidth;
   late double _targetHeight;
 
   @override
   void initState() {
     super.initState();
-    _items = List.from(widget.customers);
-    _selected = widget.initialValue;
     _scrollController = ScrollController()..addListener(_onScroll);
+    _searchController = TextEditingController()..addListener(_onSearchChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) => _initOverlay());
   }
 
-  void _initOverlay() {
-    // This ensures we have a valid context after first render
-    if (mounted) {
-      _openOverlay(); // Will use the safe version
-    }
+  @override
+  void dispose() {
+    _loadMoreTimer?.cancel();
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    _closeOverlay();
+    _scrollController.dispose();
+    super.dispose();
   }
 
-  @override
-  void didUpdateWidget(covariant PaginatedCustomerDropdown oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.customers != widget.customers) {
-      _items = List.from(widget.customers);
-      if (_overlay != null) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _overlay?.markNeedsBuild();
-        });
-      }
-    }
+  void _onSearchChanged() {
+    setState(() => _searchTerm = _searchController.text.toLowerCase());
+    _overlay?.markNeedsBuild();
+  }
+
+  void _initOverlay() {
+    if (mounted) _openOverlay();
   }
 
   void _onScroll() {
+    final customerState = ref.read(customerControllerProvider);
+    final hasMore = customerState.currentCustomersPage != null;
+
     if (_scrollController.position.pixels >
             _scrollController.position.maxScrollExtent - 100 &&
-        !widget.isLoading &&
-        widget.hasMore) {
-      widget.onLoadMore();
+        hasMore) {
+      _loadMoreTimer?.cancel();
+      _loadMoreTimer = Timer(const Duration(milliseconds: 500), () {
+        ref.read(customerControllerProvider.notifier).onLoadMoreCostumers();
+      });
     }
   }
 
@@ -82,7 +77,7 @@ class _PaginatedCustomerDropdownState extends State<PaginatedCustomerDropdown> {
     final renderBox = context.findRenderObject() as RenderBox?;
     if (renderBox == null || !mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _openOverlay(); // Retry in next frame
+        if (mounted) _openOverlay();
       });
       return;
     }
@@ -92,66 +87,107 @@ class _PaginatedCustomerDropdownState extends State<PaginatedCustomerDropdown> {
 
     _overlay = OverlayEntry(
       builder: (context) {
-        return Positioned(
-          width: _targetWidth,
-          child: CompositedTransformFollower(
-            link: _layerLink,
-            showWhenUnlinked: false,
-            offset: Offset(0, _targetHeight + 5),
-            child: Material(
-              elevation: 4,
-              borderRadius: BorderRadius.circular(8),
-              child: SizedBox(
-                height: 300.h,
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: _items.length + (widget.hasMore ? 1 : 0),
-                  itemBuilder: (_, index) {
-                    if (index >= _items.length) {
-                      return const Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                    final cust = _items[index];
-                    return ListTile(
-                      title: Text(cust.customerName),
-                      onTap: widget.enabled
-                          ? () {
-                              _selectItem(cust);
-                              _closeOverlay();
-                            }
-                          : null,
-                    );
-                  },
+        return Consumer(
+          builder: (context, ref, child) {
+            final customerState = ref.watch(customerControllerProvider);
+            final filteredItems = customerState.customers
+                .where(
+                  (cust) =>
+                      cust.customerName.toLowerCase().contains(_searchTerm),
+                )
+                .toList();
+
+            return Positioned(
+              width: _targetWidth,
+              child: CompositedTransformFollower(
+                link: _layerLink,
+                showWhenUnlinked: false,
+                offset: Offset(0, _targetHeight + 5),
+                child: Material(
+
+                  elevation: 4,
+                  borderRadius: BorderRadius.circular(8),
+                  child: SizedBox(
+                    height: 300.h,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: 'Search customers...',
+                              prefixIcon: const Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              isDense: true,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            controller: _scrollController,
+                            itemCount:
+                                filteredItems.length +
+                                (customerState.currentCustomersPage != null
+                                    ? 1
+                                    : 0),
+                            itemBuilder: (_, index) {
+                              if (index >= filteredItems.length) {
+                                return const Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              }
+                              final cust = filteredItems[index];
+                              return ListTile(
+                                title: Text(cust.customerName),
+                                onTap: widget.enabled
+                                    ? () {
+                                        _selectItem(cust);
+                                        _closeOverlay();
+                                      }
+                                    : null,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
 
-    final overlay = Overlay.of(context);
-    if (overlay.mounted) {
-      overlay.insert(_overlay!);
-    }
+    Overlay.of(context).insert(_overlay!);
   }
 
   void _selectItem(Customers c) {
-    setState(() {
-      _selected = c;
-    });
+    ref.read(customerControllerProvider.notifier).selectCustomer(c);
     widget.onChanged?.call(c);
   }
 
   void _closeOverlay() {
     _overlay?.remove();
     _overlay = null;
+    _searchController.clear();
+    _searchTerm = '';
   }
 
   @override
   Widget build(BuildContext context) {
+    final selectedCustomer = ref.watch(
+      customerControllerProvider.select((state) => state.selectedCustomer),
+    );
+
     return CompositedTransformTarget(
       link: _layerLink,
       child: GestureDetector(
@@ -166,7 +202,7 @@ class _PaginatedCustomerDropdownState extends State<PaginatedCustomerDropdown> {
             : null,
         child: InputDecorator(
           decoration: InputDecoration(
-            hintText: _selected?.customerName ?? 'Select Customer',
+            hintText: selectedCustomer?.customerName ?? 'Select Customer',
             isDense: true,
             enabled: widget.enabled,
             filled: true,
@@ -178,7 +214,7 @@ class _PaginatedCustomerDropdownState extends State<PaginatedCustomerDropdown> {
             children: [
               Expanded(
                 child: Text(
-                  _selected?.customerName ?? '',
+                  selectedCustomer?.customerName ?? '',
                   style: Theme.of(context).inputDecorationTheme.hintStyle!
                       .copyWith(color: AppColors.blackText),
                   overflow: TextOverflow.ellipsis,
@@ -193,12 +229,5 @@ class _PaginatedCustomerDropdownState extends State<PaginatedCustomerDropdown> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _closeOverlay(); // Clean up overlay on dispose
-    _scrollController.dispose();
-    super.dispose();
   }
 }

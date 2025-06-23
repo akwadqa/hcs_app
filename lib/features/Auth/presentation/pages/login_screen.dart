@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/Auth/data/models/login_params.dart';
 import 'package:hcs/features/Auth/presentation/controller/auth_controller.dart';
+import 'package:hcs/src/manager/validator.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/manager/app_strings.dart';
@@ -80,12 +81,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: const InputDecoration(hintText: "Username"),
+                        validator: (name) =>
+                            Validator.validateUserName(name, context),
                       ),
                       SizedBox(height: AppSizes.betweenTextFields.h),
                       TextFormField(
                         controller: _passwordController,
                         obscureText: true,
                         decoration: const InputDecoration(hintText: "Password"),
+                        validator: (passord) =>
+                            Validator.validatePassword(passord, context),
                       ),
                       SizedBox(height: 32.h),
                       Align(

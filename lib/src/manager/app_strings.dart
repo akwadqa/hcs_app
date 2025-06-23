@@ -10,8 +10,16 @@ class AppStrings {
   static const String checkAvailability = 'checkAvailability';
 
   //validation
-  static const String enterValidUsername = 'enterValidUsername';
+  static const String pleaseEnterCustomerName = 'pleaseEnterCustomerName';
+  static const String pleaseEnterQatarId = 'pleaseEnterQatarId';
+  static const String invalidQatarId = 'invalidQatarId';
+  static const String pleaseEnterPhoneNumber = 'pleaseEnterPhoneNumber';
+  static const String invalidPhoneNumber = 'pleaseEnterPhoneNumber';
   static const String pleaseEnterUserName = 'pleaseEnterUserName';
+  static const String enterValidUserName = 'enterValidUserName';
+  
+
+
   static const String pleaseEnterPassword = 'pleaseEnterPassword';
   static const String passwordLengthError = 'passwordLengthError';
   static const String passwordMismatch = 'passwordMismatch';
@@ -44,6 +52,8 @@ class AppStrings {
   static const String toDate = 'toDate';
   //My Orders
   static const String myOrders = 'myOrders';
+  static const String orderDetails = 'Order Details';
+  
   static const String topUp = 'topUp';
   static const String transactionHistory = 'transactionHistory';
   static const String viewAll = 'viewAll';

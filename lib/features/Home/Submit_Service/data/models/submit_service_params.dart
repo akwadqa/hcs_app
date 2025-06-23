@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:hcs/features/Home/Employees/data/models/employees_model.dart';
 
 class SubmitServiceParams {
-  final String customer;
+  final String customerId;
+  final String customerName;
   final String driver;
   final String date;
   final String serviceType;
@@ -10,9 +11,12 @@ class SubmitServiceParams {
   final List<String>? days;
   final List<Employee> employees;
   final String paymentMethod;
+  final String discountPercentage;
+  final String withCleaningSupplies;
 
   SubmitServiceParams({
-    required this.customer,
+    required this.customerId,
+    required this.customerName,
     required this.driver,
     required this.date,
     required this.serviceType,
@@ -20,12 +24,14 @@ class SubmitServiceParams {
     required this.days,
     required this.employees,
     required this.paymentMethod,
+    required this.discountPercentage,
+    required this.withCleaningSupplies,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'customer_name': 'Amin Test',
-      'customer': customer,
+      'customer_name': customerName,
+      'customer': customerId,
       'driver': driver,
       'date': date,
       'service_type': serviceType,
@@ -42,6 +48,8 @@ class SubmitServiceParams {
           )
           .toList(),
       'payment_method': paymentMethod,
+      'discount_percentage': discountPercentage,
+      'with_cleaning_supplies': withCleaningSupplies,
     };
   }
 

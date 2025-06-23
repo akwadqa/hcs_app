@@ -3,8 +3,8 @@ import 'package:hcs/src/theme/app_colors.dart';
 
 class StarredText extends StatelessWidget {
   final String text;
-
-  const StarredText(this.text, {super.key});
+  final bool withStar;
+  const StarredText(this.text, {super.key, this.withStar = true});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class StarredText extends StatelessWidget {
             style: Theme.of(context).textTheme.displayMedium,
           ),
           TextSpan(
-            text: ' *',
+            text: withStar ? ' *' : '',
             style: Theme.of(
               context,
             ).textTheme.displayMedium!.copyWith(color: AppColors.red),

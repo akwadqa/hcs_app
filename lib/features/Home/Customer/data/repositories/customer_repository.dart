@@ -26,6 +26,9 @@ class CustomerRepository {
       'customer_name': params.customerName,
       'customer_qid': params.customerQid,
       'customer_phone': params.customerPhone,
+      'custom_zone': params.customerZone,
+      'custom_location': params.customerArea,
+      'custom_map_location': params.customerLocation,
     });
     final response = await _networkService.post(
       ApiConstance.addCustomers,

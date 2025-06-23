@@ -76,6 +76,9 @@ class $AssetsImagesGen {
   AssetGenImage get noDataMin =>
       const AssetGenImage('assets/images/no_data_min.png');
 
+  /// File path: assets/images/pending.svg
+  SvgGenImage get pending => const SvgGenImage('assets/images/pending.svg');
+
   /// File path: assets/images/search.svg
   SvgGenImage get search => const SvgGenImage('assets/images/search.svg');
 
@@ -114,6 +117,7 @@ class $AssetsImagesGen {
     myordersSelected,
     noData,
     noDataMin,
+    pending,
     search,
     settingsSelected,
     settingsUnselected,

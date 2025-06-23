@@ -7,7 +7,7 @@ part of 'availability_controller.dart';
 // **************************************************************************
 
 String _$availabilityControllerHash() =>
-    r'adb49fc3b823c34b5b9e869957e25693dafb027a';
+    r'ab608cc67e270bb2216cfd50610b539ea3e5852a';
 
 /// See also [AvailabilityController].
 @ProviderFor(AvailabilityController)

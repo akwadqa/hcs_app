@@ -36,11 +36,44 @@ class Validator {
     return null;
   }
 
+  static String? validateCustomerName(String? value, BuildContext context) {
+    return validateRequired(
+      value,
+      tr(context: context, AppStrings.pleaseEnterCustomerName),
+    );
+  }
+
   static String? validateUserName(String? value, BuildContext context) {
     return validateRequired(
       value,
       tr(context: context, AppStrings.pleaseEnterUserName),
     );
+  }
+
+  static String? validateQatarId(String? value, BuildContext context) {
+    if (value == null || value.isEmpty) {
+      return tr(context: context, AppStrings.pleaseEnterQatarId);
+    }
+    if (!RegExp(r'^[2-3]\d{10}$').hasMatch(value)) {
+      return tr(context: context, AppStrings.invalidQatarId);
+    }
+    return null;
+  }
+
+  static String? validateQatarPhone(String? value, BuildContext context) {
+    if (value == null || value.isEmpty) {
+      return tr(context: context, AppStrings.pleaseEnterPhoneNumber);
+    }
+
+    // يجب أن يبدأ بـ 00974 وأن يكون طوله 14 رقماً
+    final bool startsCorrect = value.startsWith('00974');
+    final bool correctLength = value.length == 14;
+
+    if (!startsCorrect || !correctLength) {
+      return tr(context: context, AppStrings.invalidPhoneNumber);
+    }
+
+    return null;
   }
 
   // OTP Verification Validator

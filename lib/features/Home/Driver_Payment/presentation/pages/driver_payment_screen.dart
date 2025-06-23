@@ -14,7 +14,6 @@ import 'package:hcs/features/Home/Submit_Service/presentation/submit_service_con
 import 'package:hcs/features/Home/Submit_Service/presentation/submit_service_state.dart';
 import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/enums/request_state.dart';
-import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
@@ -69,26 +68,14 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                   if (driversPaymentState.driversStates ==
                       RequestStates.loaded) {
                     return PaginatedDriverDropdown(
-                      // labelGetter: (c) => c.fullName,
-                      drivers: driversPaymentState.drivers,
-                      hasMore: driversPaymentState.currentDriversPage != null,
-                      isLoading:
-                          driversPaymentState.driversStates ==
-                          RequestStates.loading,
-                      onLoadMore: () => ref
-                          .read(driversPaymentControllerProvider.notifier)
-                          .onLoadMoreDrivers(),
-                      initialValue: ref
-                          .read(driversPaymentControllerProvider)
-                          .selectedDriver,
-                      onChanged: (cust) {
-                        setState(() => _chosenDriver = cust);
-                        ref
-                            .read(driversPaymentControllerProvider.notifier)
-                            .selectDriver(cust);
-                        debugPrint('$_chosenDriver koko _chosenDriver');
-                        debugPrint('$cust koko cust ');
-                      },
+                      // onChanged: (cust) {
+                      //   setState(() => _chosenDriver = cust);
+                      //   ref
+                      //       .read(driversPaymentControllerProvider.notifier)
+                      //       .selectDriver(cust);
+                      //   debugPrint('$_chosenDriver koko _chosenDriver');
+                      //   debugPrint('$cust koko cust ');
+                      // },
                     );
                   } else if (driversPaymentState.driversStates ==
                       RequestStates.loading) {
@@ -204,7 +191,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
               32.verticalSpace,
               Divider(height: 0.1, color: AppColors.dividerGrey),
               32.verticalSpace,
-              YesNoAnswes(),
+              AreCleaningSuppliesAvailable(),
               50.verticalSpace,
 
               Center(
@@ -212,9 +199,6 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                   padding: EdgeInsets.only(bottom: 25.h),
                   child: Consumer(
                     builder: (context, ref, child) {
-                      final submitServiceState = ref.watch(
-                        submitServiceControllerProvider,
-                      );
                       final drvierDiscontState = ref.watch(
                         driversPaymentControllerProvider,
                       );
@@ -262,9 +246,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                       return CustomButton(
                         title: tr(context: context, AppStrings.submit),
                         onPressed:
-                            submitServiceState.submitServiceStates ==
-                                    RequestStates.loading ||
-                                drvierDiscontState.selectedDiscount == null ||
+                            drvierDiscontState.selectedDiscount == null ||
                                 drvierDiscontState.selectedDriver == null
                             ? null
                             : () {
@@ -273,14 +255,6 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                                       submitServiceControllerProvider.notifier,
                                     )
                                     .submitService();
-                                // Validate the form before navigating
-                                // if (_formKey.currentState!.validate()) {
-                                //   context.pushRoute(
-                                //     ServiceConfigurationRoute(
-                                //       serviceType: widget.serviceType,
-                                //     ),
-                                //   );
-                                // }
                               },
                       );
                     },
