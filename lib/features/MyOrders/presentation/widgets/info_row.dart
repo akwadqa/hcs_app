@@ -5,8 +5,8 @@ import 'package:hcs/src/theme/app_colors.dart';
 class InfoRow extends StatelessWidget {
   final String? title;
   final String? value;
-  final String? url;
-  const InfoRow(this.title, {super.key, this.value, this.url});
+  final Widget? widget;
+  const InfoRow(this.title, {super.key, this.value, this.widget});
 
   @override
   Widget build(BuildContext context) {
@@ -26,31 +26,14 @@ class InfoRow extends StatelessWidget {
               : SizedBox.shrink(),
           SizedBox(
             width: 170.w,
-            child: url != null
-                ? InkWell(
-                    child: Text(
-                      url!,
-                      style: TextStyle(
-                        fontFamily: 'Instrument Sans',
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14.sp,
-                        height: 1.0, // 100% line-height
-                        letterSpacing: 0,
-                        decoration: TextDecoration.underline,
-                        decorationStyle: TextDecorationStyle.solid,
-                        decorationColor: AppColors.blueTitle, // optional
-                      ),
-                    ),
-                    onTap: () {},
-                  )
-                : value != null
-                ? Text(
-                    value!,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.displayMedium,
-                  )
-                : SizedBox.shrink(),
+            child:
+                widget ??
+                Text(
+                  "$value",
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.displayMedium,
+                ),
           ),
         ],
       ),

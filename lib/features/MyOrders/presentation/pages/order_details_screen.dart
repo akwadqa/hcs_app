@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/MyOrders/data/models/services_orders_model.dart';
 import 'package:hcs/features/MyOrders/presentation/widgets/info_row.dart';
+import 'package:hcs/features/MyOrders/presentation/widgets/map_button.dart';
 import 'package:hcs/features/MyOrders/presentation/widgets/share_to_whatsapp.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
@@ -22,7 +23,7 @@ class OrderDetailsScreen extends StatelessWidget {
         hasBackArrow: true,
         title: context.tr(AppStrings.orderDetails),
         withTabs: false,
-        actions: [ShareToWhatsApp()],
+        actions: [ShareToWhatsApp(order: order)],
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 17.h, horizontal: 26.w),
@@ -47,7 +48,11 @@ class OrderDetailsScreen extends StatelessWidget {
             InfoRow("Zone", value: "Doha....."),
             InfoRow(
               "Location",
-              url: "https://www.google.com/maps/@?api=1&map_action=map",
+              widget: MapPreviewCard(
+                latitude: 3526,
+                longitude: 1234,
+                locationName: "locationName",
+              ),
             ),
 
             Padding(

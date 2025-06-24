@@ -5,13 +5,13 @@ import 'package:hcs/features/Home/Availability/presentation/controllers/availabi
 import 'package:hcs/src/theme/app_colors.dart';
 
 final List<String> weekDays = [
-  'sunday',
-  'monday',
-  'tuesday',
-  'wednesday',
-  'thursday',
-  'friday',
-  'saturday',
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
 ];
 
 class DaysSelectionChips extends ConsumerWidget {
@@ -35,13 +35,13 @@ class DaysSelectionChips extends ConsumerWidget {
       itemCount: weekDays.length,
       itemBuilder: (context, index) {
         final day = weekDays[index];
-        final isSelected = selectedDays.contains(day);
+        final isSelected = selectedDays.contains(day.toLowerCase());
 
         return GestureDetector(
           onTap: () {
             ref
                 .read(availabilityControllerProvider.notifier)
-                .toggleDaySelection(day);
+                .toggleDaySelection(day.toLowerCase());
           },
           child: Container(
             width: 162.w,
