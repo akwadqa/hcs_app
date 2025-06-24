@@ -16,7 +16,13 @@ class InfoRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           title != null
-              ? Text(title!, style: Theme.of(context).textTheme.displayMedium)
+              ? Text(
+                  title!,
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                    color: AppColors.blueText,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
               : SizedBox.shrink(),
           SizedBox(
             width: 170.w,

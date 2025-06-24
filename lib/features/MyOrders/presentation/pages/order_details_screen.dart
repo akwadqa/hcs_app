@@ -3,14 +3,17 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hcs/features/MyOrders/data/models/services_orders_model.dart';
 import 'package:hcs/features/MyOrders/presentation/widgets/info_row.dart';
+import 'package:hcs/features/MyOrders/presentation/widgets/share_to_whatsapp.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 
 @RoutePage()
 class OrderDetailsScreen extends StatelessWidget {
-  const OrderDetailsScreen({super.key});
+  final Orders order;
+  const OrderDetailsScreen({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +22,7 @@ class OrderDetailsScreen extends StatelessWidget {
         hasBackArrow: true,
         title: context.tr(AppStrings.orderDetails),
         withTabs: false,
+        actions: [ShareToWhatsApp()],
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 17.h, horizontal: 26.w),
@@ -27,7 +31,7 @@ class OrderDetailsScreen extends StatelessWidget {
           children: [
             Center(
               child: Text(
-                "Booking Number 4522",
+                order.serviceOrderId,
                 style: Theme.of(context).textTheme.displayMedium!.copyWith(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w600,
@@ -51,9 +55,9 @@ class OrderDetailsScreen extends StatelessWidget {
               child: Divider(height: 0.1, color: AppColors.dividerGrey),
             ),
 
-            InfoRow("Service type", value: "On Call"),
+            InfoRow("Service type", value: order.serviceType),
             InfoRow("Shift type", value: "Full day"),
-            InfoRow("Date", value: "30-05-2025"),
+            InfoRow("Date", value: order.postingDate),
             InfoRow("Service Category", value: "On Call"),
 
             Padding(
@@ -83,7 +87,7 @@ class OrderDetailsScreen extends StatelessWidget {
             24.verticalSpace,
             Center(
               child: Text(
-                "QR 500",
+                "QR ${order.totalNetAmount}",
                 style: TextStyle(
                   fontSize: 20.sp,
                   color: AppColors.green,

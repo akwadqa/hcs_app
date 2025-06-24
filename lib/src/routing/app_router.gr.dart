@@ -28,6 +28,8 @@ import 'package:hcs/features/Home/Driver_Payment/presentation/pages/driver_payme
     as _i3;
 import 'package:hcs/features/Home/Employees/presentation/pages/employees_screen.dart'
     as _i4;
+import 'package:hcs/features/MyOrders/data/models/services_orders_model.dart'
+    as _i19;
 import 'package:hcs/features/MyOrders/presentation/pages/myorders_content.dart'
     as _i10;
 import 'package:hcs/features/MyOrders/presentation/pages/myorders_screen.dart'
@@ -277,18 +279,49 @@ class MyOrdersRoute extends _i16.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i12.OrderDetailsScreen]
-class OrderDetailsRoute extends _i16.PageRouteInfo<void> {
-  const OrderDetailsRoute({List<_i16.PageRouteInfo>? children})
-    : super(OrderDetailsRoute.name, initialChildren: children);
+class OrderDetailsRoute extends _i16.PageRouteInfo<OrderDetailsRouteArgs> {
+  OrderDetailsRoute({
+    _i17.Key? key,
+    required _i19.Orders order,
+    List<_i16.PageRouteInfo>? children,
+  }) : super(
+         OrderDetailsRoute.name,
+         args: OrderDetailsRouteArgs(key: key, order: order),
+         initialChildren: children,
+       );
 
   static const String name = 'OrderDetailsRoute';
 
   static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
-      return const _i12.OrderDetailsScreen();
+      final args = data.argsAs<OrderDetailsRouteArgs>();
+      return _i12.OrderDetailsScreen(key: args.key, order: args.order);
     },
   );
+}
+
+class OrderDetailsRouteArgs {
+  const OrderDetailsRouteArgs({this.key, required this.order});
+
+  final _i17.Key? key;
+
+  final _i19.Orders order;
+
+  @override
+  String toString() {
+    return 'OrderDetailsRouteArgs{key: $key, order: $order}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! OrderDetailsRouteArgs) return false;
+    return key == other.key && order == other.order;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ order.hashCode;
 }
 
 /// generated route for

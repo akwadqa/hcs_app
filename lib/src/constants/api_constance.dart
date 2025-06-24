@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ApiConstance {
   static const String baseUrl = "https://highclass.akwad.qa/api/method";
   static const String baseDomain = "highclass";
@@ -80,4 +78,11 @@ class ApiConstance {
   ////////////////// *  SubmitService   /////////////////////
   static String submitService() =>
       '$baseUrl/$baseDomain.api.service_order.service_order';
+
+  //////////////////! *  MyOrders Services   /////////////////////
+  static String myServicesOrders({
+    required String page,
+    required String status,
+  }) =>
+      '$baseUrl/$baseDomain.api.service_order.service_orders?page=$page&limit=10&status=$status';
 }

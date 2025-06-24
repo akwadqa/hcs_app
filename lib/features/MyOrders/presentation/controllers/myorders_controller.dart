@@ -8,88 +8,68 @@ part 'myorders_controller.g.dart';
 @riverpod
 class MyOrdersController extends _$MyOrdersController {
   @override
-  MyOrdersState build() => const MyOrdersState(
-    //credits
-    currentCustomersPage: null,
-    customers: [],
-    customersStates: RequestStates.init,
-    customersMessage: '',
-  );
+  MyOrdersState build() => const MyOrdersState();
 
-  // Future<void> fetchHomeBlocks() async {
-  //   state = state.copyWith(myOrdersStates: RequestStates.loading);
-
-  //   try {
-  //     final homeRepo = ref.read(myOrdersRepositoryProvider);
-  //     final homeData = await homeRepo.getHomeBlocks();
-
-  //     state = state.copyWith(
-  //       homeBlock: homeData,
-  //       myOrdersStates: RequestStates.loaded,
-  //       homeMessage: '',
-  //     );
-  //   } catch (e) {
-  //     state = state.copyWith(
-  //       myOrdersStates: RequestStates.error,
-  //       homeMessage: e.toString(),
-  //     );
-  //   }
-  // }
-
-  Future<void> fetchCreditsByID() async {
-    state = state.copyWith(customersStates: RequestStates.loading);
+  Future<void> fetchServicesOrders({required String ordersStatus}) async {
+    state = state.copyWith(ordersStates: RequestStates.loading);
 
     try {
-      final homeRepo = ref.read(myOrdersRepositoryProvider);
-      final creditsData = await homeRepo.fetchCreditsByID(page: 1);
+      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
+      final ordersData = await myOrdersRepo.getServicesOrders(
+        page: 1,
+        status: ordersStatus,
+      );
       // debugPrint("currentPage #1 : ${state.currentPage.toString()}");
 
       int? nextPage;
       //if there is a second page ?
-      if (creditsData.pagination.totalPages > 1) {
+      if (ordersData.pagination.totalPages > 1) {
         nextPage = 2;
       } else {
         nextPage = null;
       }
       state = state.copyWith(
-        currentCustomersPage: nextPage,
-        customers: creditsData.data,
-        customersStates: RequestStates.loaded,
-        customersMessage: '',
+        currentServicesOrdersPage: nextPage,
+        orders: ordersData.data,
+        ordersStates: RequestStates.loaded,
+        ordersMessage: '',
       );
       // debugPrint("currentPage #2 : ${state.currentPage.toString()}");
     } catch (e) {
       state = state.copyWith(
-        customersStates: RequestStates.error,
-        customersMessage: e.toString(),
+        ordersStates: RequestStates.error,
+        ordersMessage: e.toString(),
       );
     }
   }
 
-  Future<void> onLoadMoreCreditsByID(String itemGroupId) async {
+  Future<void> onLoadMoreServicesOrders({required String ordersStatus}) async {
     try {
-      final homeRepo = ref.read(myOrdersRepositoryProvider);
-      final creditsData = await homeRepo.fetchCreditsByID(page: state.currentCustomersPage!);
+      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
+      final ordersData = await myOrdersRepo.getServicesOrders(
+        page: state.currentServicesOrdersPage!,
+        status: ordersStatus,
+      );
       // debugPrint("currentPage #3 : ${state.currentPage.toString()}");
 
       int? nextPage;
       //if we reach the limit or not ?
-      if (creditsData.pagination.totalPages > creditsData.pagination.page) {
-        nextPage = creditsData.pagination.page + 1;
+      if (ordersData.pagination.totalPages > ordersData.pagination.page) {
+        nextPage = ordersData.pagination.page + 1;
       } else {
         nextPage = null;
       }
       state = state.copyWith(
-        currentCustomersPage: nextPage,
-        customers: [...state.customers, ...creditsData.data],
-        customersStates: RequestStates.loaded,
-        customersMessage: '',
+        currentServicesOrdersPage: nextPage,
+        orders: [...state.orders, ...ordersData.data],
+        ordersStates: RequestStates.loaded,
+        ordersMessage: '',
       );
       // debugPrint("currentPage #4 : ${state.currentPage.toString()}");
     } catch (e) {
       state = state.copyWith(
-        customersStates: RequestStates.error,
-        customersMessage: e.toString(),
+        ordersStates: RequestStates.error,
+        ordersMessage: e.toString(),
       );
     }
   }

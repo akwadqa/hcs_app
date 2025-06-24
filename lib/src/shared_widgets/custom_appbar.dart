@@ -106,6 +106,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
         },
       ),
       actions: isHome ? null : actions,
+      actionsPadding: EdgeInsets.symmetric(horizontal: 31.w),
     );
   }
 

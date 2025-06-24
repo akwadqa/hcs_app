@@ -1,44 +1,44 @@
 import 'package:equatable/equatable.dart';
-import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
+import 'package:hcs/features/MyOrders/data/models/services_orders_model.dart';
 
 import 'package:hcs/src/enums/request_state.dart';
 
 class MyOrdersState extends Equatable {
-  //customers
-  final int? currentCustomersPage;
-  final List<Customers> customers;
-  final RequestStates customersStates;
-  final String? customersMessage;
+  //orders
+  final int? currentServicesOrdersPage;
+  final List<Orders> orders;
+  final RequestStates ordersStates;
+  final String? ordersMessage;
 
   const MyOrdersState({
-    //customers
-    required this.currentCustomersPage,
-    required this.customers,
-    required this.customersStates,
-    required this.customersMessage,
+    //orders
+    this.currentServicesOrdersPage,
+    this.orders = const [],
+    this.ordersStates = RequestStates.init,
+    this.ordersMessage = '',
   });
   MyOrdersState copyWith({
-    //customers
-    int? currentCustomersPage,
-    List<Customers>? customers,
-    RequestStates? customersStates,
-    String? customersMessage,
+    //orders
+    int? currentServicesOrdersPage,
+    List<Orders>? orders,
+    RequestStates? ordersStates,
+    String? ordersMessage,
   }) {
     return MyOrdersState(
-      //customers
-      currentCustomersPage: currentCustomersPage ?? this.currentCustomersPage,
-      customers: customers ?? this.customers,
-      customersStates: customersStates ?? this.customersStates,
-      customersMessage: customersMessage ?? this.customersMessage,
+      //orders
+      currentServicesOrdersPage: currentServicesOrdersPage,
+      orders: orders ?? this.orders,
+      ordersStates: ordersStates ?? this.ordersStates,
+      ordersMessage: ordersMessage ?? this.ordersMessage,
     );
   }
 
   @override
   List<Object?> get props => [
-    //customers
-    currentCustomersPage,
-    customers,
-    customersStates,
-    customersMessage,
+    //orders
+    currentServicesOrdersPage,
+    orders,
+    ordersStates,
+    ordersMessage,
   ];
 }
