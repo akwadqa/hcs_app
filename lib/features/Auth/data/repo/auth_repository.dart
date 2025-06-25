@@ -51,4 +51,21 @@ class AuthRepository {
     }
     // return await _handleAuthResponse(response.data);
   }
+
+  Future<bool> forgotPassword(String email) async {
+    var formData = FormData.fromMap({'email': email});
+
+    final response = await _networkService.post(
+      ApiConstance.forgotPassword(email),
+      formData,
+    );
+
+    final data = json.encode(response.data);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(response.message ?? "An unknown error occurred");
+    }
+    // return await _handleAuthResponse(response.data);
+  }
 }

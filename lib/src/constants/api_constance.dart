@@ -14,7 +14,8 @@ class ApiConstance {
   ////////////////// *  Login   /////////////////////
   static const String loginPath =
       '$baseUrl/$baseDomain.api.authentication.login';
-
+  static String forgotPassword(String email) =>
+      '$baseUrl/frappe.core.doctype.user.user.reset_password?user=$email';
   ////////////////// *  Customers   /////////////////////
   static String getCustomers(String page) =>
       '$baseUrl/$baseDomain.api.customer.customers?page=$page&limit=25';
@@ -52,7 +53,6 @@ class ApiConstance {
     if (days.isNotEmpty) {
       queryParams['days'] = days.isEmpty ? '' : '$days';
       // ensures ["monday", "wednesday"]
-      print('sddssd ${queryParams['days']}');
     }
 
     if (employeeName != null && employeeName.isNotEmpty) {
@@ -64,7 +64,6 @@ class ApiConstance {
     ).replace(queryParameters: queryParams);
 
     // print('Request URL: $uri');
-    print('Request URL: $uri');
 
     return uri.toString();
   }
@@ -85,4 +84,7 @@ class ApiConstance {
     required String status,
   }) =>
       '$baseUrl/$baseDomain.api.service_order.service_orders?page=$page&limit=10&status=$status';
+
+  static String getServiceOrderDetails({required String serviceOrderId}) =>
+      '$baseUrl/$baseDomain.api.service_order.service_order_details?service_order_id=$serviceOrderId';
 }

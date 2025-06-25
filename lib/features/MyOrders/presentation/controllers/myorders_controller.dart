@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:hcs/features/MyOrders/data/models/orders_details_model.dart';
 import 'package:hcs/features/MyOrders/data/repositories/myorders_repository.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/myorders_state.dart';
 import 'package:hcs/src/enums/request_state.dart';
@@ -19,7 +21,6 @@ class MyOrdersController extends _$MyOrdersController {
         page: 1,
         status: ordersStatus,
       );
-      // debugPrint("currentPage #1 : ${state.currentPage.toString()}");
 
       int? nextPage;
       //if there is a second page ?
@@ -34,7 +35,6 @@ class MyOrdersController extends _$MyOrdersController {
         ordersStates: RequestStates.loaded,
         ordersMessage: '',
       );
-      // debugPrint("currentPage #2 : ${state.currentPage.toString()}");
     } catch (e) {
       state = state.copyWith(
         ordersStates: RequestStates.error,
@@ -50,7 +50,6 @@ class MyOrdersController extends _$MyOrdersController {
         page: state.currentServicesOrdersPage!,
         status: ordersStatus,
       );
-      // debugPrint("currentPage #3 : ${state.currentPage.toString()}");
 
       int? nextPage;
       //if we reach the limit or not ?
@@ -65,11 +64,32 @@ class MyOrdersController extends _$MyOrdersController {
         ordersStates: RequestStates.loaded,
         ordersMessage: '',
       );
-      // debugPrint("currentPage #4 : ${state.currentPage.toString()}");
     } catch (e) {
       state = state.copyWith(
         ordersStates: RequestStates.error,
         ordersMessage: e.toString(),
+      );
+    }
+  }
+
+  Future<void> fetchOrdersDetails({required String serviceOrderID}) async {
+    state = state.copyWith(ordersDetailsStates: RequestStates.loading);
+
+    try {
+      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
+      final ordersDetails = await myOrdersRepo.getServicesOrderDetails(
+        serviceOrderId: serviceOrderID,
+      );
+
+      state = state.copyWith(
+        ordersDetails: ordersDetails.details,
+        ordersDetailsStates: RequestStates.loaded,
+        ordersDetailsMessage: '',
+      );
+    } catch (e) {
+      state = state.copyWith(
+        ordersDetailsStates: RequestStates.error,
+        ordersDetailsMessage: e.toString(),
       );
     }
   }

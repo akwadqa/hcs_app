@@ -18,7 +18,6 @@ class SubmitServiceRepository {
 
   Future<bool> submitService(SubmitServiceParams params) async {
 
-    debugPrint("htr ${params.toMap().toString()}");
 
     final response = await _networkService.post(
       ApiConstance.submitService(),

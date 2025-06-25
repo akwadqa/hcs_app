@@ -11,26 +11,27 @@ class AuthController extends _$AuthController {
   @override
   FutureOr<void> build() => null;
 
-  // Future<String> _authenticate(
-  //   Future<String> Function(AuthRepository authRepo) action,
-  // ) async {
-  //   state = const AsyncLoading();
-  //   final result = await AsyncValue.guard(() async {
-  //     final authRepo = ref.watch(authRepositoryProvider);
-  //     await action(authRepo);
-  //   });
-  //   state = result;
-  //   return result.value ?? (throw result.error);
-  // }
-
   Future<void> login(LoginParams params) async {
-    debugPrint('login controlelr');
-
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final authRepo = ref.watch(authRepositoryProvider);
       final token = await authRepo.login(params);
       ref.read(userDataProvider.notifier).setData(token, 0);
+    });
+  }
+
+  Future<void> logout() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      ref.read(userDataProvider.notifier).removeData();
+    });
+  }
+
+  Future<void> forgotPassword(String email) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final authRepo = ref.watch(authRepositoryProvider);
+      await authRepo.forgotPassword(email);
     });
   }
 }

@@ -54,7 +54,7 @@ class Validator {
     if (value == null || value.isEmpty) {
       return tr(context: context, AppStrings.pleaseEnterQatarId);
     }
-    if (!RegExp(r'^[2-3]\d{10}$').hasMatch(value)) {
+    if (value.length != 11) {
       return tr(context: context, AppStrings.invalidQatarId);
     }
     return null;
@@ -65,11 +65,7 @@ class Validator {
       return tr(context: context, AppStrings.pleaseEnterPhoneNumber);
     }
 
-    // يجب أن يبدأ بـ 00974 وأن يكون طوله 14 رقماً
-    final bool startsCorrect = value.startsWith('00974');
-    final bool correctLength = value.length == 14;
-
-    if (!startsCorrect || !correctLength) {
+    if (value.length != 8) {
       return tr(context: context, AppStrings.invalidPhoneNumber);
     }
 

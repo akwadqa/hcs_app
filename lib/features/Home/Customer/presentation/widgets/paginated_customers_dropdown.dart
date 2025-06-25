@@ -5,6 +5,7 @@ import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/Home/Customer/presentation/controllers/customer_controller.dart';
+import 'package:hcs/src/shared_widgets/fade_circle_loading_indicator.dart';
 
 class PaginatedCustomerDropdown extends ConsumerStatefulWidget {
   final bool enabled;
@@ -44,8 +45,10 @@ class _PaginatedCustomerDropdownState
   void dispose() {
     _loadMoreTimer?.cancel();
     _searchController.removeListener(_onSearchChanged);
-    _searchController.dispose();
+
     _closeOverlay();
+    
+    _searchController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -104,7 +107,6 @@ class _PaginatedCustomerDropdownState
                 showWhenUnlinked: false,
                 offset: Offset(0, _targetHeight + 5),
                 child: Material(
-
                   elevation: 4,
                   borderRadius: BorderRadius.circular(8),
                   child: SizedBox(
@@ -139,7 +141,7 @@ class _PaginatedCustomerDropdownState
                                 return const Padding(
                                   padding: EdgeInsets.all(8),
                                   child: Center(
-                                    child: CircularProgressIndicator(),
+                                    child: FadeCircleLoadingIndicator(),
                                   ),
                                 );
                               }
@@ -176,10 +178,15 @@ class _PaginatedCustomerDropdownState
   }
 
   void _closeOverlay() {
-    _overlay?.remove();
-    _overlay = null;
-    _searchController.clear();
-    _searchTerm = '';
+    // Only clear & remove if we're still mounted
+    if (_overlay != null) {
+      _overlay!.remove();
+      _overlay = null;
+    }
+    if (mounted) {
+      _searchController.clear();
+      _searchTerm = '';
+    }
   }
 
   @override

@@ -40,7 +40,7 @@ class _HomeContentState extends ConsumerState<HomeContentScreen> {
       // body: homeState.homeStates == RequestStates.loaded
       //     ? _buildContent(homeState.homeBlock!)
       //     : homeState.homeStates == RequestStates.loading
-      //     ? const Center(child: CircularProgressIndicator())
+      //     ? const Center(child: FadeCircleLoadingIndicator())
       //     : homeState.homeStates == RequestStates.error
       //     ? AppErrorWidget(
       //         onTap: () => Future(
@@ -78,17 +78,22 @@ class _HomeContentState extends ConsumerState<HomeContentScreen> {
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
-                        onTap: () {
-                          availabilityNotifier.selectService(
-                            serviceTypeToString(list[index]),
-                          );
+                        onTap: index < 2
+                            ? () {
+                                availabilityNotifier.selectService(
+                                  serviceTypeToString(list[index]),
+                                );
 
-                          context.pushRoute(
-                            CustomerRoute(serviceType: list[index]),
-                          );
-                        },
+                                context.pushRoute(
+                                  CustomerRoute(serviceType: list[index]),
+                                );
+                              }
+                            : null,
 
-                        child: ServiceCard(serviceType: list[index]),
+                        child: ServiceCard(
+                          serviceType: list[index],
+                          enabled: index < 2,
+                        ),
                       );
                     },
                     separatorBuilder: (context, index) {

@@ -15,19 +15,21 @@ class AppErrorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Assets.images.error404.image(),
-          20.verticalSpace,
-          Text(
-            context.tr(AppStrings.pressToRefreash),
-            style: Theme.of(context).textTheme.displaySmall!.copyWith(
-              color: AppColors.unSelectedText,
-              fontSize: 22.sp,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Assets.images.error404Min.image(width: 300.w, height: 350.h),
+            20.verticalSpace,
+            Text(
+              context.tr(AppStrings.pressToRefreash),
+              style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                color: AppColors.unSelectedText,
+                fontSize: 22.sp,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -16,6 +16,7 @@ import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
+import 'package:hcs/src/shared_widgets/fade_circle_loading_indicator.dart';
 
 @RoutePage()
 class EmployeesScreen extends ConsumerStatefulWidget {
@@ -108,9 +109,7 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                             final employeesState = ref.watch(
                               employeesControllerProvider,
                             );
-                            debugPrint(
-                              'rebuilding listview now ... ${employeesState.employeesStates}',
-                            );
+              
                             if (employeesState.employeesStates ==
                                 RequestStates.loaded) {
                               if (employeesState.employees.isEmpty) {
@@ -140,7 +139,7 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                                         );
                                       } else {
                                         return Center(
-                                          child: CircularProgressIndicator(),
+                                          child: FadeCircleLoadingIndicator(),
                                         );
                                       }
                                     } else {
@@ -167,7 +166,9 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                               );
                             } else if (employeesState.employeesStates ==
                                 RequestStates.loading) {
-                              return Center(child: CircularProgressIndicator());
+                              return Center(
+                                child: FadeCircleLoadingIndicator(),
+                              );
                             }
 
                             return SizedBox.shrink();

@@ -50,9 +50,12 @@ class $AssetsImagesGen {
   AssetGenImage get dummycard =>
       const AssetGenImage('assets/images/dummycard.png');
 
-  /// File path: assets/images/error404.png
-  AssetGenImage get error404 =>
-      const AssetGenImage('assets/images/error404.png');
+  /// File path: assets/images/error404-min.png
+  AssetGenImage get error404Min =>
+      const AssetGenImage('assets/images/error404-min.png');
+
+  /// File path: assets/images/goodbye.png
+  AssetGenImage get goodbye => const AssetGenImage('assets/images/goodbye.png');
 
   /// File path: assets/images/home_selected.svg
   SvgGenImage get homeSelected =>
@@ -68,9 +71,6 @@ class $AssetsImagesGen {
   /// File path: assets/images/myorders_selected.svg
   SvgGenImage get myordersSelected =>
       const SvgGenImage('assets/images/myorders_selected.svg');
-
-  /// File path: assets/images/no_data.png
-  AssetGenImage get noData => const AssetGenImage('assets/images/no_data.png');
 
   /// File path: assets/images/no_data_min.png
   AssetGenImage get noDataMin =>
@@ -110,12 +110,12 @@ class $AssetsImagesGen {
     cash,
     creditCard,
     dummycard,
-    error404,
+    error404Min,
+    goodbye,
     homeSelected,
     homeUnselected,
     logo,
     myordersSelected,
-    noData,
     noDataMin,
     pending,
     search,

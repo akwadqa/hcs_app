@@ -157,8 +157,6 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                 value: 'Al Shamal',
                 onChanged: (p0) {
                   customerArea = p0;
-
-                  print('ioioioi $customerArea');
                 },
                 enabled: true,
               ),

@@ -10,6 +10,7 @@ import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
 import 'package:hcs/src/theme/app_colors.dart';
+import 'package:hcs/src/shared_widgets/fade_circle_loading_indicator.dart';
 
 class PendingOrdersScreen extends ConsumerStatefulWidget {
   const PendingOrdersScreen({super.key});
@@ -63,7 +64,7 @@ class _PendingOrdersScreenState extends ConsumerState<PendingOrdersScreen> {
 
     if (ordersState.ordersStates == RequestStates.init ||
         ordersState.ordersStates == RequestStates.loading) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: FadeCircleLoadingIndicator());
     } else if (ordersState.ordersStates == RequestStates.loaded) {
       if (ordersState.orders.isEmpty) {
         return Assets.images.noDataMin.image();
@@ -84,14 +85,16 @@ class _PendingOrdersScreenState extends ConsumerState<PendingOrdersScreen> {
             } else {
               return const Padding(
                 padding: EdgeInsets.all(8),
-                child: Center(child: CircularProgressIndicator()),
+                child: Center(child: FadeCircleLoadingIndicator()),
               );
             }
           }
           return GestureDetector(
             onTap: () {
               context.pushRoute(
-                OrderDetailsRoute(order: ordersState.orders[index]),
+                OrderDetailsRoute(
+                  serviceOrderID: ordersState.orders[index].serviceOrderId,
+                ),
               );
             },
             child: Container(
@@ -169,7 +172,13 @@ class _PendingOrdersScreenState extends ConsumerState<PendingOrdersScreen> {
         },
       );
     } else if (ordersState.ordersStates == RequestStates.error) {
-      return AppErrorWidget(onTap: () {});
+      return AppErrorWidget(
+        onTap: () => Future(
+          () => ref
+              .read(myOrdersControllerProvider.notifier)
+              .onLoadMoreServicesOrders(ordersStatus: 'Pending'),
+        ),
+      );
     }
     return SizedBox.shrink();
   }

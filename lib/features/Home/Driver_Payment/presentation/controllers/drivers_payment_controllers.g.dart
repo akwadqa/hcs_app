@@ -7,7 +7,7 @@ part of 'drivers_payment_controllers.dart';
 // **************************************************************************
 
 String _$driversPaymentControllerHash() =>
-    r'e9fa596e796738dcdacc79fbf1b8196bb39c6932';
+    r'9780f41313560975e52795aa78c268cea4af5f68';
 
 /// See also [DriversPaymentController].
 @ProviderFor(DriversPaymentController)

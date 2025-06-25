@@ -1,6 +1,8 @@
 // home_repository.dart
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
+import 'package:hcs/features/MyOrders/data/models/orders_details_model.dart';
 import 'package:hcs/features/MyOrders/data/models/services_orders_model.dart';
 import 'package:hcs/src/constants/api_constance.dart';
 import 'package:hcs/src/network/network_service.dart';
@@ -17,15 +19,34 @@ class MyOrdersRepository {
 
   MyOrdersRepository(this._networkService);
 
-  Future<ServicesOrders> getServicesOrders({required int page, required String status}) async {
+  Future<ServicesOrders> getServicesOrders({
+    required int page,
+    required String status,
+  }) async {
     final response = await _networkService.get(
-      ApiConstance.myServicesOrders(page: page.toString(),status: status),
+      ApiConstance.myServicesOrders(page: page.toString(), status: status),
     );
 
     if (response.statusCode == 200) {
       return ServicesOrders.fromJson(response.data);
     } else {
       throw Exception(response.message ?? 'Failed to get Services Orders');
+    }
+  }
+
+  Future<OrdersDetails> getServicesOrderDetails({
+    required String serviceOrderId,
+  }) async {
+    final response = await _networkService.get(
+      ApiConstance.getServiceOrderDetails(serviceOrderId: serviceOrderId),
+    );
+
+    if (response.statusCode == 200) {
+      return OrdersDetails.fromJson(response.data);
+    } else {
+      throw Exception(
+        response.message ?? 'Failed to get Services Order Details',
+      );
     }
   }
 }

@@ -11,7 +11,7 @@ class AreCleaningSuppliesAvailable extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<String> options = ['yes', 'no'];
+    final List<String> options = ['Yes', 'No'];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,12 +33,13 @@ class AreCleaningSuppliesAvailable extends ConsumerWidget {
                 (value) => value.withCleaningSupplies,
               ),
             );
-            final bool isSelected = options[i] == withCleaningSupplies;
+            final bool isSelected =
+                options[i].toLowerCase() == withCleaningSupplies;
 
             return GestureDetector(
               onTap: () {
                 // setState(() => _selectedIndex = i);
-                notifier.withCleaningSupplies(options[i]);
+                notifier.withCleaningSupplies(options[i].toLowerCase());
               },
               child: Container(
                 // padding: EdgeInsets.symmetric(

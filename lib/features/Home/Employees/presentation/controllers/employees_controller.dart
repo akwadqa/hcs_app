@@ -20,15 +20,12 @@ class EmployeesController extends _$EmployeesController {
       selectedEmployees: [],
     );
 
-    debugPrint("${state.serviceCategory.toString()} llll serviceCategory");
   }
 
   searchEmployee(String employeeName) {
     state = state.copyWith(employeeSearchedFor: employeeName);
     fetchEmployees();
-    debugPrint(
-      "${state.employeeSearchedFor.toString()} llll employeeSearchedFor",
-    );
+
   }
 
   selectEmployee(Employee selectedEmployee) {
@@ -41,9 +38,7 @@ class EmployeesController extends _$EmployeesController {
       state = state.copyWith(selectedEmployees: employeesList);
     }
 
-    debugPrint(
-      "${state.selectedEmployees.toString()} ${state.selectedEmployees.length} llll",
-    );
+
   }
 
   unSelectEmployee(Employee unSelectedEmployee) {
@@ -55,7 +50,6 @@ class EmployeesController extends _$EmployeesController {
       employeeList.removeAt(index);
     }
     state = state.copyWith(selectedEmployees: employeeList);
-    debugPrint("${state.selectedEmployees.toString()} llll");
   }
 
   Future<void> fetchEmployees() async {
@@ -65,9 +59,7 @@ class EmployeesController extends _$EmployeesController {
       final employeesRepo = ref.read(employeesRepositoryProvider);
       final availabilityController = ref.read(availabilityControllerProvider);
 
-      debugPrint(
-        '${availabilityController.selectedPackage?.id} selectedPackage',
-      );
+   
 
       final employeesData = await employeesRepo.getEmployees(
         getEmployeesParams: GetEmployeesParams(
@@ -106,9 +98,7 @@ class EmployeesController extends _$EmployeesController {
     try {
       final employeesRepo = ref.read(employeesRepositoryProvider);
       final availabilityController = ref.read(availabilityControllerProvider);
-      debugPrint(
-        '${availabilityController.selectedPackage?.id} selectedPackage',
-      );
+ 
       final employeesData = await employeesRepo.getEmployees(
         getEmployeesParams: GetEmployeesParams(
           serviceType: availabilityController.selectedPackage?.id ?? 'Daily',

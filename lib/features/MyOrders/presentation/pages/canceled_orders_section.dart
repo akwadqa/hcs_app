@@ -10,6 +10,7 @@ import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
 import 'package:hcs/src/theme/app_colors.dart';
+import 'package:hcs/src/shared_widgets/fade_circle_loading_indicator.dart';
 
 class CanceledOrdersScreen extends ConsumerStatefulWidget {
   const CanceledOrdersScreen({super.key});
@@ -63,7 +64,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
 
     if (ordersState.ordersStates == RequestStates.init ||
         ordersState.ordersStates == RequestStates.loading) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: FadeCircleLoadingIndicator());
     } else if (ordersState.ordersStates == RequestStates.loaded) {
       if (ordersState.orders.isEmpty) {
         return Assets.images.noDataMin.image();
@@ -84,13 +85,17 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
             } else {
               return const Padding(
                 padding: EdgeInsets.all(8),
-                child: Center(child: CircularProgressIndicator()),
+                child: Center(child: FadeCircleLoadingIndicator()),
               );
             }
           }
           return GestureDetector(
             onTap: () {
-              context.pushRoute(OrderDetailsRoute(order: ordersState.orders[index]));
+              context.pushRoute(
+                OrderDetailsRoute(
+                  serviceOrderID: ordersState.orders[index].serviceOrderId,
+                ),
+              );
             },
             child: Container(
               margin: EdgeInsets.symmetric(vertical: 16.h, horizontal: 24.w),
@@ -167,7 +172,13 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
         },
       );
     } else if (ordersState.ordersStates == RequestStates.error) {
-      return AppErrorWidget(onTap: () {});
+      return AppErrorWidget(
+        onTap: () => Future(
+          () => ref
+              .read(myOrdersControllerProvider.notifier)
+              .onLoadMoreServicesOrders(ordersStatus: 'Cancelled'),
+        ),
+      );
     }
     return SizedBox.shrink();
   }

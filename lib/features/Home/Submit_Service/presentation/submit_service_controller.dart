@@ -29,26 +29,6 @@ class SubmitServiceController extends _$SubmitServiceController {
       final driverPaymentController = ref.read(
         driversPaymentControllerProvider,
       );
-      debugPrint(
-        '${customerController.selectedCustomer!.customerId} 3y2 custoemrId',
-      );
-      debugPrint(
-        '${driverPaymentController.selectedDriver!.driverId} 3y2 driverId',
-      );
-      debugPrint('${availabilityController.selectedDate} 3y2 selectedDate');
-
-      debugPrint(
-        '${availabilityController.selectedPackage!.id} 3y2 selectedPackage',
-      );
-      debugPrint(
-        '${availabilityController.selectedShiftType} 3y2 selectedShiftType',
-      );
-      debugPrint(
-        '${employeesController.selectedEmployees} 3y2 selectedEmployees',
-      );
-      debugPrint(
-        '${driverPaymentController.selectedPaymentMethod} 3y2 selectedPaymentMethod',
-      );
 
       final submitServiceData = await submitServiceRepo.submitService(
         SubmitServiceParams(
@@ -67,7 +47,6 @@ class SubmitServiceController extends _$SubmitServiceController {
         ),
       );
 
-      // debugPrint("currentCustomersPage #1 : ${state.currentCustomersPage.toString()}");
       state = state.copyWith(
         submitServiceStates: RequestStates.loaded,
         submitServiceMessage: 'loadded successfully',

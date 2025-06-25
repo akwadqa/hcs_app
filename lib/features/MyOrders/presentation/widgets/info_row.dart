@@ -6,6 +6,7 @@ class InfoRow extends StatelessWidget {
   final String? title;
   final String? value;
   final Widget? widget;
+
   const InfoRow(this.title, {super.key, this.value, this.widget});
 
   @override
@@ -13,19 +14,22 @@ class InfoRow extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.h),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          title != null
-              ? Text(
-                  title!,
-                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                    color: AppColors.blueText,
-                    fontWeight: FontWeight.w600,
-                  ),
-                )
-              : SizedBox.shrink(),
-          SizedBox(
-            width: 170.w,
+          if (title != null)
+            Expanded(
+              flex: 3,
+              child: Text(
+                title!,
+                style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                  color: AppColors.blueText,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          SizedBox(width: 16.w),
+          Expanded(
+            flex: 5,
             child:
                 widget ??
                 Text(

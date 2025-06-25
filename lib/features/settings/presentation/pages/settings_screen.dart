@@ -3,44 +3,83 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/Auth/application/auth_service.dart';
+import 'package:hcs/features/Auth/presentation/controller/auth_controller.dart';
+import 'package:hcs/gen/assets.gen.dart';
+import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
+import 'package:hcs/src/theme/app_colors.dart';
 
 @RoutePage()
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: CustomAppbar(hasBackArrow: false),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 60.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 200.h),
+    // Register listener exactly once
+    ref.listen<AsyncValue<void>>(authControllerProvider, (previous, next) {
+      if (next is AsyncData) {
+        context.router.replaceAll([
+          MainRoute(children: [IntroRoute()]),
+        ]);
+      } else if (next is AsyncError) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(next.error.toString())));
+      }
+    });
 
-              Consumer(
-                builder: (context, ref, child) => CustomButton(
-                  title: tr(context: context, AppStrings.letMeOut),
-                  textSize: 26.sp,
-                  onPressed: () {
-                    ref.read(userDataProvider.notifier).removeData();
-                  },
-                ),
+    return Scaffold(
+      appBar: CustomAppbar(
+        hasBackArrow: false,
+        title: context.tr(AppStrings.settings),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 26.w),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  30.verticalSpace,
+
+                  Assets.images.goodbye.image(width: 100, height: 100),
+                  10.verticalSpace,
+                  Text(
+                    context.tr(AppStrings.settingsDesc),
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      decoration: TextDecoration.overline,
+                      decorationStyle: TextDecorationStyle.dotted,
+                      fontStyle: FontStyle.italic,
+                      fontSize: 15.sp,
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 26.w, vertical: 25.h),
+            child: CustomButton(
+              title: tr(context: context, AppStrings.logOut),
+              textSize: 26.sp,
+              onPressed: ref.read(authControllerProvider) is AsyncLoading
+                  ? null
+                  : () {
+                      ref.read(authControllerProvider.notifier).logout();
+                    },
+            ),
+          ),
+        ],
       ),
     );
   }

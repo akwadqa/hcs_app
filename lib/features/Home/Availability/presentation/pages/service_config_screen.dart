@@ -15,6 +15,7 @@ import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
+import 'package:hcs/src/shared_widgets/fade_circle_loading_indicator.dart';
 
 @RoutePage()
 class ServiceConfigurationScreen extends ConsumerStatefulWidget {
@@ -43,12 +44,11 @@ class _ServiceConfigurationScreenState
     final availabilityState = ref.watch(
       availabilityControllerProvider.select((value) => value.packagesStates),
     );
-    debugPrint('ssxxss screen');
     return Scaffold(
       body: availabilityState == RequestStates.loaded
           ? _buildContent()
           : availabilityState == RequestStates.loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: FadeCircleLoadingIndicator())
           : availabilityState == RequestStates.error
           ? AppErrorWidget(
               onTap: () => Future(
@@ -135,7 +135,6 @@ class _ServiceConfigurationScreenState
                     onDateSelected: (dt) {
                       // do something with the chosen date
                       final formattedDate = DateFormat('yyyy-MM-dd').format(dt);
-                      debugPrint('Selected date: $formattedDate');
                       ref
                           .read(availabilityControllerProvider.notifier)
                           .selectDate(formattedDate);

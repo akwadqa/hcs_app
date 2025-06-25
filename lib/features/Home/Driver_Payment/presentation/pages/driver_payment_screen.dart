@@ -4,7 +4,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/Home/Driver_Payment/data/models/drivers_model.dart';
 import 'package:hcs/features/Home/Driver_Payment/presentation/controllers/drivers_payment_controllers.dart';
 import 'package:hcs/features/Home/Driver_Payment/presentation/widgets/discount_dropdown.dart';
 import 'package:hcs/features/Home/Driver_Payment/presentation/widgets/paginated_dropdown_drivers.dart';
@@ -19,7 +18,9 @@ import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
+import 'package:hcs/src/shared_widgets/row_error_widget.dart';
 import 'package:hcs/src/theme/app_colors.dart';
+import 'package:hcs/src/shared_widgets/fade_circle_loading_indicator.dart';
 
 @RoutePage()
 class DriverPaymentScreen extends ConsumerStatefulWidget {
@@ -31,10 +32,6 @@ class DriverPaymentScreen extends ConsumerStatefulWidget {
 }
 
 class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
-  Driver? _chosenDriver;
-  final TextEditingController _discountPercentageController =
-      TextEditingController(text: '10%');
-
   @override
   void initState() {
     super.initState();
@@ -73,16 +70,15 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                       //   ref
                       //       .read(driversPaymentControllerProvider.notifier)
                       //       .selectDriver(cust);
-                      //   debugPrint('$_chosenDriver koko _chosenDriver');
-                      //   debugPrint('$cust koko cust ');
+
                       // },
                     );
                   } else if (driversPaymentState.driversStates ==
                       RequestStates.loading) {
-                    return const CircularProgressIndicator();
+                    return const FadeCircleLoadingIndicator();
                   } else if (driversPaymentState.driversStates ==
                       RequestStates.error) {
-                    return AppErrorWidget(
+                    return SimpleErrorWidget(
                       onTap: () => ref
                           .read(driversPaymentControllerProvider.notifier)
                           .fetchDrivers(),
@@ -173,10 +169,10 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                     );
                   } else if (driversPaymentState.discountStates ==
                       RequestStates.loading) {
-                    return const CircularProgressIndicator();
+                    return const FadeCircleLoadingIndicator();
                   } else if (driversPaymentState.discountStates ==
                       RequestStates.error) {
-                    return AppErrorWidget(
+                    return SimpleErrorWidget(
                       onTap: () => ref
                           .read(driversPaymentControllerProvider.notifier)
                           .getDiscountType(),
@@ -202,7 +198,11 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                       final drvierDiscontState = ref.watch(
                         driversPaymentControllerProvider,
                       );
-
+                      final submitServiceStates = ref.watch(
+                        submitServiceControllerProvider.select(
+                          (value) => value.submitServiceStates,
+                        ),
+                      );
                       ref.listen<SubmitServiceState>(
                         submitServiceControllerProvider,
                         (previous, next) {
@@ -247,7 +247,8 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                         title: tr(context: context, AppStrings.submit),
                         onPressed:
                             drvierDiscontState.selectedDiscount == null ||
-                                drvierDiscontState.selectedDriver == null
+                                drvierDiscontState.selectedDriver == null ||
+                                submitServiceStates == RequestStates.loading
                             ? null
                             : () {
                                 ref

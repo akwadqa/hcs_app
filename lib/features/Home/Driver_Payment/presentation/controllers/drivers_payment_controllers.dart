@@ -17,16 +17,12 @@ class DriversPaymentController extends _$DriversPaymentController {
 
   Future<void> withCleaningSupplies(String choice) async {
     state = state.copyWith(withCleaningSupplies: choice);
-    debugPrint(
-      "${state.withCleaningSupplies.toString()} withCleaningSupplies llll",
-    );
+ 
   }
 
   Future<void> selectPaymentMethod(String? selectedPaymentMethod) async {
     state = state.copyWith(selectedPaymentMethod: selectedPaymentMethod);
-    debugPrint(
-      "${state.selectedPaymentMethod.toString()} selectedPaymentMethod llll",
-    );
+ 
   }
 
   // In this function we getDiscountType and Auto selectDiscount,discountPercentage and calculateTotalCost
@@ -36,7 +32,6 @@ class DriversPaymentController extends _$DriversPaymentController {
     try {
       final driverPaymentRepo = ref.read(driverPaymentRepositoryProvider);
       final driverPaymentData = await driverPaymentRepo.getDiscountType();
-      // debugPrint("currentDriversPage #1 : ${state.currentDriversPage.toString()}");
       calculateTotalCost(
         driverPaymentData.data[0].discountPercentage.toDouble(),
       );
@@ -48,7 +43,6 @@ class DriversPaymentController extends _$DriversPaymentController {
         discountStates: RequestStates.loaded,
         driversMessage: '',
       );
-      // debugPrint("currentDriversPage #2 : ${state.currentDriversPage.toString()}");
     } catch (e) {
       state = state.copyWith(
         discountStates: RequestStates.error,
@@ -61,7 +55,6 @@ class DriversPaymentController extends _$DriversPaymentController {
   Future<void> selectDiscount(Discount? selectedDiscount) async {
     calculateTotalCost(selectedDiscount?.discountPercentage.toDouble());
     state = state.copyWith(selectedDiscount: selectedDiscount);
-    debugPrint("${state.selectedDiscount.toString()} selectedDiscount llll");
   }
 
   // In this function calculateEmployeesSum
@@ -99,13 +92,10 @@ class DriversPaymentController extends _$DriversPaymentController {
       discountPercentage: discountPercentage,
     );
 
-    debugPrint("${state.originalCost.toString()} cost before discount");
-    debugPrint("${state.discountedCost.toString()} cost after discount");
   }
 
   Future<void> selectDriver(Driver? selectedDriver) async {
     state = state.copyWith(selectedDriver: selectedDriver);
-    debugPrint("${state.selectedDriver.toString()} selectedDriver llll");
   }
 
   Future<void> fetchDrivers() async {
@@ -114,7 +104,6 @@ class DriversPaymentController extends _$DriversPaymentController {
     try {
       final driverPaymentRepo = ref.read(driverPaymentRepositoryProvider);
       final driverPaymentData = await driverPaymentRepo.getDrivers(page: 1);
-      // debugPrint("currentDriversPage #1 : ${state.currentDriversPage.toString()}");
 
       int? nextPage;
       //if there is a second page ?
@@ -130,7 +119,6 @@ class DriversPaymentController extends _$DriversPaymentController {
         driversStates: RequestStates.loaded,
         driversMessage: '',
       );
-      // debugPrint("currentDriversPage #2 : ${state.currentDriversPage.toString()}");
     } catch (e) {
       state = state.copyWith(
         driversStates: RequestStates.error,
@@ -145,7 +133,6 @@ class DriversPaymentController extends _$DriversPaymentController {
       final driverPaymentData = await driverPaymentRepo.getDrivers(
         page: state.currentDriversPage!,
       );
-      // debugPrint("currentDriversPage #3 : ${state.currentDriversPage.toString()}");
 
       int? nextPage;
       //if we reach the limit or not ?
@@ -161,7 +148,6 @@ class DriversPaymentController extends _$DriversPaymentController {
         driversStates: RequestStates.loaded,
         driversMessage: '',
       );
-      // debugPrint("currentDriversPage #4 : ${state.currentDriversPage.toString()}");
     } catch (e) {
       state = state.copyWith(
         driversStates: RequestStates.error,

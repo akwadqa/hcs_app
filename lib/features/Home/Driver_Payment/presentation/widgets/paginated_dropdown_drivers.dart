@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/models/drivers_model.dart';
 import 'package:hcs/features/Home/Driver_Payment/presentation/controllers/drivers_payment_controllers.dart';
+import 'package:hcs/src/shared_widgets/fade_circle_loading_indicator.dart';
 
 class PaginatedDriverDropdown extends ConsumerStatefulWidget {
   final bool enabled;
@@ -138,7 +139,7 @@ class _PaginatedDriverDropdownState
                                 return const Padding(
                                   padding: EdgeInsets.all(8),
                                   child: Center(
-                                    child: CircularProgressIndicator(),
+                                    child: FadeCircleLoadingIndicator(),
                                   ),
                                 );
                               }

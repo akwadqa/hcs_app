@@ -3,20 +3,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapPreviewCard extends StatelessWidget {
-  final double latitude;
-  final double longitude;
+  final String lcoationUrl;
   final String locationName;
 
   const MapPreviewCard({
     super.key,
-    required this.latitude,
-    required this.longitude,
+    required this.lcoationUrl,
     required this.locationName,
   });
 
   void _openMap() async {
     final url = Uri.parse(
-      'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude',
+      lcoationUrl,
     );
 
     if (await canLaunchUrl(url)) {

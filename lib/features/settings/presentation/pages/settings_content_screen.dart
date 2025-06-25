@@ -28,7 +28,7 @@ class _HomeContentState extends ConsumerState<SettingsContentScreen> {
       // body: homeState.homeStates == RequestStates.loaded
       //     ? _buildContent(homeState.homeBlock!)
       //     : homeState.homeStates == RequestStates.loading
-      //     ? const Center(child: CircularProgressIndicator())
+      //     ? const Center(child: FadeCircleLoadingIndicator())
       //     : homeState.homeStates == RequestStates.error
       //     ? AppErrorWidget(
       //         onTap: () => Future(

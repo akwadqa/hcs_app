@@ -22,11 +22,7 @@ class EmployeesRepository {
   Future<Employees> getEmployees({
     required GetEmployeesParams getEmployeesParams,
   }) async {
-    debugPrint(
-      '${getEmployeesParams.serviceType} getEmployeesParams.serviceType',
-    );
 
-    debugPrint('${getEmployeesParams.days} ffddfdfdfdf');
     final response = await _networkService.get(
       ApiConstance.getEmployees(
         serviceType: getEmployeesParams.serviceType,

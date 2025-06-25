@@ -6,16 +6,18 @@ import 'package:hcs/src/theme/app_colors.dart';
 
 class ServiceCard extends StatelessWidget {
   final ServiceType? serviceType;
-  const ServiceCard({super.key, this.serviceType});
+  final bool enabled;
+
+  const ServiceCard({super.key, this.serviceType, this.enabled = true});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    // Wrap in AbsorbPointer when disabled
+    Widget card = Container(
       width: 342.w,
       height: 150.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        // gradient: AppColors.serviceCardGradient,
         image: DecorationImage(
           image: AssetImage(Assets.images.dummycard.path),
           fit: BoxFit.cover,
@@ -44,8 +46,15 @@ class ServiceCard extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                 ),
               )
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
       ),
     );
+
+    if (!enabled) {
+      // Dim and block interactions
+      card = Opacity(opacity: 0.5, child: AbsorbPointer(child: card));
+    }
+
+    return card;
   }
 }

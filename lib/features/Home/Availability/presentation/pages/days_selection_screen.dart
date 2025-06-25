@@ -30,7 +30,7 @@ class _DaysSelectionScreenState extends State<DaysSelectionScreen> {
       // body: availabilityState.packagesStates == RequestStates.loaded
       //     ? _buildContent(homeState.homeBlock!)
       //     : availabilityState.packagesStates == RequestStates.loading
-      //     ? const Center(child: CircularProgressIndicator())
+      //     ? const Center(child: FadeCircleLoadingIndicator())
       //     : availabilityState.packagesStates == RequestStates.error
       //     ? AppErrorWidget(
       //         onTap: () => Future(
@@ -74,8 +74,7 @@ class _DaysSelectionScreenState extends State<DaysSelectionScreen> {
                   ),
                 );
 
-                debugPrint('sds42d firstVisitDate $firstVisitDate');
-                debugPrint('sds42d lastVisitDate $lastVisitDate');
+            
                 if (firstVisitDate.isNotEmpty && lastVisitDate.isNotEmpty) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,8 +132,6 @@ class _DaysSelectionScreenState extends State<DaysSelectionScreen> {
                       (value) => value.selectedDays.isEmpty,
                     ),
                   );
-
-                  debugPrint('sds42d button  ');
 
                   return CustomButton(
                     title: tr(context: context, AppStrings.checkAvailability),

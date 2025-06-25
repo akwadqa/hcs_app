@@ -32,7 +32,6 @@ class CustomerController extends _$CustomerController {
 
   Future<void> selectCustomer(Customers? selectedCustomer) async {
     state = state.copyWith(selectedCustomer: selectedCustomer);
-    debugPrint("cttt 0 controller ${selectedCustomer?.customerName}");
   }
 
   Future<void> fetchCostumers() async {
@@ -41,7 +40,6 @@ class CustomerController extends _$CustomerController {
     try {
       final homeRepo = ref.read(customerRepositoryProvider);
       final customersData = await homeRepo.getCustomers(page: 1);
-      // debugPrint("currentCustomersPage #1 : ${state.currentCustomersPage.toString()}");
 
       int? nextPage;
       //if there is a second page ?
@@ -57,7 +55,6 @@ class CustomerController extends _$CustomerController {
         customersStates: RequestStates.loaded,
         customersMessage: '',
       );
-      // debugPrint("currentCustomersPage #2 : ${state.currentCustomersPage.toString()}");
     } catch (e) {
       state = state.copyWith(
         customersStates: RequestStates.error,
@@ -72,7 +69,6 @@ class CustomerController extends _$CustomerController {
       final customersData = await homeRepo.getCustomers(
         page: state.currentCustomersPage!,
       );
-      // debugPrint("currentCustomersPage #3 : ${state.currentCustomersPage.toString()}");
 
       int? nextPage;
       //if we reach the limit or not ?
@@ -87,9 +83,7 @@ class CustomerController extends _$CustomerController {
         customersStates: RequestStates.loaded,
         customersMessage: '',
       );
-      debugPrint(
-        "page= customers.length #4 : ${state.customers.length.toString()}",
-      );
+ 
     } catch (e) {
       state = state.copyWith(
         customersStates: RequestStates.error,

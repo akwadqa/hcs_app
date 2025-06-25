@@ -95,19 +95,43 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: 32.h),
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            tr(context: context, AppStrings.forgotPassword),
-                            style: Theme.of(context).textTheme.displaySmall,
-                          ),
+                        child: Consumer(
+                          builder: (context, ref, child) {
+                            var state = ref.watch(authControllerProvider);
+
+                            return TextButton(
+                              onPressed: state is AsyncLoading
+                                  ? null
+                                  : () {
+                                      if (_emailController.text.isNotEmpty) {
+                                        ref
+                                            .watch(
+                                              authControllerProvider.notifier,
+                                            )
+                                            .forgotPassword(
+                                              _emailController.text,
+                                            );
+                                      }
+                                    },
+                              child: Text(
+                                tr(context: context, AppStrings.forgotPassword),
+                                style: Theme.of(context).textTheme.displaySmall,
+                              ),
+                            );
+                          },
                         ),
                       ),
                       const Spacer(),
                       Consumer(
                         builder: (context, ref, child) {
                           ref.listen(authControllerProvider, (prev, next) {
-                            if (next is AsyncError) {
+                            if (next is AsyncData) {
+                              notifyUser(
+                                context: context,
+                                message: 'Request has been sent successfully',
+                                success: true,
+                              );
+                            } else if (next is AsyncError) {
                               notifyUser(
                                 context: context,
                                 message: next.error.toString(),

@@ -15,6 +15,7 @@ import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
+import 'package:hcs/src/shared_widgets/fade_circle_loading_indicator.dart';
 
 @RoutePage()
 class CustomerScreen extends ConsumerStatefulWidget {
@@ -35,6 +36,7 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     final customerState = ref.watch(customerControllerProvider);
@@ -43,7 +45,7 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
       body: customerState.customersStates == RequestStates.loaded
           ? _buildContent(customerState)
           : customerState.customersStates == RequestStates.loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: FadeCircleLoadingIndicator())
           : customerState.customersStates == RequestStates.error
           ? AppErrorWidget(
               onTap: () => Future(
