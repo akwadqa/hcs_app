@@ -13,14 +13,13 @@ import 'package:hcs/src/theme/app_colors.dart';
 
 @RoutePage()
 class DaysSelectionScreen extends StatefulWidget {
-  DaysSelectionScreen({super.key});
+  const DaysSelectionScreen({super.key});
 
   @override
   State<DaysSelectionScreen> createState() => _DaysSelectionScreenState();
 }
 
 class _DaysSelectionScreenState extends State<DaysSelectionScreen> {
-  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {

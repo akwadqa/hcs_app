@@ -89,46 +89,18 @@ class CustomerRouteArgs {
 
 /// generated route for
 /// [_i2.DaysSelectionScreen]
-class DaysSelectionRoute extends _i16.PageRouteInfo<DaysSelectionRouteArgs> {
-  DaysSelectionRoute({_i17.Key? key, List<_i16.PageRouteInfo>? children})
-    : super(
-        DaysSelectionRoute.name,
-        args: DaysSelectionRouteArgs(key: key),
-        initialChildren: children,
-      );
+class DaysSelectionRoute extends _i16.PageRouteInfo<void> {
+  const DaysSelectionRoute({List<_i16.PageRouteInfo>? children})
+    : super(DaysSelectionRoute.name, initialChildren: children);
 
   static const String name = 'DaysSelectionRoute';
 
   static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<DaysSelectionRouteArgs>(
-        orElse: () => const DaysSelectionRouteArgs(),
-      );
-      return _i2.DaysSelectionScreen(key: args.key);
+      return const _i2.DaysSelectionScreen();
     },
   );
-}
-
-class DaysSelectionRouteArgs {
-  const DaysSelectionRouteArgs({this.key});
-
-  final _i17.Key? key;
-
-  @override
-  String toString() {
-    return 'DaysSelectionRouteArgs{key: $key}';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! DaysSelectionRouteArgs) return false;
-    return key == other.key;
-  }
-
-  @override
-  int get hashCode => key.hashCode;
 }
 
 /// generated route for

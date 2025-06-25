@@ -9,7 +9,6 @@ import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
-import 'package:hcs/src/theme/app_colors.dart';
 
 @RoutePage()
 class SettingsScreen extends ConsumerStatefulWidget {

@@ -3,7 +3,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/settings/presentation/controller/settings_controller.dart';
 
 @RoutePage()
 class SettingsContentScreen extends ConsumerStatefulWidget {
@@ -22,7 +21,7 @@ class _HomeContentState extends ConsumerState<SettingsContentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final homeState = ref.watch(settingsControllerProvider);
+    // final homeState = ref.watch(settingsControllerProvider);
 
     return Scaffold(
       // body: homeState.homeStates == RequestStates.loaded
@@ -37,16 +36,12 @@ class _HomeContentState extends ConsumerState<SettingsContentScreen> {
       //         ),
       //       )
       //     : SizedBox.shrink(),
-      body: _buildContent(),
-    );
-  }
-
-  Widget _buildContent() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(
-        top: 75.h,
-      ), //+ 25.h vetrical padding in buildContentItem
-      child: Column(children: [Center(child: Text('SEttings'))]),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          top: 75.h,
+        ), //+ 25.h vetrical padding in buildContentItem
+        child: Column(children: [Center(child: Text('SEttings'))]),
+      ),
     );
   }
 }

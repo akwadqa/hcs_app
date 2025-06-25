@@ -9,16 +9,19 @@ import 'package:hcs/src/theme/app_colors.dart';
 class EmployeeBarChip extends StatefulWidget {
   final Employee employee;
   final VoidCallback? onTap;
-   bool enabled;
-   EmployeeBarChip({super.key, required this.employee, this.onTap, required this.enabled});
+  bool enabled;
+  EmployeeBarChip({
+    super.key,
+    required this.employee,
+    this.onTap,
+    required this.enabled,
+  });
 
   @override
   State<EmployeeBarChip> createState() => _EmployeeBarChipState();
 }
 
 class _EmployeeBarChipState extends State<EmployeeBarChip> {
-
-
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -29,7 +32,7 @@ class _EmployeeBarChipState extends State<EmployeeBarChip> {
             if (!widget.enabled) {
               controller.selectEmployee(widget.employee);
             } else {
-                controller.unSelectEmployee(widget.employee);
+              controller.unSelectEmployee(widget.employee);
             }
             setState(() {
               widget.enabled = !widget.enabled;
@@ -51,7 +54,9 @@ class _EmployeeBarChipState extends State<EmployeeBarChip> {
             child: Text(
               widget.employee.employeeName,
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                color: widget.enabled ? AppColors.blackText : AppColors.unSelectedText,
+                color: widget.enabled
+                    ? AppColors.blackText
+                    : AppColors.unSelectedText,
               ),
             ),
           ),

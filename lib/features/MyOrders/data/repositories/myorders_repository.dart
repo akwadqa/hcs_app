@@ -1,7 +1,5 @@
 // home_repository.dart
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
 import 'package:hcs/features/MyOrders/data/models/orders_details_model.dart';
 import 'package:hcs/features/MyOrders/data/models/services_orders_model.dart';
 import 'package:hcs/src/constants/api_constance.dart';

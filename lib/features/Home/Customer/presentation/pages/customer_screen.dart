@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
 import 'package:hcs/features/Home/Customer/presentation/controllers/customer_controller.dart';
 import 'package:hcs/features/Home/Customer/presentation/controllers/customer_state.dart';
 import 'package:hcs/features/Home/Customer/presentation/widgets/add_customer_dialog.dart';
@@ -27,7 +26,6 @@ class CustomerScreen extends ConsumerStatefulWidget {
 }
 
 class _CustomerScreenState extends ConsumerState<CustomerScreen> {
-  Customers? _chosenCustomer;
   @override
   void initState() {
     super.initState();

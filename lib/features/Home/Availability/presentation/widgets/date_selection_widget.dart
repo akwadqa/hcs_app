@@ -33,10 +33,10 @@ class DateFormField extends StatefulWidget {
        lastDate = lastDate ?? DateTime(2100);
 
   @override
-  _DateFormFieldState createState() => _DateFormFieldState();
+  DateFormFieldState createState() => DateFormFieldState();
 }
 
-class _DateFormFieldState extends State<DateFormField> {
+class DateFormFieldState extends State<DateFormField> {
   late TextEditingController _controller;
   DateTime? _pickedDate;
 

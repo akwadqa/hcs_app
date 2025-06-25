@@ -60,7 +60,6 @@ class AuthRepository {
       formData,
     );
 
-    final data = json.encode(response.data);
     if (response.statusCode == 200) {
       return true;
     } else {

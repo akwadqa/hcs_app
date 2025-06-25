@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
 import 'package:hcs/features/Home/Customer/presentation/controllers/customer_controller.dart';
 import 'package:hcs/features/Home/Driver_Payment/presentation/controllers/drivers_payment_controllers.dart';
@@ -30,7 +29,7 @@ class SubmitServiceController extends _$SubmitServiceController {
         driversPaymentControllerProvider,
       );
 
-      final submitServiceData = await submitServiceRepo.submitService(
+       await submitServiceRepo.submitService(
         SubmitServiceParams(
           customerId: customerController.selectedCustomer!.customerId,
           customerName: customerController.selectedCustomer!.customerName,

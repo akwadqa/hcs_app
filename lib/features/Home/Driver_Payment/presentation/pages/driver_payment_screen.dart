@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/routing/app_router.gr.dart';
-import 'package:hcs/src/shared_widgets/app_error_widget.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 import 'package:hcs/src/shared_widgets/row_error_widget.dart';

@@ -17,7 +17,7 @@ abstract class AppTheme {
     fontWeight: FontWeight.w400,
   );
 
-  static final EdgeInsets _buttonPadding = EdgeInsets.symmetric(vertical: 30.h);
+  // static final EdgeInsets _buttonPadding = EdgeInsets.symmetric(vertical: 30.h);
 
   static OutlineInputBorder _outlineBorder(Color borderColor) {
     return OutlineInputBorder(

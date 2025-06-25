@@ -10,10 +10,10 @@ class ServiceCategoryChips extends ConsumerStatefulWidget {
   const ServiceCategoryChips({super.key, required this.selectedChip});
 
   @override
-  _ServiceCategoryChipsState createState() => _ServiceCategoryChipsState();
+  ServiceCategoryChipsState createState() => ServiceCategoryChipsState();
 }
 
-class _ServiceCategoryChipsState extends ConsumerState<ServiceCategoryChips> {
+class ServiceCategoryChipsState extends ConsumerState<ServiceCategoryChips> {
   late List<String> serviceCategoryStringList;
   late int _selectedIndex;
 
