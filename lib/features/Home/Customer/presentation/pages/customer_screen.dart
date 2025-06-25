@@ -26,6 +26,8 @@ class CustomerScreen extends ConsumerStatefulWidget {
 }
 
 class _CustomerScreenState extends ConsumerState<CustomerScreen> {
+  final _dropdownKey = GlobalKey<PaginatedCustomerDropdownState>();
+
   @override
   void initState() {
     super.initState();
@@ -33,7 +35,6 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
       () => ref.read(customerControllerProvider.notifier).fetchCostumers(),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -59,69 +60,76 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
   }
 
   Widget _buildContent(CustomerState customerState) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
-      child: Column(
-        children: [
-          // This Column will take available space
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.symmetric(vertical: 32.h),
-                  child: Text(
-                    context.tr(AppStrings.customer),
-                    style: Theme.of(context).textTheme.displayMedium!,
-                  ),
-                ),
-                8.verticalSpace,
-                PaginatedCustomerDropdown(),
-                20.verticalSpace,
-
-                SizedBox(
-                  height: 48.h,
-                  child: TextButton(
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(Colors.white),
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        // 3) First close the overlay if it's open
+        _dropdownKey.currentState?.closeOverlay();
+        // 4) Then allow the pop to happen
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24.w),
+        child: Column(
+          children: [
+            // This Column will take available space
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.symmetric(vertical: 32.h),
+                    child: Text(
+                      context.tr(AppStrings.customer),
+                      style: Theme.of(context).textTheme.displayMedium!,
                     ),
-                    onPressed: () async {
-                      await showDialog<String>(
-                        context: context,
-                        builder: (_) => const AddCustomerDialog(),
-                      );
-                    },
-                    child: const Text(
-                      '+ Add Customer',
-                    ), // Changed to const Text
                   ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 25.h),
-            child: Consumer(
-              builder: (context, ref, child) {
-                final selectedCustomerState = ref.watch(
-                  customerControllerProvider.select(
-                    (value) => value.selectedCustomer,
-                  ),
-                );
+                  8.verticalSpace,
+                  PaginatedCustomerDropdown(key: _dropdownKey),
+                  20.verticalSpace,
 
-                return CustomButton(
-                  title: tr(context: context, AppStrings.next),
-                  onPressed: selectedCustomerState == null
-                      ? null
-                      : () {
-                          context.pushRoute(ServiceConfigurationRoute());
-                        },
-                );
-              },
+                  SizedBox(
+                    height: 48.h,
+                    child: TextButton(
+                      style: const ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(Colors.white),
+                      ),
+                      onPressed: () async {
+                        await showDialog<String>(
+                          context: context,
+                          builder: (_) => const AddCustomerDialog(),
+                        );
+                      },
+                      child: const Text(
+                        '+ Add Customer',
+                      ), // Changed to const Text
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.only(bottom: 25.h),
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final selectedCustomerState = ref.watch(
+                    customerControllerProvider.select(
+                      (value) => value.selectedCustomer,
+                    ),
+                  );
+
+                  return CustomButton(
+                    title: tr(context: context, AppStrings.next),
+                    onPressed: selectedCustomerState == null
+                        ? null
+                        : () {
+                            context.pushRoute(ServiceConfigurationRoute());
+                          },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

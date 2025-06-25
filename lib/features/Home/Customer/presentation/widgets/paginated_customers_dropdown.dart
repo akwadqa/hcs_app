@@ -19,10 +19,10 @@ class PaginatedCustomerDropdown extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<PaginatedCustomerDropdown> createState() =>
-      _PaginatedCustomerDropdownState();
+      PaginatedCustomerDropdownState();
 }
 
-class _PaginatedCustomerDropdownState
+class PaginatedCustomerDropdownState
     extends ConsumerState<PaginatedCustomerDropdown> {
   Timer? _loadMoreTimer;
   final LayerLink _layerLink = LayerLink();
@@ -32,6 +32,10 @@ class _PaginatedCustomerDropdownState
   String _searchTerm = '';
   late double _targetWidth;
   late double _targetHeight;
+
+  void closeOverlay() {
+    _closeOverlay();
+  }
 
   @override
   void initState() {
@@ -47,7 +51,7 @@ class _PaginatedCustomerDropdownState
     _searchController.removeListener(_onSearchChanged);
 
     _closeOverlay();
-    
+
     _searchController.dispose();
     _scrollController.dispose();
     super.dispose();

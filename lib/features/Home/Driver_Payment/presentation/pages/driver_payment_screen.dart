@@ -30,6 +30,8 @@ class DriverPaymentScreen extends ConsumerStatefulWidget {
 }
 
 class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
+  final _dropdownKey = GlobalKey<PaginatedDriverDropdownState>();
+
   @override
   void initState() {
     super.initState();
@@ -43,167 +45,179 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
   Widget build(BuildContext context) {
     final driversPaymentState = ref.watch(driversPaymentControllerProvider);
 
-    return Scaffold(
-      appBar: CustomAppbar(hasBackArrow: true),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              24.verticalSpace,
-              Text(
-                context.tr(AppStrings.driverName),
-                style: Theme.of(context).textTheme.displayMedium!,
-              ),
-              8.verticalSpace,
-              Consumer(
-                builder: (context, ref, child) {
-                  if (driversPaymentState.driversStates ==
-                      RequestStates.loaded) {
-                    return PaginatedDriverDropdown(
-                      // onChanged: (cust) {
-                      //   setState(() => _chosenDriver = cust);
-                      //   ref
-                      //       .read(driversPaymentControllerProvider.notifier)
-                      //       .selectDriver(cust);
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        // 3) First close the overlay if it's open
+        _dropdownKey.currentState?.closeOverlay();
+        // 4) Then allow the pop to happen
+      },
+      child: Scaffold(
+        appBar: CustomAppbar(hasBackArrow: true),
+        body: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                24.verticalSpace,
+                Text(
+                  context.tr(AppStrings.driverName),
+                  style: Theme.of(context).textTheme.displayMedium!,
+                ),
+                8.verticalSpace,
+                Consumer(
+                  builder: (context, ref, child) {
+                    if (driversPaymentState.driversStates ==
+                        RequestStates.loaded) {
+                      return PaginatedDriverDropdown(
+                        key: _dropdownKey,
+                        // onChanged: (cust) {
+                        //   setState(() => _chosenDriver = cust);
+                        //   ref
+                        //       .read(driversPaymentControllerProvider.notifier)
+                        //       .selectDriver(cust);
 
-                      // },
-                    );
-                  } else if (driversPaymentState.driversStates ==
-                      RequestStates.loading) {
-                    return const FadeCircleLoadingIndicator();
-                  } else if (driversPaymentState.driversStates ==
-                      RequestStates.error) {
-                    return SimpleErrorWidget(
-                      onTap: () => ref
-                          .read(driversPaymentControllerProvider.notifier)
-                          .fetchDrivers(),
-                    );
-                  } else {
-                    return const SizedBox.shrink();
-                  }
-                },
-              ),
+                        // },
+                      );
+                    } else if (driversPaymentState.driversStates ==
+                        RequestStates.loading) {
+                      return const FadeCircleLoadingIndicator();
+                    } else if (driversPaymentState.driversStates ==
+                        RequestStates.error) {
+                      return SimpleErrorWidget(
+                        onTap: () => ref
+                            .read(driversPaymentControllerProvider.notifier)
+                            .fetchDrivers(),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
 
-              32.verticalSpace,
-              Divider(height: 0.1, color: AppColors.dividerGrey),
-              32.verticalSpace,
+                32.verticalSpace,
+                Divider(height: 0.1, color: AppColors.dividerGrey),
+                32.verticalSpace,
 
-              Consumer(
-                builder: (context, ref, child) {
-                  if (driversPaymentState.discountStates ==
-                      RequestStates.loaded) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                Consumer(
+                  builder: (context, ref, child) {
+                    if (driversPaymentState.discountStates ==
+                        RequestStates.loaded) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
 
-                      children: [
-                        DiscountDropdown(
-                          items: driversPaymentState.discountType,
-                          selectedItem: driversPaymentState.selectedDiscount,
-                          onSelected: (p0) {
-                            Future(
-                              () => ref
+                        children: [
+                          DiscountDropdown(
+                            items: driversPaymentState.discountType,
+                            selectedItem: driversPaymentState.selectedDiscount,
+                            onSelected: (p0) {
+                              Future(
+                                () => ref
+                                    .read(
+                                      driversPaymentControllerProvider.notifier,
+                                    )
+                                    .selectDiscount(p0),
+                              );
+                            },
+                          ),
+                          16.verticalSpace,
+                          Text(
+                            context.tr(AppStrings.discountPercentage),
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
+                          8.verticalSpace,
+                          TextFormField(
+                            controller: TextEditingController(
+                              text: driversPaymentState.discountPercentage
+                                  .toString(),
+                            ),
+                            onFieldSubmitted: (value) {
+                              double? doubleDiscount = double.tryParse(value);
+                              ref
                                   .read(
                                     driversPaymentControllerProvider.notifier,
                                   )
-                                  .selectDiscount(p0),
-                            );
-                          },
-                        ),
-                        16.verticalSpace,
-                        Text(
-                          context.tr(AppStrings.discountPercentage),
-                          style: Theme.of(context).textTheme.displayMedium,
-                        ),
-                        8.verticalSpace,
-                        TextFormField(
-                          controller: TextEditingController(
-                            text: driversPaymentState.discountPercentage
-                                .toString(),
+                                  .calculateTotalCost(doubleDiscount);
+                            },
+                            decoration: InputDecoration(
+                              hintStyle: Theme.of(
+                                context,
+                              ).inputDecorationTheme.hintStyle,
+                            ),
                           ),
-                          onFieldSubmitted: (value) {
-                            double? doubleDiscount = double.tryParse(value);
-                            ref
-                                .read(driversPaymentControllerProvider.notifier)
-                                .calculateTotalCost(doubleDiscount);
-                          },
-                          decoration: InputDecoration(
-                            hintStyle: Theme.of(
-                              context,
-                            ).inputDecorationTheme.hintStyle,
+                          10.verticalSpace,
+                          Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: 'Total Cost: ',
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.displayMedium,
+                                ),
+                                TextSpan(
+                                  text:
+                                      '${driversPaymentState.discountedCost} ',
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.displaySmall,
+                                ),
+
+                                TextSpan(
+                                  text: driversPaymentState.originalCost
+                                      .toString(),
+                                  style: Theme.of(context).textTheme.bodyMedium!
+                                      .copyWith(
+                                        decoration: TextDecoration.lineThrough,
+                                        fontSize: 13.sp,
+                                      ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        10.verticalSpace,
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'Total Cost: ',
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.displayMedium,
-                              ),
-                              TextSpan(
-                                text: '${driversPaymentState.discountedCost} ',
-                                style: Theme.of(context).textTheme.displaySmall,
-                              ),
-
-                              TextSpan(
-                                text: driversPaymentState.originalCost
-                                    .toString(),
-                                style: Theme.of(context).textTheme.bodyMedium!
-                                    .copyWith(
-                                      decoration: TextDecoration.lineThrough,
-                                      fontSize: 13.sp,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        32.verticalSpace,
-                      ],
-                    );
-                  } else if (driversPaymentState.discountStates ==
-                      RequestStates.loading) {
-                    return const FadeCircleLoadingIndicator();
-                  } else if (driversPaymentState.discountStates ==
-                      RequestStates.error) {
-                    return SimpleErrorWidget(
-                      onTap: () => ref
-                          .read(driversPaymentControllerProvider.notifier)
-                          .getDiscountType(),
-                    );
-                  } else {
-                    return const SizedBox.shrink();
-                  }
-                },
-              ),
-
-              PaymentMethodChips(),
-              32.verticalSpace,
-              Divider(height: 0.1, color: AppColors.dividerGrey),
-              32.verticalSpace,
-              AreCleaningSuppliesAvailable(),
-              50.verticalSpace,
-
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 25.h),
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      final drvierDiscontState = ref.watch(
-                        driversPaymentControllerProvider,
+                          32.verticalSpace,
+                        ],
                       );
-                      final submitServiceStates = ref.watch(
-                        submitServiceControllerProvider.select(
-                          (value) => value.submitServiceStates,
-                        ),
+                    } else if (driversPaymentState.discountStates ==
+                        RequestStates.loading) {
+                      return const FadeCircleLoadingIndicator();
+                    } else if (driversPaymentState.discountStates ==
+                        RequestStates.error) {
+                      return SimpleErrorWidget(
+                        onTap: () => ref
+                            .read(driversPaymentControllerProvider.notifier)
+                            .getDiscountType(),
                       );
-                      ref.listen<SubmitServiceState>(
-                        submitServiceControllerProvider,
-                        (previous, next) {
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
+
+                PaymentMethodChips(),
+                32.verticalSpace,
+                Divider(height: 0.1, color: AppColors.dividerGrey),
+                32.verticalSpace,
+                AreCleaningSuppliesAvailable(),
+                50.verticalSpace,
+
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 25.h),
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final drvierDiscontState = ref.watch(
+                          driversPaymentControllerProvider,
+                        );
+                        final submitServiceStates = ref.watch(
+                          submitServiceControllerProvider.select(
+                            (value) => value.submitServiceStates,
+                          ),
+                        );
+                        ref.listen<
+                          SubmitServiceState
+                        >(submitServiceControllerProvider, (previous, next) {
                           if (next.submitServiceStates ==
                               RequestStates.loaded) {
                             context.router.replaceAll([
@@ -239,28 +253,29 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                               ),
                             );
                           }
-                        },
-                      );
-                      return CustomButton(
-                        title: tr(context: context, AppStrings.submit),
-                        onPressed:
-                            drvierDiscontState.selectedDiscount == null ||
-                                drvierDiscontState.selectedDriver == null ||
-                                submitServiceStates == RequestStates.loading
-                            ? null
-                            : () {
-                                ref
-                                    .watch(
-                                      submitServiceControllerProvider.notifier,
-                                    )
-                                    .submitService();
-                              },
-                      );
-                    },
+                        });
+                        return CustomButton(
+                          title: tr(context: context, AppStrings.submit),
+                          onPressed:
+                              drvierDiscontState.selectedDiscount == null ||
+                                  drvierDiscontState.selectedDriver == null ||
+                                  submitServiceStates == RequestStates.loading
+                              ? null
+                              : () {
+                                  ref
+                                      .watch(
+                                        submitServiceControllerProvider
+                                            .notifier,
+                                      )
+                                      .submitService();
+                                },
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -19,10 +19,10 @@ class PaginatedDriverDropdown extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<PaginatedDriverDropdown> createState() =>
-      _PaginatedDriverDropdownState();
+      PaginatedDriverDropdownState();
 }
 
-class _PaginatedDriverDropdownState
+class PaginatedDriverDropdownState
     extends ConsumerState<PaginatedDriverDropdown> {
   Timer? _loadMoreTimer;
   final LayerLink _layerLink = LayerLink();
@@ -32,6 +32,9 @@ class _PaginatedDriverDropdownState
   String _searchTerm = '';
   late double _targetWidth;
   late double _targetHeight;
+  void closeOverlay() {
+    _closeOverlay();
+  }
 
   @override
   void initState() {
