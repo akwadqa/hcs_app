@@ -27,7 +27,6 @@ class ShareToWhatsApp extends StatelessWidget {
 💵 Payment: Cash, QR ${orderDetails?.totalNetAmount}
 ''';
 
-
     final url = Uri.parse(
       "https://wa.me/?text=${Uri.encodeComponent(message)}",
     );

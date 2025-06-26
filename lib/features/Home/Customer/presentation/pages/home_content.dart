@@ -35,6 +35,7 @@ class _HomeContentState extends ConsumerState<HomeContentScreen> {
   @override
   Widget build(BuildContext context) {
     // final homeState = ref.watch(customerControllerProvider);
+    debugPrint('qteg ${context.router}');
 
     return Scaffold(
       // body: homeState.homeStates == RequestStates.loaded

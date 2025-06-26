@@ -48,8 +48,10 @@ class PaginatedDriverDropdownState
   void dispose() {
     _loadMoreTimer?.cancel();
     _searchController.removeListener(_onSearchChanged);
-    _searchController.dispose();
+
     _closeOverlay();
+
+    _searchController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -179,10 +181,15 @@ class PaginatedDriverDropdownState
   }
 
   void _closeOverlay() {
-    _overlay?.remove();
-    _overlay = null;
-    _searchController.clear();
-    _searchTerm = '';
+    // Only clear & remove if we're still mounted
+    if (_overlay != null) {
+      _overlay!.remove();
+      _overlay = null;
+    }
+    if (mounted) {
+      _searchController.clear();
+      _searchTerm = '';
+    }
   }
 
   @override

@@ -122,6 +122,7 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
                     onPressed: selectedCustomerState == null
                         ? null
                         : () {
+                            _dropdownKey.currentState?.closeOverlay();
                             context.pushRoute(ServiceConfigurationRoute());
                           },
                   );

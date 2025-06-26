@@ -227,11 +227,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                           if (next.submitServiceStates ==
                               RequestStates.loaded) {
                             context.router.replaceAll([
-                              MainRoute(
-                                children: [
-                                  HomeRoute(children: [HomeContentRoute()]),
-                                ],
-                              ),
+                              MainRoute(children: [HomeRoute()]),
                             ]);
 
                             showDialog(
@@ -251,6 +247,8 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                           }
 
                           if (next.submitServiceStates == RequestStates.error) {
+                            _dropdownKey.currentState?.closeOverlay();
+
                             showDialog(
                               context: context,
                               builder: (_) => AlertDialog(
@@ -276,6 +274,8 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                                   submitServiceStates == RequestStates.loading
                               ? null
                               : () {
+                                  _dropdownKey.currentState?.closeOverlay();
+
                                   ref
                                       .watch(
                                         submitServiceControllerProvider

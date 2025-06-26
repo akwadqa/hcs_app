@@ -24,9 +24,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     // Register listener exactly once
     ref.listen<AsyncValue<void>>(authControllerProvider, (previous, next) {
       if (next is AsyncData) {
-        context.router.replaceAll([
-          MainRoute(children: [IntroRoute()]),
-        ]);
+        context.router.replaceAll([IntroRoute()]);
       } else if (next is AsyncError) {
         ScaffoldMessenger.of(
           context,

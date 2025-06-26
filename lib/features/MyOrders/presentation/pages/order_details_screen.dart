@@ -121,7 +121,11 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
             child: Divider(height: 0.1, color: AppColors.dividerGrey),
           ),
 
-          InfoRow("Employee name", value: details?.staffAppointment.toString()),
+          InfoRow(
+            "Employees name",
+            value: (details?.staffAppointment as List?)?.join(',\n') ?? '',
+          ),
+
           InfoRow("Driver name", value: details?.driver?.driverName),
 
           Padding(
@@ -129,7 +133,7 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
             child: Divider(height: 0.1, color: AppColors.dividerGrey),
           ),
 
-          InfoRow("Discount Type", value: details?.discountType),
+          // InfoRow("Discount Type", value: details?.discountType),
           InfoRow(
             "Discount Percentage",
             value: details?.discountPercentage.toString(),
@@ -143,7 +147,7 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
 
           InfoRow(
             "Cleaning supply",
-            value: details?.withCleaningSupplies.toString(),
+            value: details?.withCleaningSupplies == 0 ? "No" : "Yes",
           ),
 
           24.verticalSpace,

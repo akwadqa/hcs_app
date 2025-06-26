@@ -18,9 +18,9 @@ class InfoRow extends StatelessWidget {
         children: [
           if (title != null)
             Expanded(
-              flex: 3,
               child: Text(
                 title!,
+                softWrap: true,
                 style: Theme.of(context).textTheme.displayMedium!.copyWith(
                   color: AppColors.blueText,
                   fontWeight: FontWeight.w600,
@@ -29,13 +29,13 @@ class InfoRow extends StatelessWidget {
             ),
           SizedBox(width: 16.w),
           Expanded(
-            flex: 5,
             child:
                 widget ??
                 Text(
                   "$value",
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
+
+                  // textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.displayMedium,
                 ),
           ),
