@@ -24,7 +24,7 @@ class OrdersDetails {
   @JsonKey(name: "message")
   final String? message;
 
-  @JsonKey(name: "Details")
+  @JsonKey(name: "data")
   final Details? details;
 
   OrdersDetails({this.statusCode, this.error, this.message, this.details});

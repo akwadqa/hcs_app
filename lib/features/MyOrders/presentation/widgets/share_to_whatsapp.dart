@@ -20,14 +20,13 @@ class ShareToWhatsApp extends StatelessWidget {
 
 🔢 Booking Number: $serviceOrderId
 📍 Address: Zone ${orderDetails?.customer?.zone},
-🗺️ Location Link:
-- Google Maps: ${orderDetails?.customer?.locationUrl}
 📅 Date: ${orderDetails?.date}
 🧴 Cleaning Material: ${orderDetails?.withCleaningSupplies == 0 ? 'No' : "Yes"}
+🗺️ Google Maps: ${orderDetails?.customer?.locationUrl}
 
 💵 Payment: Cash, QR ${orderDetails?.totalNetAmount}
-
 ''';
+
 
     final url = Uri.parse(
       "https://wa.me/?text=${Uri.encodeComponent(message)}",

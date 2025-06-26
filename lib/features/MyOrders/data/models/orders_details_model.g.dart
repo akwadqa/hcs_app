@@ -11,9 +11,9 @@ OrdersDetails _$OrdersDetailsFromJson(Map<String, dynamic> json) =>
       statusCode: (json['status_code'] as num?)?.toInt(),
       error: (json['error'] as num?)?.toInt(),
       message: json['message'] as String?,
-      details: json['Details'] == null
+      details: json['data'] == null
           ? null
-          : Details.fromJson(json['Details'] as Map<String, dynamic>),
+          : Details.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$OrdersDetailsToJson(OrdersDetails instance) =>
@@ -21,7 +21,7 @@ Map<String, dynamic> _$OrdersDetailsToJson(OrdersDetails instance) =>
       'status_code': instance.statusCode,
       'error': instance.error,
       'message': instance.message,
-      'Details': instance.details,
+      'data': instance.details,
     };
 
 Details _$DetailsFromJson(Map<String, dynamic> json) => Details(

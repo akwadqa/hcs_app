@@ -68,6 +68,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                 8.verticalSpace,
                 Consumer(
                   builder: (context, ref, child) {
+                    debugPrint('jrrjjrjr driver');
                     if (driversPaymentState.driversStates ==
                         RequestStates.loaded) {
                       return PaginatedDriverDropdown(
@@ -102,6 +103,8 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
 
                 Consumer(
                   builder: (context, ref, child) {
+                    debugPrint('jrrjjrjr discount ');
+
                     if (driversPaymentState.discountStates ==
                         RequestStates.loaded) {
                       return Column(
@@ -132,6 +135,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                               text: driversPaymentState.discountPercentage
                                   .toString(),
                             ),
+                            keyboardType: TextInputType.number,
                             onFieldSubmitted: (value) {
                               double? doubleDiscount = double.tryParse(value);
                               ref
@@ -207,6 +211,8 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                     padding: EdgeInsets.only(bottom: 25.h),
                     child: Consumer(
                       builder: (context, ref, child) {
+                        debugPrint('jrrjjrjr button');
+
                         final drvierDiscontState = ref.watch(
                           driversPaymentControllerProvider,
                         );
@@ -245,10 +251,18 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                           }
 
                           if (next.submitServiceStates == RequestStates.error) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
+                            showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: Assets.images.errorX.svg(),
                                 content: Text(
-                                  next.submitServiceMessage ?? 'Error',
+                                  next.submitServiceMessage ??
+                                      "An unexpected error occurred. Please try again.",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium!
+                                      .copyWith(fontSize: 20.sp),
                                 ),
                               ),
                             );

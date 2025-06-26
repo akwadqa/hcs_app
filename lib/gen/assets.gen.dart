@@ -54,6 +54,9 @@ class $AssetsImagesGen {
   AssetGenImage get error404Min =>
       const AssetGenImage('assets/images/error404-min.png');
 
+  /// File path: assets/images/error_x.svg
+  SvgGenImage get errorX => const SvgGenImage('assets/images/error_x.svg');
+
   /// File path: assets/images/goodbye.png
   AssetGenImage get goodbye => const AssetGenImage('assets/images/goodbye.png');
 
@@ -111,6 +114,7 @@ class $AssetsImagesGen {
     creditCard,
     dummycard,
     error404Min,
+    errorX,
     goodbye,
     homeSelected,
     homeUnselected,

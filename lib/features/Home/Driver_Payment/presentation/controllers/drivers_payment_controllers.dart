@@ -16,12 +16,10 @@ class DriversPaymentController extends _$DriversPaymentController {
 
   Future<void> withCleaningSupplies(String choice) async {
     state = state.copyWith(withCleaningSupplies: choice);
- 
   }
 
   Future<void> selectPaymentMethod(String? selectedPaymentMethod) async {
     state = state.copyWith(selectedPaymentMethod: selectedPaymentMethod);
- 
   }
 
   // In this function we getDiscountType and Auto selectDiscount,discountPercentage and calculateTotalCost
@@ -71,7 +69,11 @@ class DriversPaymentController extends _$DriversPaymentController {
 
   // In this function we controll 3 (originalCost , discountedCost, discountPercentage) in state
   Future<void> calculateTotalCost(double? discountPercentage) async {
-    discountPercentage ??= 0;
+    if (discountPercentage == null || discountPercentage < 0) {
+      discountPercentage = 0.0;
+    } else if (discountPercentage > 100) {
+      discountPercentage = 100.0;
+    }
 
     double employeesCost = calculateEmployeesSum();
 
@@ -90,7 +92,6 @@ class DriversPaymentController extends _$DriversPaymentController {
       discountedCost: discountedTotal,
       discountPercentage: discountPercentage,
     );
-
   }
 
   Future<void> selectDriver(Driver? selectedDriver) async {

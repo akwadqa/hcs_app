@@ -23,6 +23,8 @@ class PaymentMethodChips extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    debugPrint('jrrjjrjr PaymentMethodChips');
+
     var paymentMethodState = ref.watch(
       driversPaymentControllerProvider.select(
         (value) => value.selectedPaymentMethod,
