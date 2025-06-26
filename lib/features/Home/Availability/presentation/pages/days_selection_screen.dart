@@ -12,14 +12,24 @@ import 'package:hcs/src/shared_widgets/custom_button.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 
 @RoutePage()
-class DaysSelectionScreen extends StatefulWidget {
+class DaysSelectionScreen extends ConsumerStatefulWidget {
   const DaysSelectionScreen({super.key});
 
   @override
-  State<DaysSelectionScreen> createState() => _DaysSelectionScreenState();
+  ConsumerState<DaysSelectionScreen> createState() =>
+      _DaysSelectionScreenState();
 }
 
-class _DaysSelectionScreenState extends State<DaysSelectionScreen> {
+class _DaysSelectionScreenState extends ConsumerState<DaysSelectionScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future(
+      () => ref
+          .read(availabilityControllerProvider.notifier)
+          .calculateVisitDates(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +83,6 @@ class _DaysSelectionScreenState extends State<DaysSelectionScreen> {
                   ),
                 );
 
-            
                 if (firstVisitDate.isNotEmpty && lastVisitDate.isNotEmpty) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

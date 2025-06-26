@@ -95,8 +95,11 @@ class AvailabilityController extends _$AvailabilityController {
   }
 
   calculateVisitDates() {
-    DateTime startDate = DateFormat('yyyy-MM-dd').parse(state.selectedDate);
     List<String> selectedDays = List.from(state.selectedDays);
+    if (selectedDays.isEmpty) {
+      return;
+    }
+    DateTime startDate = DateFormat('yyyy-MM-dd').parse(state.selectedDate);
     int? visitsRemaining = int.tryParse(state.selectedPackage!.numberOfVisits!);
 
     // قائمة للأيام المختارة في الأسبوع
