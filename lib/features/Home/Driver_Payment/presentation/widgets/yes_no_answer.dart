@@ -12,7 +12,6 @@ class AreCleaningSuppliesAvailable extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final List<String> options = ['Yes', 'No'];
-    debugPrint('jrrjjrjr AreCleaningSuppliesAvailable');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

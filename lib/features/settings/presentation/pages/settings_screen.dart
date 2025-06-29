@@ -68,7 +68,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             padding: EdgeInsets.symmetric(horizontal: 26.w, vertical: 25.h),
             child: CustomButton(
               title: tr(context: context, AppStrings.logOut),
-              textSize: 26.sp,
               onPressed: ref.read(authControllerProvider) is AsyncLoading
                   ? null
                   : () {

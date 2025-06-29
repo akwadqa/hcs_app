@@ -120,7 +120,9 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                       TextFormField(
                         controller: _controllerQID,
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(hintText: "12345678"),
+                        decoration: const InputDecoration(
+                          hintText: "12345678910",
+                        ),
                         validator: isPackages
                             ? (qatarId) =>
                                   Validator.validateQatarId(qatarId, context)
@@ -136,7 +138,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
               TextFormField(
                 controller: _controllerPhone,
                 keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(hintText: "0974 6666 3333"),
+                decoration: const InputDecoration(hintText: "XXXXXXXX"),
                 validator: (phoneNumber) =>
                     Validator.validateQatarPhone(phoneNumber, context),
               ),

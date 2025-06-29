@@ -76,13 +76,13 @@ class CustomerController extends _$CustomerController {
       } else {
         nextPage = null;
       }
+
       state = state.copyWith(
         currentCustomersPage: nextPage,
         customers: [...state.customers, ...customersData.data],
         customersStates: RequestStates.loaded,
         customersMessage: '',
       );
- 
     } catch (e) {
       state = state.copyWith(
         customersStates: RequestStates.error,

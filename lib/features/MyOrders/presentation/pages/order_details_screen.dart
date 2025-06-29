@@ -13,6 +13,7 @@ import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
+import 'package:hcs/src/shared_widgets/custom_button.dart';
 import 'package:hcs/src/shared_widgets/fade_circle_loading_indicator.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 
@@ -71,6 +72,42 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
               ]
             : null,
       ),
+
+      bottomNavigationBar:
+          orderStatus == RequestStates.loaded &&
+              details?.withCleaningSupplies == 0
+          ? Padding(
+              padding: EdgeInsets.symmetric(vertical: 17.h, horizontal: 26.w),
+              child: CustomButton(
+                title: AppStrings.cancelOrder.tr(context: context),
+                buttonColor: AppColors.blueText,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text(AppStrings.cancelOrder.tr(context: context)),
+                      content: Text(
+                        "Are you sure you want to cancel this order?",
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text("No"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            // Call your cancel order logic here
+                          },
+                          child: Text("Yes"),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            )
+          : null,
     );
   }
 
@@ -96,15 +133,15 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
           InfoRow("Customer", value: details?.customer?.customerName),
           InfoRow("Area", value: details?.customer?.location),
           InfoRow("Zone", value: details?.customer?.zone),
-          details?.customer?.locationUrl != null
-              ? InfoRow(
-                  "Location",
-                  widget: MapPreviewCard(
+          InfoRow(
+            "Location",
+            widget: details?.customer?.locationUrl != null
+                ? MapPreviewCard(
                     lcoationUrl: details!.customer!.locationUrl!,
                     locationName: details.customer!.location!,
-                  ),
-                )
-              : SizedBox.shrink(),
+                  )
+                : null,
+          ),
 
           Padding(
             padding: EdgeInsets.symmetric(vertical: 24.h),

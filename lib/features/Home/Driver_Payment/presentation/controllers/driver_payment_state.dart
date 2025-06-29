@@ -56,7 +56,7 @@ class DriverPaymentState extends Equatable {
   }) {
     return DriverPaymentState(
       //drivers
-      currentDriversPage: currentDriversPage ?? this.currentDriversPage,
+      currentDriversPage: currentDriversPage,
       drivers: drivers ?? this.drivers,
       driversStates: driversStates ?? this.driversStates,
       driversMessage: driversMessage ?? this.driversMessage,

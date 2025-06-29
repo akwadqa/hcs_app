@@ -15,7 +15,7 @@ class AppStrings {
   static const String pleaseEnterQatarId = 'pleaseEnterQatarId';
   static const String invalidQatarId = 'invalidQatarId';
   static const String pleaseEnterPhoneNumber = 'pleaseEnterPhoneNumber';
-  static const String invalidPhoneNumber = 'pleaseEnterPhoneNumber';
+  static const String invalidPhoneNumber = 'invalidPhoneNumber';
   static const String pleaseEnterUserName = 'pleaseEnterUserName';
   static const String enterValidUserName = 'enterValidUserName';
 
@@ -63,6 +63,8 @@ class AppStrings {
   static const String language = 'language';
   static const String logOut = 'logOut';
   static const String settingsDesc = 'settingsDesc';
+  static const String cancelOrder = 'Cancel Order';
+  
 
   //Language
   static const String english = 'English';

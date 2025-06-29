@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
 import 'package:hcs/features/Home/Driver_Payment/presentation/controllers/drivers_payment_controllers.dart';
 import 'package:hcs/features/Home/Driver_Payment/presentation/widgets/discount_dropdown.dart';
 import 'package:hcs/features/Home/Driver_Payment/presentation/widgets/paginated_dropdown_drivers.dart';
@@ -68,7 +69,6 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                 8.verticalSpace,
                 Consumer(
                   builder: (context, ref, child) {
-                    debugPrint('jrrjjrjr driver');
                     if (driversPaymentState.driversStates ==
                         RequestStates.loaded) {
                       return PaginatedDriverDropdown(
@@ -103,8 +103,6 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
 
                 Consumer(
                   builder: (context, ref, child) {
-                    debugPrint('jrrjjrjr discount ');
-
                     if (driversPaymentState.discountStates ==
                         RequestStates.loaded) {
                       return Column(
@@ -203,7 +201,19 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                 32.verticalSpace,
                 Divider(height: 0.1, color: AppColors.dividerGrey),
                 32.verticalSpace,
-                AreCleaningSuppliesAvailable(),
+                Consumer(
+                  builder: (context, ref, child) {
+                    var selectedServiceType = ref.watch(
+                      availabilityControllerProvider.select(
+                        (value) => value.selectedServiceType,
+                      ),
+                    );
+
+                    return selectedServiceType != "Packages"
+                        ? AreCleaningSuppliesAvailable()
+                        : SizedBox.shrink();
+                  },
+                ),
                 50.verticalSpace,
 
                 Center(
@@ -211,8 +221,6 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                     padding: EdgeInsets.only(bottom: 25.h),
                     child: Consumer(
                       builder: (context, ref, child) {
-                        debugPrint('jrrjjrjr button');
-
                         final drvierDiscontState = ref.watch(
                           driversPaymentControllerProvider,
                         );

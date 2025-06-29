@@ -18,7 +18,7 @@ class ApiConstance {
       '$baseUrl/frappe.core.doctype.user.user.reset_password?user=$email';
   ////////////////// *  Customers   /////////////////////
   static String getCustomers(String page) =>
-      '$baseUrl/$baseDomain.api.customer.customers?page=$page&limit=25';
+      '$baseUrl/$baseDomain.api.customer.customers?page=$page&limit=100';
   static String addCustomers = '$baseUrl/$baseDomain.api.customer.customer';
 
   ////////////////// *  Availabillty   /////////////////////
@@ -70,7 +70,7 @@ class ApiConstance {
 
   ////////////////// *  Drivers   /////////////////////
   static String getDrivers(String page) =>
-      '$baseUrl/$baseDomain.api.driver.drivers?page=$page&limit=10';
+      '$baseUrl/$baseDomain.api.driver.drivers?page=$page&limit=25';
 
   static String getDiscoutType() =>
       '$baseUrl/$baseDomain.api.discount_type.discount_types';

@@ -28,7 +28,7 @@ class CustomerState extends Equatable {
   }) {
     return CustomerState(
       //customers
-      currentCustomersPage: currentCustomersPage ?? this.currentCustomersPage,
+      currentCustomersPage: currentCustomersPage,
       customers: customers ?? this.customers,
       customersStates: customersStates ?? this.customersStates,
       customersMessage: customersMessage ?? this.customersMessage,

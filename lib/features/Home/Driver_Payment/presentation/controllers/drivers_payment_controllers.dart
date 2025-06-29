@@ -1,3 +1,4 @@
+import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/models/discount_type.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/models/drivers_model.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/repositories/driver_payment_repo.dart';
@@ -16,6 +17,7 @@ class DriversPaymentController extends _$DriversPaymentController {
 
   Future<void> withCleaningSupplies(String choice) async {
     state = state.copyWith(withCleaningSupplies: choice);
+    calculateTotalCost(state.discountPercentage);
   }
 
   Future<void> selectPaymentMethod(String? selectedPaymentMethod) async {
@@ -54,6 +56,25 @@ class DriversPaymentController extends _$DriversPaymentController {
     state = state.copyWith(selectedDiscount: selectedDiscount);
   }
 
+  // In this function calculate withCleaningSupplies
+  double calculatewithCleaningSupplies() {
+    final availabilityController = ref.read(availabilityControllerProvider);
+    final String selectedServiceType =
+        availabilityController.selectedServiceType!;
+    final String selectedShiftType = availabilityController.selectedShiftType;
+
+    if (state.withCleaningSupplies == "no") {
+      return 0.0;
+    }
+    if (selectedServiceType == "Packages") {
+      return 0.0;
+    }
+    if (selectedShiftType == "Full Day") {
+      return 100.0;
+    }
+    return 50.0;
+  }
+
   // In this function calculateEmployeesSum
   double calculateEmployeesSum() {
     final employeesController = ref.read(employeesControllerProvider);
@@ -76,19 +97,21 @@ class DriversPaymentController extends _$DriversPaymentController {
     }
 
     double employeesCost = calculateEmployeesSum();
+    double withCleaningSupplies = calculatewithCleaningSupplies();
+    double totalCost = employeesCost + withCleaningSupplies;
 
     // Convert percentage to a decimal (e.g., 10% -> 0.10)
     double discountDecimal = discountPercentage / 100;
 
     // Calculate the discount amount
-    double discountAmount = employeesCost * discountDecimal;
+    double discountAmount = totalCost * discountDecimal;
 
     // Apply the discount
-    double discountedTotal = employeesCost - discountAmount;
+    double discountedTotal = totalCost - discountAmount;
 
     // Update the state with the new total cost
     state = state.copyWith(
-      originalCost: employeesCost,
+      originalCost: totalCost,
       discountedCost: discountedTotal,
       discountPercentage: discountPercentage,
     );

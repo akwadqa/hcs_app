@@ -24,9 +24,9 @@
   "orderDetails":"Order Details",
   "pleaseEnterCustomerName":"Please Enter Customer Name",
   "pleaseEnterQatarId":"Please Enter Qatar Id",
-  "invalidQatarId":"Invalid Qatar Id",
+  "invalidQatarId":"Qatar Id Should Be 11 Digits",
   "pleaseEnterPhoneNumber":"Please Enter Phone Number",
-  "invalidPhoneNumber":"Invalid Phone Number 00974 XXX XXX XXX",
+  "invalidPhoneNumber":"Phone Number Should Be 8 Digits",
   "pleaseEnterUserName":"Please Enter UserName",
   "enterValidUserName":"Enter Valid User Name",
   "settingsDesc":"“You’re all set here – tap the button below to securely log out. Don’t worry, you can come back anytime and pick up right where you left off!”",
@@ -58,6 +58,7 @@
   "paymentMethod": "Payment Method",
   "promoCode": "Promo Code",
   "total": "Total",
+  "cancelOrder": "Cancel Order",
 
 
   "goBack": "Go Back",
