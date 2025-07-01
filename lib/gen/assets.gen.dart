@@ -28,9 +28,9 @@ class $AssetsFontsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/background11.png
-  AssetGenImage get background11 =>
-      const AssetGenImage('assets/images/background11.png');
+  /// File path: assets/images/background.png
+  AssetGenImage get background =>
+      const AssetGenImage('assets/images/background.png');
 
   /// File path: assets/images/calendar.svg
   SvgGenImage get calendar => const SvgGenImage('assets/images/calendar.svg');
@@ -99,7 +99,7 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<dynamic> get values => [
-    background11,
+    background,
     calendar,
     cash,
     creditCard,
