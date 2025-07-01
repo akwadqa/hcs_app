@@ -29,7 +29,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
     Future(
       () => ref
           .read(myOrdersControllerProvider.notifier)
-          .fetchServicesOrders(ordersStatus: 'Cancelled'),
+          .fetchCancelledOrders(),
     );
 
     _scrollController = ScrollController()..addListener(_onScroll);
@@ -37,7 +37,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
 
   _onScroll() {
     final customerState = ref.read(myOrdersControllerProvider);
-    final hasMore = customerState.currentServicesOrdersPage != null;
+    final hasMore = customerState.currentCancelledOrdersPage != null;
 
     if (_scrollController.position.pixels >
             _scrollController.position.maxScrollExtent - 100 &&
@@ -46,7 +46,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
       _loadMoreTimer = Timer(const Duration(milliseconds: 500), () {
         ref
             .read(myOrdersControllerProvider.notifier)
-            .onLoadMoreServicesOrders(ordersStatus: 'Cancelled');
+            .onLoadMoreCancelledOrders();
       });
     }
   }
@@ -62,16 +62,16 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
   Widget build(BuildContext context) {
     var ordersState = ref.watch(myOrdersControllerProvider);
 
-    if (ordersState.ordersStates == RequestStates.init ||
-        ordersState.ordersStates == RequestStates.loading) {
+    if (ordersState.cancelledOrdersStates == RequestStates.init ||
+        ordersState.cancelledOrdersStates == RequestStates.loading) {
       return Center(child: FadeCircleLoadingIndicator());
-    } else if (ordersState.ordersStates == RequestStates.loaded) {
-      if (ordersState.orders.isEmpty) {
+    } else if (ordersState.cancelledOrdersStates == RequestStates.loaded) {
+      if (ordersState.cancelledOrders.isEmpty) {
         return RefreshIndicator(
           onRefresh: () async {
             await ref
                 .read(myOrdersControllerProvider.notifier)
-                .fetchServicesOrders(ordersStatus: 'Cancelled');
+                .fetchCancelledOrders();
           },
           child: Assets.images.noDataMin.image(),
         );
@@ -80,15 +80,15 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
         onRefresh: () async {
           await ref
               .read(myOrdersControllerProvider.notifier)
-              .fetchServicesOrders(ordersStatus: 'Cancelled');
+              .fetchCancelledOrders();
         },
         child: ListView.builder(
           controller: _scrollController,
           shrinkWrap: true,
-          itemCount: ordersState.orders.length + 1,
+          itemCount: ordersState.cancelledOrders.length + 1,
           itemBuilder: (context, index) {
-            if (index >= ordersState.orders.length) {
-              if (ordersState.currentServicesOrdersPage == null) {
+            if (index >= ordersState.cancelledOrders.length) {
+              if (ordersState.currentCancelledOrdersPage == null) {
                 return Center(
                   child: Text(
                     'No More Orders',
@@ -106,7 +106,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
               onTap: () {
                 context.pushRoute(
                   OrderDetailsRoute(
-                    serviceOrderID: ordersState.orders[index].serviceOrderId,
+                    serviceOrderID: ordersState.cancelledOrders[index].serviceOrderId,
                   ),
                 );
               },
@@ -126,7 +126,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          ordersState.orders[index].serviceOrderId,
+                          ordersState.cancelledOrders[index].serviceOrderId,
                           style: Theme.of(context).textTheme.displaySmall!
                               .copyWith(
                                 fontSize: 14.sp,
@@ -138,7 +138,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
                             Assets.images.pending.svg(),
                             9.horizontalSpace,
                             Text(
-                              ordersState.orders[index].status.toString(),
+                              ordersState.cancelledOrders[index].status.toString(),
                               style: Theme.of(context).textTheme.displayMedium!
                                   .copyWith(fontSize: 14.sp),
                             ),
@@ -148,7 +148,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
                     ),
                     8.verticalSpace,
                     Text(
-                      ordersState.orders[index].serviceType,
+                      ordersState.cancelledOrders[index].serviceType,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         fontSize: 12.sp,
                         color: AppColors.greyText,
@@ -160,7 +160,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          ordersState.orders[index].postingDate,
+                          ordersState.cancelledOrders[index].postingDate,
                           style: Theme.of(context).textTheme.bodyMedium!
                               .copyWith(
                                 fontSize: 12.sp,
@@ -169,7 +169,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
                               ),
                         ),
                         Text(
-                          "QR ${ordersState.orders[index].totalNetAmount}",
+                          "QR ${ordersState.cancelledOrders[index].totalNetAmount}",
                           style: Theme.of(context).textTheme.displaySmall!
                               .copyWith(
                                 fontSize: 12.sp,
@@ -186,12 +186,12 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
           },
         ),
       );
-    } else if (ordersState.ordersStates == RequestStates.error) {
+    } else if (ordersState.cancelledOrdersStates == RequestStates.error) {
       return AppErrorWidget(
         onTap: () => Future(
           () => ref
               .read(myOrdersControllerProvider.notifier)
-              .fetchServicesOrders(ordersStatus: 'Cancelled'),
+              .fetchCancelledOrders(),
         ),
       );
     }

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/Home/Customer/presentation/controllers/customer_controller.dart';
 import 'package:hcs/features/Home/Customer/presentation/controllers/customer_state.dart';
+import 'package:hcs/features/Home/Customer/presentation/widgets/add_customer_dialog.dart';
 import 'package:hcs/features/Home/Customer/presentation/widgets/custoemr_bar_chip.dart';
 import 'package:hcs/features/Home/Employees/presentation/widgets/search_field.dart';
 import 'package:hcs/gen/assets.gen.dart';
@@ -84,16 +85,48 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
       child: Column(
         children: [
           // This Column will take available space
-          SearchField(
-            controller: TextEditingController(
-              text: customerState.customerSearchedFor,
-            ),
-            onFieldSubmitted: (value) {
-              var customerNotifier = ref.read(
-                customerControllerProvider.notifier,
-              );
-              customerNotifier.searchCustomer(value);
-            },
+          Row(
+            children: [
+              Expanded(
+                flex: 8,
+                child: SearchField(
+                  hintText: "Search Customers",
+                  controller: TextEditingController(
+                    text: customerState.customerSearchedFor,
+                  ),
+                  onFieldSubmitted: (value) {
+                    var customerNotifier = ref.read(
+                      customerControllerProvider.notifier,
+                    );
+                    customerNotifier.searchCustomer(value);
+                  },
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 8.w),
+                  child: Container(
+                    height: kMinInteractiveDimension,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.r),
+                      border: Border.all(color: Colors.transparent),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => const AddCustomerDialog(),
+                        );
+                      },
+                      icon: const Icon(Icons.person_add),
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           22.verticalSpace,
           Text(

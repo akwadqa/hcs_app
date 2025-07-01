@@ -27,9 +27,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
   void initState() {
     super.initState();
     Future(
-      () => ref
-          .read(myOrdersControllerProvider.notifier)
-          .fetchServicesOrders(ordersStatus: 'Approved'),
+      () => ref.read(myOrdersControllerProvider.notifier).fetchApprovedOrders(),
     );
 
     _scrollController = ScrollController()..addListener(_onScroll);
@@ -37,7 +35,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
 
   _onScroll() {
     final customerState = ref.read(myOrdersControllerProvider);
-    final hasMore = customerState.currentServicesOrdersPage != null;
+    final hasMore = customerState.currentApprovedOrdersPage != null;
 
     if (_scrollController.position.pixels >
             _scrollController.position.maxScrollExtent - 100 &&
@@ -46,7 +44,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
       _loadMoreTimer = Timer(const Duration(milliseconds: 500), () {
         ref
             .read(myOrdersControllerProvider.notifier)
-            .onLoadMoreServicesOrders(ordersStatus: 'Approved');
+            .onLoadMoreApprovedOrders();
       });
     }
   }
@@ -62,17 +60,17 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
   Widget build(BuildContext context) {
     var ordersState = ref.watch(myOrdersControllerProvider);
 
-    if (ordersState.ordersStates == RequestStates.init ||
-        ordersState.ordersStates == RequestStates.loading) {
+    if (ordersState.approvedOrdersStates == RequestStates.init ||
+        ordersState.approvedOrdersStates == RequestStates.loading) {
       // return Center(child: FadeCircleLoadingIndicator());
       return FadeCircleLoadingIndicator();
-    } else if (ordersState.ordersStates == RequestStates.loaded) {
-      if (ordersState.orders.isEmpty) {
+    } else if (ordersState.approvedOrdersStates == RequestStates.loaded) {
+      if (ordersState.approvedOrders.isEmpty) {
         return RefreshIndicator(
           onRefresh: () async {
             await ref
                 .read(myOrdersControllerProvider.notifier)
-                .fetchServicesOrders(ordersStatus: 'Approved');
+                .fetchApprovedOrders();
           },
           child: Assets.images.noDataMin.image(),
         );
@@ -81,15 +79,15 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
         onRefresh: () async {
           await ref
               .read(myOrdersControllerProvider.notifier)
-              .fetchServicesOrders(ordersStatus: 'Approved');
+              .fetchApprovedOrders();
         },
         child: ListView.builder(
           controller: _scrollController,
           shrinkWrap: true,
-          itemCount: ordersState.orders.length + 1,
+          itemCount: ordersState.approvedOrders.length + 1,
           itemBuilder: (context, index) {
-            if (index >= ordersState.orders.length) {
-              if (ordersState.currentServicesOrdersPage == null) {
+            if (index >= ordersState.approvedOrders.length) {
+              if (ordersState.currentApprovedOrdersPage == null) {
                 return Center(
                   child: Text(
                     'No More Orders',
@@ -107,7 +105,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
               onTap: () {
                 context.pushRoute(
                   OrderDetailsRoute(
-                    serviceOrderID: ordersState.orders[index].serviceOrderId,
+                    serviceOrderID: ordersState.approvedOrders[index].serviceOrderId,
                   ),
                 );
               },
@@ -127,7 +125,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          ordersState.orders[index].serviceOrderId,
+                          ordersState.approvedOrders[index].serviceOrderId,
                           style: Theme.of(context).textTheme.displaySmall!
                               .copyWith(
                                 fontSize: 14.sp,
@@ -139,7 +137,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
                             Assets.images.pending.svg(),
                             9.horizontalSpace,
                             Text(
-                              ordersState.orders[index].status.toString(),
+                              ordersState.approvedOrders[index].status.toString(),
                               style: Theme.of(context).textTheme.displayMedium!
                                   .copyWith(fontSize: 14.sp),
                             ),
@@ -149,7 +147,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
                     ),
                     8.verticalSpace,
                     Text(
-                      ordersState.orders[index].serviceType,
+                      ordersState.approvedOrders[index].serviceType,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         fontSize: 12.sp,
                         color: AppColors.greyText,
@@ -161,7 +159,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          ordersState.orders[index].postingDate,
+                          ordersState.approvedOrders[index].postingDate,
                           style: Theme.of(context).textTheme.bodyMedium!
                               .copyWith(
                                 fontSize: 12.sp,
@@ -170,7 +168,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
                               ),
                         ),
                         Text(
-                          "QR ${ordersState.orders[index].totalNetAmount}",
+                          "QR ${ordersState.approvedOrders[index].totalNetAmount}",
                           style: Theme.of(context).textTheme.displaySmall!
                               .copyWith(
                                 fontSize: 12.sp,
@@ -187,12 +185,12 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
           },
         ),
       );
-    } else if (ordersState.ordersStates == RequestStates.error) {
+    } else if (ordersState.approvedOrdersStates == RequestStates.error) {
       return AppErrorWidget(
         onTap: () => Future(
           () => ref
               .read(myOrdersControllerProvider.notifier)
-              .fetchServicesOrders(ordersStatus: 'Approved'),
+              .fetchApprovedOrders(),
         ),
       );
     }

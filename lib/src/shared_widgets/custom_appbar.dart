@@ -55,7 +55,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                   tabs: const [
                     Tab(text: 'Accept'),
                     Tab(text: 'Pending'),
-                    Tab(text: 'Canceled'),
+                    Tab(text: 'Cancelled'),
                   ],
                 ),
               ),

@@ -10,14 +10,14 @@ class MyOrdersController extends _$MyOrdersController {
   @override
   MyOrdersState build() => const MyOrdersState();
 
-  Future<void> fetchServicesOrders({required String ordersStatus}) async {
-    state = state.copyWith(ordersStates: RequestStates.loading);
+  Future<void> fetchApprovedOrders() async {
+    state = state.copyWith(approvedOrdersStates: RequestStates.loading);
 
     try {
       final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
       final ordersData = await myOrdersRepo.getServicesOrders(
         page: 1,
-        status: ordersStatus,
+        status: 'Approved',
       );
 
       int? nextPage;
@@ -28,25 +28,25 @@ class MyOrdersController extends _$MyOrdersController {
         nextPage = null;
       }
       state = state.copyWith(
-        currentServicesOrdersPage: nextPage,
-        orders: ordersData.data,
-        ordersStates: RequestStates.loaded,
+        currentApprovedOrdersPage: nextPage,
+        approvedOrders: ordersData.data,
+        approvedOrdersStates: RequestStates.loaded,
         ordersMessage: '',
       );
     } catch (e) {
       state = state.copyWith(
-        ordersStates: RequestStates.error,
+        approvedOrdersStates: RequestStates.error,
         ordersMessage: e.toString(),
       );
     }
   }
 
-  Future<void> onLoadMoreServicesOrders({required String ordersStatus}) async {
+  Future<void> onLoadMoreApprovedOrders() async {
     try {
       final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
       final ordersData = await myOrdersRepo.getServicesOrders(
-        page: state.currentServicesOrdersPage!,
-        status: ordersStatus,
+        page: state.currentApprovedOrdersPage!,
+        status: 'Approved',
       );
 
       int? nextPage;
@@ -57,14 +57,134 @@ class MyOrdersController extends _$MyOrdersController {
         nextPage = null;
       }
       state = state.copyWith(
-        currentServicesOrdersPage: nextPage,
-        orders: [...state.orders, ...ordersData.data],
-        ordersStates: RequestStates.loaded,
+        currentApprovedOrdersPage: nextPage,
+        approvedOrders: [...state.approvedOrders, ...ordersData.data],
+        approvedOrdersStates: RequestStates.loaded,
         ordersMessage: '',
       );
     } catch (e) {
       state = state.copyWith(
-        ordersStates: RequestStates.error,
+        approvedOrdersStates: RequestStates.error,
+        ordersMessage: e.toString(),
+      );
+    }
+  }
+
+  Future<void> fetchPendingOrders() async {
+    state = state.copyWith(pendingOrdersStates: RequestStates.loading);
+
+    try {
+      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
+      final ordersData = await myOrdersRepo.getServicesOrders(
+        page: 1,
+        status: 'Pending',
+      );
+
+      int? nextPage;
+      //if there is a second page ?
+      if (ordersData.pagination.totalPages > 1) {
+        nextPage = 2;
+      } else {
+        nextPage = null;
+      }
+      state = state.copyWith(
+        currentPendingOrdersPage: nextPage,
+        pendingOrders: ordersData.data,
+        pendingOrdersStates: RequestStates.loaded,
+        ordersMessage: '',
+      );
+    } catch (e) {
+      state = state.copyWith(
+        pendingOrdersStates: RequestStates.error,
+        ordersMessage: e.toString(),
+      );
+    }
+  }
+
+  Future<void> onLoadMorePendingOrders() async {
+    try {
+      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
+      final ordersData = await myOrdersRepo.getServicesOrders(
+        page: state.currentPendingOrdersPage!,
+        status: 'Pending',
+      );
+
+      int? nextPage;
+      //if we reach the limit or not ?
+      if (ordersData.pagination.totalPages > ordersData.pagination.page) {
+        nextPage = ordersData.pagination.page + 1;
+      } else {
+        nextPage = null;
+      }
+      state = state.copyWith(
+        currentPendingOrdersPage: nextPage,
+        pendingOrders: [...state.pendingOrders, ...ordersData.data],
+        pendingOrdersStates: RequestStates.loaded,
+        ordersMessage: '',
+      );
+    } catch (e) {
+      state = state.copyWith(
+        pendingOrdersStates: RequestStates.error,
+        ordersMessage: e.toString(),
+      );
+    }
+  }
+
+  Future<void> fetchCancelledOrders() async {
+    state = state.copyWith(cancelledOrdersStates: RequestStates.loading);
+
+    try {
+      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
+      final ordersData = await myOrdersRepo.getServicesOrders(
+        page: 1,
+        status: 'Cancelled',
+      );
+
+      int? nextPage;
+      //if there is a second page ?
+      if (ordersData.pagination.totalPages > 1) {
+        nextPage = 2;
+      } else {
+        nextPage = null;
+      }
+      state = state.copyWith(
+        currentCancelledOrdersPage: nextPage,
+        cancelledOrders: ordersData.data,
+        cancelledOrdersStates: RequestStates.loaded,
+        ordersMessage: '',
+      );
+    } catch (e) {
+      state = state.copyWith(
+        cancelledOrdersStates: RequestStates.error,
+        ordersMessage: e.toString(),
+      );
+    }
+  }
+
+  Future<void> onLoadMoreCancelledOrders() async {
+    try {
+      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
+      final ordersData = await myOrdersRepo.getServicesOrders(
+        page: state.currentPendingOrdersPage!,
+        status: 'Cancelled',
+      );
+
+      int? nextPage;
+      //if we reach the limit or not ?
+      if (ordersData.pagination.totalPages > ordersData.pagination.page) {
+        nextPage = ordersData.pagination.page + 1;
+      } else {
+        nextPage = null;
+      }
+      state = state.copyWith(
+        currentCancelledOrdersPage: nextPage,
+        cancelledOrders: [...state.cancelledOrders, ...ordersData.data],
+        cancelledOrdersStates: RequestStates.loaded,
+        ordersMessage: '',
+      );
+    } catch (e) {
+      state = state.copyWith(
+        cancelledOrdersStates: RequestStates.error,
         ordersMessage: e.toString(),
       );
     }

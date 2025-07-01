@@ -6,9 +6,15 @@ import 'package:hcs/src/enums/request_state.dart';
 
 class MyOrdersState extends Equatable {
   //orders
-  final int? currentServicesOrdersPage;
-  final List<Orders> orders;
-  final RequestStates ordersStates;
+  final int? currentApprovedOrdersPage;
+  final List<Orders> approvedOrders;
+  final int? currentPendingOrdersPage;
+  final List<Orders> pendingOrders;
+  final int? currentCancelledOrdersPage;
+  final List<Orders> cancelledOrders;
+  final RequestStates approvedOrdersStates;
+  final RequestStates pendingOrdersStates;
+  final RequestStates cancelledOrdersStates;
   final String? ordersMessage;
 
   //Orders Details
@@ -18,11 +24,16 @@ class MyOrdersState extends Equatable {
 
   const MyOrdersState({
     //orders
-    this.currentServicesOrdersPage,
-    this.orders = const [],
-    this.ordersStates = RequestStates.init,
+    this.currentApprovedOrdersPage,
+    this.approvedOrders = const [],
+    this.currentPendingOrdersPage,
+    this.pendingOrders = const [],
+    this.currentCancelledOrdersPage,
+    this.cancelledOrders = const [],
+    this.approvedOrdersStates = RequestStates.init,
+    this.pendingOrdersStates = RequestStates.init,
+    this.cancelledOrdersStates = RequestStates.init,
     this.ordersMessage = '',
-
     //Orders Details
     this.ordersDetails,
     this.ordersDetailsStates = RequestStates.init,
@@ -30,9 +41,15 @@ class MyOrdersState extends Equatable {
   });
   MyOrdersState copyWith({
     //orders
-    int? currentServicesOrdersPage,
-    List<Orders>? orders,
-    RequestStates? ordersStates,
+    int? currentApprovedOrdersPage,
+    List<Orders>? approvedOrders,
+    int? currentPendingOrdersPage,
+    List<Orders>? pendingOrders,
+    int? currentCancelledOrdersPage,
+    List<Orders>? cancelledOrders,
+    RequestStates? approvedOrdersStates,
+    RequestStates? pendingOrdersStates,
+    RequestStates? cancelledOrdersStates,
     String? ordersMessage,
 
     //Orders Details
@@ -42,9 +59,16 @@ class MyOrdersState extends Equatable {
   }) {
     return MyOrdersState(
       //orders
-      currentServicesOrdersPage: currentServicesOrdersPage,
-      orders: orders ?? this.orders,
-      ordersStates: ordersStates ?? this.ordersStates,
+      currentApprovedOrdersPage: currentApprovedOrdersPage,
+      approvedOrders: approvedOrders ?? this.approvedOrders,
+      currentPendingOrdersPage: currentPendingOrdersPage,
+      pendingOrders: pendingOrders ?? this.pendingOrders,
+      currentCancelledOrdersPage: currentCancelledOrdersPage,
+      cancelledOrders: cancelledOrders ?? this.cancelledOrders,
+      approvedOrdersStates: approvedOrdersStates ?? this.approvedOrdersStates,
+      pendingOrdersStates: pendingOrdersStates ?? this.pendingOrdersStates,
+      cancelledOrdersStates:
+          cancelledOrdersStates ?? this.cancelledOrdersStates,
       ordersMessage: ordersMessage ?? this.ordersMessage,
 
       //Orders Details
@@ -57,9 +81,15 @@ class MyOrdersState extends Equatable {
   @override
   List<Object?> get props => [
     //orders
-    currentServicesOrdersPage,
-    orders,
-    ordersStates,
+    currentApprovedOrdersPage,
+    approvedOrders,
+    currentPendingOrdersPage,
+    pendingOrders,
+    currentCancelledOrdersPage,
+    cancelledOrders,
+    approvedOrdersStates,
+    pendingOrdersStates,
+    cancelledOrdersStates,
     ordersMessage,
 
     //Orders Details

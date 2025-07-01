@@ -124,6 +124,21 @@ abstract class AppTheme {
           textStyle: _baseTextStyle.copyWith(fontSize: 14.sp),
         ),
       ),
+      // Add this to your ThemeData inside lightTheme()
+      iconButtonTheme: IconButtonThemeData(
+        style: ButtonStyle(
+          iconColor: WidgetStateProperty.all(AppColors.primary),
+          overlayColor: WidgetStateProperty.all(
+            AppColors.primary.withValues(alpha: 0.1),
+          ),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSizes.textFieldRadius),
+            ),
+          ),
+        ),
+      ),
+
       scaffoldBackgroundColor: AppColors.scaffoldColor,
     );
   }
