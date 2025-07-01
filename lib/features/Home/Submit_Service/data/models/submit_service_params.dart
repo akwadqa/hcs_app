@@ -49,7 +49,7 @@ class SubmitServiceParams {
           .toList(),
       'payment_method': paymentMethod,
       'discount_percentage': discountPercentage,
-      'with_cleaning_supplies': withCleaningSupplies,
+      'with_cleaning_supplies': withCleaningSupplies == 'yes' ? 1 : 0,
     };
   }
 

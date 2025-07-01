@@ -42,7 +42,7 @@ class SubmitServiceController extends _$SubmitServiceController {
           paymentMethod: driverPaymentController.selectedPaymentMethod,
           discountPercentage: driverPaymentController.discountPercentage
               .toString(),
-          withCleaningSupplies: driverPaymentController.withCleaningSupplies,
+          withCleaningSupplies: driverPaymentController.withCleaningSupplies ,
         ),
       );
 

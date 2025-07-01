@@ -9,6 +9,7 @@ class CustomerState extends Equatable {
   final RequestStates customersStates;
   final String? customersMessage;
   final Customers? selectedCustomer;
+  final String customerSearchedFor;
 
   const CustomerState({
     //customers
@@ -17,6 +18,7 @@ class CustomerState extends Equatable {
     this.customersStates = RequestStates.init,
     this.customersMessage = '',
     this.selectedCustomer,
+    this.customerSearchedFor = '',
   });
   CustomerState copyWith({
     //customers
@@ -25,6 +27,7 @@ class CustomerState extends Equatable {
     RequestStates? customersStates,
     String? customersMessage,
     Customers? selectedCustomer,
+    String? customerSearchedFor,
   }) {
     return CustomerState(
       //customers
@@ -32,7 +35,8 @@ class CustomerState extends Equatable {
       customers: customers ?? this.customers,
       customersStates: customersStates ?? this.customersStates,
       customersMessage: customersMessage ?? this.customersMessage,
-      selectedCustomer: selectedCustomer ?? this.selectedCustomer,
+      selectedCustomer: selectedCustomer,
+      customerSearchedFor: customerSearchedFor ?? this.customerSearchedFor,
     );
   }
 
@@ -42,6 +46,6 @@ class CustomerState extends Equatable {
     currentCustomersPage,
     customers,
     customersStates,
-    customersMessage, selectedCustomer,
+    customersMessage, selectedCustomer, customerSearchedFor,
   ];
 }

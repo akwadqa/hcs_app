@@ -31,14 +31,13 @@ class DriversPaymentController extends _$DriversPaymentController {
     try {
       final driverPaymentRepo = ref.read(driverPaymentRepositoryProvider);
       final driverPaymentData = await driverPaymentRepo.getDiscountType();
-      calculateTotalCost(
-        driverPaymentData.data[0].discountPercentage.toDouble(),
-      );
+      calculateTotalCost(state.discountPercentage.toDouble());
+
       state = state.copyWith(
         discountType: driverPaymentData.data,
-        selectedDiscount: driverPaymentData.data[0],
-        discountPercentage: driverPaymentData.data[0].discountPercentage
-            .toDouble(),
+        // selectedDiscount: driverPaymentData.data[0],
+        // discountPercentage: driverPaymentData.data[0].discountPercentage
+        //     .toDouble(),
         discountStates: RequestStates.loaded,
         driversMessage: '',
       );
@@ -78,9 +77,10 @@ class DriversPaymentController extends _$DriversPaymentController {
   // In this function calculateEmployeesSum
   double calculateEmployeesSum() {
     final employeesController = ref.read(employeesControllerProvider);
-    final List<Employee> employees = employeesController.employees;
+    final List<Employee> selectedEmployees =
+        employeesController.selectedEmployees;
 
-    double total = employees.fold(
+    double total = selectedEmployees.fold(
       0.0,
       (sum, employee) => sum + employee.serviceCost,
     );
@@ -98,7 +98,7 @@ class DriversPaymentController extends _$DriversPaymentController {
 
     double employeesCost = calculateEmployeesSum();
     double withCleaningSupplies = calculatewithCleaningSupplies();
-    double totalCost = employeesCost + withCleaningSupplies;
+    double totalCost = employeesCost;
 
     // Convert percentage to a decimal (e.g., 10% -> 0.10)
     double discountDecimal = discountPercentage / 100;
@@ -107,11 +107,11 @@ class DriversPaymentController extends _$DriversPaymentController {
     double discountAmount = totalCost * discountDecimal;
 
     // Apply the discount
-    double discountedTotal = totalCost - discountAmount;
+    double discountedTotal = totalCost - discountAmount + withCleaningSupplies;
 
     // Update the state with the new total cost
     state = state.copyWith(
-      originalCost: totalCost,
+      originalCost: totalCost + withCleaningSupplies,
       discountedCost: discountedTotal,
       discountPercentage: discountPercentage,
     );

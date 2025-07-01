@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/Home/Employees/presentation/controllers/employees_controller.dart';
 import 'package:hcs/gen/assets.gen.dart';
 
 /// A reusable search input styled like the app's TextFormField theme.
@@ -10,6 +9,7 @@ class SearchField extends ConsumerWidget {
   final String hintText;
   final VoidCallback? onClear;
   final ValueChanged<String>? onChanged;
+  final Function(String)? onFieldSubmitted;
 
   const SearchField({
     super.key,
@@ -17,17 +17,15 @@ class SearchField extends ConsumerWidget {
     this.hintText = 'Search',
     this.onClear,
     this.onChanged,
+    this.onFieldSubmitted
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var epmloyeeNotifier = ref.read(employeesControllerProvider.notifier);
     return TextFormField(
       controller: controller,
       // onChanged: onChanged,
-      onFieldSubmitted: (value) {
-        epmloyeeNotifier.searchEmployee(value);
-      },
+      onFieldSubmitted:onFieldSubmitted ,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,

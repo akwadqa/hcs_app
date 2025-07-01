@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hcs/features/Home/Customer/data/models/add_cutomer_mdoel.dart';
 import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
 import 'package:hcs/features/Home/Customer/data/repositories/customer_repository.dart';
@@ -29,8 +30,18 @@ class CustomerController extends _$CustomerController {
     }
   }
 
-  Future<void> selectCustomer(Customers? selectedCustomer) async {
-    state = state.copyWith(selectedCustomer: selectedCustomer);
+  Future<void> toggleCustomer(Customers? selectedCustomer) async {
+    if (state.selectedCustomer?.customerId == selectedCustomer?.customerId) {
+      state = state.copyWith(selectedCustomer: null);
+    } else {
+      state = state.copyWith(selectedCustomer: selectedCustomer);
+    }
+  }
+
+  searchCustomer(String customerName) {
+    state = state.copyWith(customerSearchedFor: customerName);
+    //TODO add serch name in fetch customers
+    fetchCostumers();
   }
 
   Future<void> fetchCostumers() async {
@@ -38,7 +49,10 @@ class CustomerController extends _$CustomerController {
 
     try {
       final homeRepo = ref.read(customerRepositoryProvider);
-      final customersData = await homeRepo.getCustomers(page: 1);
+      final customersData = await homeRepo.getCustomers(
+        page: 1,
+        customerName: state.customerSearchedFor,
+      );
 
       int? nextPage;
       //if there is a second page ?
@@ -47,13 +61,15 @@ class CustomerController extends _$CustomerController {
       } else {
         nextPage = null;
       }
+      debugPrint("ooo before $nextPage");
       state = state.copyWith(
         currentCustomersPage: nextPage,
         customers: customersData.data,
-        selectedCustomer: customersData.data[0],
+        // selectedCustomer: customersData.data[0],
         customersStates: RequestStates.loaded,
         customersMessage: '',
       );
+      debugPrint("ooo after ${state.currentCustomersPage}");
     } catch (e) {
       state = state.copyWith(
         customersStates: RequestStates.error,
@@ -67,6 +83,7 @@ class CustomerController extends _$CustomerController {
       final homeRepo = ref.read(customerRepositoryProvider);
       final customersData = await homeRepo.getCustomers(
         page: state.currentCustomersPage!,
+        customerName: state.customerSearchedFor,
       );
 
       int? nextPage;

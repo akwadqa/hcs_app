@@ -26,9 +26,9 @@ class CustomerRepository {
       'customer_name': params.customerName,
       'customer_qid': params.customerQid,
       'customer_phone': params.customerPhone,
-      'custom_zone': params.customerZone,
-      'custom_location': params.customerArea,
-      'custom_map_location': params.customerLocation,
+      'zone': params.customerZone,
+      'location': params.customerArea,
+      'location_url': params.customerLocation,
     });
     final response = await _networkService.post(
       ApiConstance.addCustomers,
@@ -44,9 +44,9 @@ class CustomerRepository {
     }
   }
 
-  Future<CustomersModel> getCustomers({required int page}) async {
+  Future<CustomersModel> getCustomers({required int page,required String customerName}) async {
     final response = await _networkService.get(
-      ApiConstance.getCustomers(page.toString()),
+      ApiConstance.getCustomers(page: page.toString(),customerName: customerName),
     );
     // final data = json.encode(response.data);
 

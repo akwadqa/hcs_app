@@ -69,114 +69,122 @@ class _PendingOrdersScreenState extends ConsumerState<PendingOrdersScreen> {
       if (ordersState.orders.isEmpty) {
         return Assets.images.noDataMin.image();
       }
-      return ListView.builder(
-        controller: _scrollController,
-        shrinkWrap: true,
-        itemCount: ordersState.orders.length + 1,
-        itemBuilder: (context, index) {
-          if (index >= ordersState.orders.length) {
-            if (ordersState.currentServicesOrdersPage == null) {
-              return Center(
-                child: Text(
-                  'No More Orders',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              );
-            } else {
-              return const Padding(
-                padding: EdgeInsets.all(8),
-                child: Center(child: FadeCircleLoadingIndicator()),
-              );
-            }
-          }
-          return GestureDetector(
-            onTap: () {
-              context.pushRoute(
-                OrderDetailsRoute(
-                  serviceOrderID: ordersState.orders[index].serviceOrderId,
-                ),
-              );
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(vertical: 16.h, horizontal: 24.w),
-              padding: EdgeInsets.symmetric(vertical: 13.h, horizontal: 22.w),
-              // height: 100.h,
-              width: 345.w,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        ordersState.orders[index].serviceOrderId,
-                        style: Theme.of(context).textTheme.displaySmall!
-                            .copyWith(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ),
-                      Row(
-                        children: [
-                          Assets.images.pending.svg(),
-                          9.horizontalSpace,
-                          Text(
-                            ordersState.orders[index].status.toString(),
-                            style: Theme.of(context).textTheme.displayMedium!
-                                .copyWith(fontSize: 14.sp),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  8.verticalSpace,
-                  Text(
-                    ordersState.orders[index].serviceType,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontSize: 12.sp,
-                      color: AppColors.greyText,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  8.verticalSpace,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        ordersState.orders[index].postingDate,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          fontSize: 12.sp,
-                          color: AppColors.greyText,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Text(
-                        "QR ${ordersState.orders[index].totalNetAmount}",
-                        style: Theme.of(context).textTheme.displaySmall!
-                            .copyWith(
-                              fontSize: 12.sp,
-                              color: AppColors.greenText,
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
+      return RefreshIndicator(
+        onRefresh: () async {
+          await ref
+              .read(myOrdersControllerProvider.notifier)
+              .fetchServicesOrders(ordersStatus: 'Pending');
         },
+        child: ListView.builder(
+          controller: _scrollController,
+          shrinkWrap: true,
+          itemCount: ordersState.orders.length + 1,
+          itemBuilder: (context, index) {
+            if (index >= ordersState.orders.length) {
+              if (ordersState.currentServicesOrdersPage == null) {
+                return Center(
+                  child: Text(
+                    'No More Orders',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                );
+              } else {
+                return const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Center(child: FadeCircleLoadingIndicator()),
+                );
+              }
+            }
+            return GestureDetector(
+              onTap: () {
+                context.pushRoute(
+                  OrderDetailsRoute(
+                    serviceOrderID: ordersState.orders[index].serviceOrderId,
+                  ),
+                );
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 16.h, horizontal: 24.w),
+                padding: EdgeInsets.symmetric(vertical: 13.h, horizontal: 22.w),
+                // height: 100.h,
+                width: 345.w,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          ordersState.orders[index].serviceOrderId,
+                          style: Theme.of(context).textTheme.displaySmall!
+                              .copyWith(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                        Row(
+                          children: [
+                            Assets.images.pending.svg(),
+                            9.horizontalSpace,
+                            Text(
+                              ordersState.orders[index].status.toString(),
+                              style: Theme.of(context).textTheme.displayMedium!
+                                  .copyWith(fontSize: 14.sp),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    8.verticalSpace,
+                    Text(
+                      ordersState.orders[index].serviceType,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontSize: 12.sp,
+                        color: AppColors.greyText,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    8.verticalSpace,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          ordersState.orders[index].postingDate,
+                          style: Theme.of(context).textTheme.bodyMedium!
+                              .copyWith(
+                                fontSize: 12.sp,
+                                color: AppColors.greyText,
+                                fontWeight: FontWeight.w500,
+                              ),
+                        ),
+                        Text(
+                          "QR ${ordersState.orders[index].totalNetAmount}",
+                          style: Theme.of(context).textTheme.displaySmall!
+                              .copyWith(
+                                fontSize: 12.sp,
+                                color: AppColors.greenText,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       );
     } else if (ordersState.ordersStates == RequestStates.error) {
       return AppErrorWidget(
         onTap: () => Future(
           () => ref
               .read(myOrdersControllerProvider.notifier)
-              .onLoadMoreServicesOrders(ordersStatus: 'Pending'),
+              .fetchServicesOrders(ordersStatus: 'Pending'),
         ),
       );
     }

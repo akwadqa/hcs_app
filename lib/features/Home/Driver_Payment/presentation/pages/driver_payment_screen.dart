@@ -122,32 +122,44 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                               );
                             },
                           ),
-                          16.verticalSpace,
-                          Text(
-                            context.tr(AppStrings.discountPercentage),
-                            style: Theme.of(context).textTheme.displayMedium,
-                          ),
-                          8.verticalSpace,
-                          TextFormField(
-                            controller: TextEditingController(
-                              text: driversPaymentState.discountPercentage
-                                  .toString(),
-                            ),
-                            keyboardType: TextInputType.number,
-                            onFieldSubmitted: (value) {
-                              double? doubleDiscount = double.tryParse(value);
-                              ref
-                                  .read(
-                                    driversPaymentControllerProvider.notifier,
-                                  )
-                                  .calculateTotalCost(doubleDiscount);
-                            },
-                            decoration: InputDecoration(
-                              hintStyle: Theme.of(
-                                context,
-                              ).inputDecorationTheme.hintStyle,
-                            ),
-                          ),
+                          driversPaymentState.selectedDiscount != null
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    16.verticalSpace,
+                                    Text(
+                                      context.tr(AppStrings.discountPercentage),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.displayMedium,
+                                    ),
+                                    8.verticalSpace,
+                                    TextFormField(
+                                      controller: TextEditingController(
+                                        text: driversPaymentState
+                                            .discountPercentage
+                                            .toString(),
+                                      ),
+                                      keyboardType: TextInputType.number,
+                                      onFieldSubmitted: (value) {
+                                        double? doubleDiscount =
+                                            double.tryParse(value);
+                                        ref
+                                            .read(
+                                              driversPaymentControllerProvider
+                                                  .notifier,
+                                            )
+                                            .calculateTotalCost(doubleDiscount);
+                                      },
+                                      decoration: InputDecoration(
+                                        hintStyle: Theme.of(
+                                          context,
+                                        ).inputDecorationTheme.hintStyle,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : SizedBox.shrink(),
                           10.verticalSpace,
                           Text.rich(
                             TextSpan(
@@ -221,7 +233,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                     padding: EdgeInsets.only(bottom: 25.h),
                     child: Consumer(
                       builder: (context, ref, child) {
-                        final drvierDiscontState = ref.watch(
+                        final drvierDiscountState = ref.watch(
                           driversPaymentControllerProvider,
                         );
                         final submitServiceStates = ref.watch(
@@ -277,8 +289,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                         return CustomButton(
                           title: tr(context: context, AppStrings.submit),
                           onPressed:
-                              drvierDiscontState.selectedDiscount == null ||
-                                  drvierDiscontState.selectedDriver == null ||
+                              drvierDiscountState.selectedDriver == null ||
                                   submitServiceStates == RequestStates.loading
                               ? null
                               : () {

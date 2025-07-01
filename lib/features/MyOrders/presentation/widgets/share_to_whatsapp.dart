@@ -16,15 +16,25 @@ class ShareToWhatsApp extends StatelessWidget {
   void shareToWhatsApp() async {
     final String message =
         '''
-📌 Booking Details
+Booking Number:- $serviceOrderId
 
-🔢 Booking Number: $serviceOrderId
-📍 Address: Zone ${orderDetails?.customer?.zone},
-📅 Date: ${orderDetails?.date}
-🧴 Cleaning Material: ${orderDetails?.withCleaningSupplies == 0 ? 'No' : "Yes"}
-🗺️ Google Maps: ${orderDetails?.customer?.locationUrl}
+Omarnasr
+26 Al Sena, backside
+30190093
+Mobile:- 30190093
 
-💵 Payment: Cash, QR ${orderDetails?.totalNetAmount}
+https://www.waze.com/ul?ll=25.261341109440203,51.50751080363989
+
+${orderDetails?.customer?.locationUrl}
+
+Date:- ${orderDetails?.date}
+Number of Cleaners:- 1
+Cleaning Material:- ${orderDetails?.withCleaningSupplies == 0 ? 'No' : "Yes"}
+ 
+
+Pay by Online 
+
+https://admin.aldobi.com/homecleaning/hc-store/order/start/7926
 ''';
 
     final url = Uri.parse(

@@ -78,7 +78,15 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        SearchField(),
+                        SearchField(
+                          onFieldSubmitted: (value) {
+                            var epmloyeeNotifier = ref.read(
+                              employeesControllerProvider.notifier,
+                            );
+
+                            epmloyeeNotifier.searchEmployee(value);
+                          },
+                        ),
                         24.verticalSpace,
                         Text(
                           context.tr(AppStrings.serviceCategory),
@@ -108,7 +116,7 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                             final employeesState = ref.watch(
                               employeesControllerProvider,
                             );
-              
+
                             if (employeesState.employeesStates ==
                                 RequestStates.loaded) {
                               if (employeesState.employees.isEmpty) {

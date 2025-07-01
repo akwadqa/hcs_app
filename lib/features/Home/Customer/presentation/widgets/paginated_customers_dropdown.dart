@@ -177,7 +177,7 @@ class PaginatedCustomerDropdownState
   }
 
   void _selectItem(Customers c) {
-    ref.read(customerControllerProvider.notifier).selectCustomer(c);
+    ref.read(customerControllerProvider.notifier).toggleCustomer(c);
     widget.onChanged?.call(c);
   }
 

@@ -28,10 +28,6 @@ class $AssetsFontsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/background.png
-  AssetGenImage get background =>
-      const AssetGenImage('assets/images/background.png');
-
   /// File path: assets/images/background11.png
   AssetGenImage get background11 =>
       const AssetGenImage('assets/images/background11.png');
@@ -97,17 +93,12 @@ class $AssetsImagesGen {
   SvgGenImage get smallLogo =>
       const SvgGenImage('assets/images/small_logo.svg');
 
-  /// File path: assets/images/splash_background.png
-  AssetGenImage get splashBackground =>
-      const AssetGenImage('assets/images/splash_background.png');
-
   /// File path: assets/images/successful.svg
   SvgGenImage get successful =>
       const SvgGenImage('assets/images/successful.svg');
 
   /// List of all assets
   List<dynamic> get values => [
-    background,
     background11,
     calendar,
     cash,
@@ -126,7 +117,6 @@ class $AssetsImagesGen {
     settingsSelected,
     settingsUnselected,
     smallLogo,
-    splashBackground,
     successful,
   ];
 }

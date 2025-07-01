@@ -34,7 +34,7 @@ class AppStrings {
   //Home
   static const String home = 'home';
   static const String chooseServices = 'chooseServices';
-  static const String customer = 'customer';
+  static const String customers = 'customers';
   static const String serviceType = 'serviceType';
   static const String shiftType = 'shiftType';
   static const String date = 'date';

@@ -17,8 +17,8 @@ class ApiConstance {
   static String forgotPassword(String email) =>
       '$baseUrl/frappe.core.doctype.user.user.reset_password?user=$email';
   ////////////////// *  Customers   /////////////////////
-  static String getCustomers(String page) =>
-      '$baseUrl/$baseDomain.api.customer.customers?page=$page&limit=100';
+  static String getCustomers({required String page,required String customerName}) =>
+      '$baseUrl/$baseDomain.api.customer.customers?page=$page&limit=100&customer_name=$customerName';
   static String addCustomers = '$baseUrl/$baseDomain.api.customer.customer';
 
   ////////////////// *  Availabillty   /////////////////////
@@ -52,7 +52,6 @@ class ApiConstance {
 
     if (days.isNotEmpty) {
       queryParams['days'] = days.isEmpty ? '' : '$days';
-      // ensures ["monday", "wednesday"]
     }
 
     if (employeeName != null && employeeName.isNotEmpty) {
