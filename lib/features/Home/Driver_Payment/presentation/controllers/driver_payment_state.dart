@@ -26,8 +26,8 @@ class DriverPaymentState extends Equatable {
     this.driversStates = RequestStates.init,
     this.driversMessage = '',
     this.selectedDriver,
-    this.selectedPaymentMethod = 'Link',
-    this.withCleaningSupplies = 'yes',
+    this.selectedPaymentMethod = 'SkipCash',
+    this.withCleaningSupplies = 'no',
     //
     this.discountStates = RequestStates.init,
     this.selectedDiscount,

@@ -56,6 +56,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/goodbye.png
   AssetGenImage get goodbye => const AssetGenImage('assets/images/goodbye.png');
 
+  /// File path: assets/images/green_successful.svg
+  SvgGenImage get greenSuccessful =>
+      const SvgGenImage('assets/images/green_successful.svg');
+
   /// File path: assets/images/home_selected.svg
   SvgGenImage get homeSelected =>
       const SvgGenImage('assets/images/home_selected.svg');
@@ -89,9 +93,9 @@ class $AssetsImagesGen {
   SvgGenImage get settingsUnselected =>
       const SvgGenImage('assets/images/settings_unselected.svg');
 
-  /// File path: assets/images/small_logo.svg
-  SvgGenImage get smallLogo =>
-      const SvgGenImage('assets/images/small_logo.svg');
+  /// File path: assets/images/splash_logo.png
+  AssetGenImage get splashLogo =>
+      const AssetGenImage('assets/images/splash_logo.png');
 
   /// File path: assets/images/successful.svg
   SvgGenImage get successful =>
@@ -107,6 +111,7 @@ class $AssetsImagesGen {
     error404Min,
     errorX,
     goodbye,
+    greenSuccessful,
     homeSelected,
     homeUnselected,
     logo,
@@ -116,7 +121,7 @@ class $AssetsImagesGen {
     search,
     settingsSelected,
     settingsUnselected,
-    smallLogo,
+    splashLogo,
     successful,
   ];
 }

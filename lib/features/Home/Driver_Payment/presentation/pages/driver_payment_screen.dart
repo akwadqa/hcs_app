@@ -140,6 +140,11 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                                             .discountPercentage
                                             .toString(),
                                       ),
+                                      enabled:
+                                          driversPaymentState
+                                              .selectedDiscount
+                                              ?.discountPercentage !=
+                                          0,
                                       keyboardType: TextInputType.number,
                                       onFieldSubmitted: (value) {
                                         double? doubleDiscount =
@@ -236,6 +241,11 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                         final drvierDiscountState = ref.watch(
                           driversPaymentControllerProvider,
                         );
+                        final selectedServiceType = ref.watch(
+                          availabilityControllerProvider.select(
+                            (value) => value.selectedServiceType,
+                          ),
+                        );
                         final submitServiceStates = ref.watch(
                           submitServiceControllerProvider.select(
                             (value) => value.submitServiceStates,
@@ -253,7 +263,12 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                             showDialog(
                               context: context,
                               builder: (_) => AlertDialog(
-                                title: Assets.images.successful.svg(),
+                                title: selectedServiceType == "On Call"
+                                    ? Assets.images.greenSuccessful.svg(
+                                        width: 100,
+                                        height: 100,
+                                      )
+                                    : Assets.images.successful.svg(),
                                 content: Text(
                                   'Service has been\n requested successfully.',
                                   textAlign: TextAlign.center,

@@ -12,7 +12,7 @@ class PaymentMethodChips extends ConsumerWidget {
   PaymentMethodChips({super.key});
 
   final List<String> _options = [
-    PaymentMethod.link,
+    PaymentMethod.skipCash,
     PaymentMethod.cash,
   ].map((type) => paymentMethodToString(type)).toList();
 

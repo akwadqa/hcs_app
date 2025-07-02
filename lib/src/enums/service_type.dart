@@ -91,12 +91,12 @@ String serviceCategoryToString(ServiceCategory serviceCategory) {
 }
 
 //Payment Enums
-enum PaymentMethod { link, cash }
+enum PaymentMethod { skipCash, cash }
 
 String paymentMethodToString(PaymentMethod paymentMethod) {
   switch (paymentMethod) {
-    case PaymentMethod.link:
-      return 'Link';
+    case PaymentMethod.skipCash:
+      return 'SkipCash';
     case PaymentMethod.cash:
       return 'Cash';
   }

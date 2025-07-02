@@ -41,7 +41,7 @@ class PaginatedDriverDropdownState
     super.initState();
     _scrollController = ScrollController()..addListener(_onScroll);
     _searchController = TextEditingController()..addListener(_onSearchChanged);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _initOverlay());
+    // WidgetsBinding.instance.addPostFrameCallback((_) => _initOverlay());
   }
 
   @override
@@ -61,9 +61,9 @@ class PaginatedDriverDropdownState
     _overlay?.markNeedsBuild();
   }
 
-  void _initOverlay() {
-    if (mounted) _openOverlay();
-  }
+  // void _initOverlay() {
+  //   if (mounted) _openOverlay();
+  // }
 
   void _onScroll() {
     final driverState = ref.read(driversPaymentControllerProvider);
