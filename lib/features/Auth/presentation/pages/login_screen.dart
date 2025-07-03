@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Consumer(
                         builder: (context, ref, child) {
                           ref.listen(authControllerProvider, (prev, next) {
-                            if (next is AsyncData) {
+                            if (prev is AsyncLoading && next is AsyncData) {
                               notifyUser(
                                 context: context,
                                 message: 'Request has been sent successfully',

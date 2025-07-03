@@ -40,7 +40,6 @@ class CustomerController extends _$CustomerController {
 
   searchCustomer(String customerName) {
     state = state.copyWith(customerSearchedFor: customerName);
-    //TODO add serch name in fetch customers
     fetchCostumers();
   }
 

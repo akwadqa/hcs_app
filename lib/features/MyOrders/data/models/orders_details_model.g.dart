@@ -25,6 +25,7 @@ Map<String, dynamic> _$OrdersDetailsToJson(OrdersDetails instance) =>
     };
 
 Details _$DetailsFromJson(Map<String, dynamic> json) => Details(
+  status: json['status'] as String?,
   customer: json['customer'] == null
       ? null
       : Customer.fromJson(json['customer'] as Map<String, dynamic>),
@@ -45,6 +46,7 @@ Details _$DetailsFromJson(Map<String, dynamic> json) => Details(
 );
 
 Map<String, dynamic> _$DetailsToJson(Details instance) => <String, dynamic>{
+  'status': instance.status,
   'customer': instance.customer,
   'driver': instance.driver,
   'date': instance.date,
@@ -64,6 +66,7 @@ Customer _$CustomerFromJson(Map<String, dynamic> json) => Customer(
   location: json['location'] as String?,
   locationUrl: json['location_url'] as String?,
   zone: json['zone'] as String?,
+  phoneNumber: json['phone_number'] as String?,
 );
 
 Map<String, dynamic> _$CustomerToJson(Customer instance) => <String, dynamic>{
@@ -72,6 +75,7 @@ Map<String, dynamic> _$CustomerToJson(Customer instance) => <String, dynamic>{
   'location': instance.location,
   'location_url': instance.locationUrl,
   'zone': instance.zone,
+  'phone_number': instance.phoneNumber,
 };
 
 Driver _$DriverFromJson(Map<String, dynamic> json) => Driver(

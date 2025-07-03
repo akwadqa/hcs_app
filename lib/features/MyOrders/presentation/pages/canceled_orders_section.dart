@@ -27,9 +27,8 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
   void initState() {
     super.initState();
     Future(
-      () => ref
-          .read(myOrdersControllerProvider.notifier)
-          .fetchCancelledOrders(),
+      () =>
+          ref.read(myOrdersControllerProvider.notifier).fetchCancelledOrders(),
     );
 
     _scrollController = ScrollController()..addListener(_onScroll);
@@ -106,7 +105,8 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
               onTap: () {
                 context.pushRoute(
                   OrderDetailsRoute(
-                    serviceOrderID: ordersState.cancelledOrders[index].serviceOrderId,
+                    serviceOrderID:
+                        ordersState.cancelledOrders[index].serviceOrderId,
                   ),
                 );
               },
@@ -138,7 +138,8 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
                             Assets.images.pending.svg(),
                             9.horizontalSpace,
                             Text(
-                              ordersState.cancelledOrders[index].status.toString(),
+                              ordersState.cancelledOrders[index].status
+                                  .toString(),
                               style: Theme.of(context).textTheme.displayMedium!
                                   .copyWith(fontSize: 14.sp),
                             ),

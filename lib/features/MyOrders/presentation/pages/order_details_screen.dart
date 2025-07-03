@@ -6,9 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/MyOrders/data/models/orders_details_model.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/myorders_controller.dart';
+import 'package:hcs/features/MyOrders/presentation/controllers/myorders_state.dart';
 import 'package:hcs/features/MyOrders/presentation/widgets/info_row.dart';
 import 'package:hcs/features/MyOrders/presentation/widgets/map_button.dart';
 import 'package:hcs/features/MyOrders/presentation/widgets/share_to_whatsapp.dart';
+import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
@@ -74,38 +76,102 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
       ),
 
       bottomNavigationBar:
-          orderStatus == RequestStates.loaded &&
-              details?.withCleaningSupplies == 0
-          ? Padding(
-              padding: EdgeInsets.symmetric(vertical: 17.h, horizontal: 26.w),
-              child: CustomButton(
-                title: AppStrings.cancelOrder.tr(context: context),
-                buttonColor: AppColors.blueText,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text(AppStrings.cancelOrder.tr(context: context)),
-                      content: Text(
-                        "Are you sure you want to cancel this order?",
+          orderStatus == RequestStates.loaded && details?.status == 'Approved'
+          ? Consumer(
+              builder: (context, ref, child) {
+                var orderCancelltionStates = ref.watch(
+                  myOrdersControllerProvider.select(
+                    (value) => value.orderCancelltionStates,
+                  ),
+                );
+                ref.listen<MyOrdersState>(myOrdersControllerProvider, (
+                  previous,
+                  next,
+                ) {
+                  if (next.orderCancelltionStates == RequestStates.loaded) {
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: Assets.images.redSuccessful.svg(
+                          width: 100,
+                          height: 100,
+                        ),
+
+                        content: Text(
+                          'Service has been\ncancelled successfully.',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.displayMedium!.copyWith(fontSize: 20.sp),
+                        ),
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text("No"),
+                    );
+                  }
+
+                  if (next.orderCancelltionStates == RequestStates.error) {
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: Assets.images.errorX.svg(),
+                        content: Text(
+                          next.orderCancelltionMessage ??
+                              "An unexpected error occurred.\nPlease try again.",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.displayMedium!.copyWith(fontSize: 20.sp),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            // Call your cancel order logic here
-                          },
-                          child: Text("Yes"),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+                      ),
+                    );
+                  }
+                });
+
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 17.h,
+                    horizontal: 26.w,
+                  ),
+                  child: CustomButton(
+                    title: AppStrings.cancelOrder.tr(context: context),
+                    buttonColor: AppColors.blueText,
+                    onPressed: orderCancelltionStates != RequestStates.loading
+                        ? () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text(
+                                  AppStrings.cancelOrder.tr(context: context),
+                                ),
+                                content: Text(
+                                  "Are you sure you want to cancel this order?",
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text("No"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      ref
+                                          .read(
+                                            myOrdersControllerProvider.notifier,
+                                          )
+                                          .orderCancelltion(
+                                            serviceOrderID:
+                                                widget.serviceOrderID,
+                                          );
+                                    },
+                                    child: Text("Yes"),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        : null,
+                  ),
+                );
+              },
             )
           : null,
     );

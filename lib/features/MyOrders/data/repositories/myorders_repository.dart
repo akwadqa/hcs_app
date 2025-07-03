@@ -1,4 +1,5 @@
 // home_repository.dart
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/MyOrders/data/models/orders_details_model.dart';
 import 'package:hcs/features/MyOrders/data/models/services_orders_model.dart';
@@ -45,6 +46,20 @@ class MyOrdersRepository {
       throw Exception(
         response.message ?? 'Failed to get Services Order Details',
       );
+    }
+  }
+
+  Future<bool> orderCancelltion({required String serviceOrderId}) async {
+    var data = FormData.fromMap({'service_order_id': serviceOrderId});
+    final response = await _networkService.post(
+      ApiConstance.orderCancelltion(),
+      data,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(response.message ?? 'Failed to cancel the orders');
     }
   }
 }

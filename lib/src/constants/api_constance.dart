@@ -17,7 +17,10 @@ class ApiConstance {
   static String forgotPassword(String email) =>
       '$baseUrl/frappe.core.doctype.user.user.reset_password?user=$email';
   ////////////////// *  Customers   /////////////////////
-  static String getCustomers({required String page,required String customerName}) =>
+  static String getCustomers({
+    required String page,
+    required String customerName,
+  }) =>
       '$baseUrl/$baseDomain.api.customer.customers?page=$page&limit=100&customer_name=$customerName';
   static String addCustomers = '$baseUrl/$baseDomain.api.customer.customer';
 
@@ -86,4 +89,7 @@ class ApiConstance {
 
   static String getServiceOrderDetails({required String serviceOrderId}) =>
       '$baseUrl/$baseDomain.api.service_order.service_order_details?service_order_id=$serviceOrderId';
+
+  static String orderCancelltion() =>
+      '$baseUrl/$baseDomain.api.service_order.cancel_service_order';
 }

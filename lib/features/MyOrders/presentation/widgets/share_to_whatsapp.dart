@@ -12,27 +12,25 @@ class ShareToWhatsApp extends StatelessWidget {
     required this.serviceOrderId,
     required this.orderDetails,
   });
+  // https://www.waze.com/ul?ll=${orderDetails?.customer?.locationUrl?.split('=').last}
 
   void shareToWhatsApp() async {
     final String message =
         '''
 Booking Number:- $serviceOrderId
 
-Omarnasr
-26 Al Sena, backside
-30190093
-Mobile:- 30190093
-
-https://www.waze.com/ul?ll=25.261341109440203,51.50751080363989
+${orderDetails?.customer?.customerName}
+${orderDetails?.customer?.zone}, ${orderDetails?.customer?.location}
+Mobile:- ${orderDetails?.customer?.phoneNumber}
 
 ${orderDetails?.customer?.locationUrl}
 
 Date:- ${orderDetails?.date}
-Number of Cleaners:- 1
+Number of Cleaners:- ${orderDetails?.staffAppointment?.length}
 Cleaning Material:- ${orderDetails?.withCleaningSupplies == 0 ? 'No' : "Yes"}
  
 
-Pay by Online 
+Payment collect by cash QR ${orderDetails?.totalNetAmount}
 
 https://admin.aldobi.com/homecleaning/hc-store/order/start/7926
 ''';

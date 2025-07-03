@@ -105,7 +105,8 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
               onTap: () {
                 context.pushRoute(
                   OrderDetailsRoute(
-                    serviceOrderID: ordersState.approvedOrders[index].serviceOrderId,
+                    serviceOrderID:
+                        ordersState.approvedOrders[index].serviceOrderId,
                   ),
                 );
               },
@@ -137,7 +138,8 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
                             Assets.images.pending.svg(),
                             9.horizontalSpace,
                             Text(
-                              ordersState.approvedOrders[index].status.toString(),
+                              ordersState.approvedOrders[index].status
+                                  .toString(),
                               style: Theme.of(context).textTheme.displayMedium!
                                   .copyWith(fontSize: 14.sp),
                             ),

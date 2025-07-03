@@ -82,6 +82,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/pending.svg
   SvgGenImage get pending => const SvgGenImage('assets/images/pending.svg');
 
+  /// File path: assets/images/red_successful.svg
+  SvgGenImage get redSuccessful =>
+      const SvgGenImage('assets/images/red_successful.svg');
+
   /// File path: assets/images/search.svg
   SvgGenImage get search => const SvgGenImage('assets/images/search.svg');
 
@@ -118,6 +122,7 @@ class $AssetsImagesGen {
     myordersSelected,
     noDataMin,
     pending,
+    redSuccessful,
     search,
     settingsSelected,
     settingsUnselected,

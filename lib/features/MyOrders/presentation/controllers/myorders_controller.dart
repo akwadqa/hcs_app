@@ -165,7 +165,7 @@ class MyOrdersController extends _$MyOrdersController {
     try {
       final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
       final ordersData = await myOrdersRepo.getServicesOrders(
-        page: state.currentPendingOrdersPage!,
+        page: state.currentCancelledOrdersPage!,
         status: 'Cancelled',
       );
 
@@ -191,7 +191,10 @@ class MyOrdersController extends _$MyOrdersController {
   }
 
   Future<void> fetchOrdersDetails({required String serviceOrderID}) async {
-    state = state.copyWith(ordersDetailsStates: RequestStates.loading);
+    state = state.copyWith(
+      ordersDetailsStates: RequestStates.loading,
+      orderCancelltionStates: RequestStates.init,
+    );
 
     try {
       final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
@@ -203,11 +206,33 @@ class MyOrdersController extends _$MyOrdersController {
         ordersDetails: ordersDetails.details,
         ordersDetailsStates: RequestStates.loaded,
         ordersDetailsMessage: '',
+        orderCancelltionStates: RequestStates.init,
       );
     } catch (e) {
       state = state.copyWith(
         ordersDetailsStates: RequestStates.error,
         ordersDetailsMessage: e.toString(),
+      );
+    }
+  }
+
+  Future<void> orderCancelltion({required String serviceOrderID}) async {
+    state = state.copyWith(orderCancelltionStates: RequestStates.loading);
+
+    try {
+      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
+      await myOrdersRepo.orderCancelltion(serviceOrderId: serviceOrderID);
+
+      state = state.copyWith(
+        orderCancelltionStates: RequestStates.loaded,
+        orderCancelltionMessage: '',
+      );
+
+      fetchOrdersDetails(serviceOrderID: serviceOrderID);
+    } catch (e) {
+      state = state.copyWith(
+        orderCancelltionStates: RequestStates.error,
+        orderCancelltionMessage: e.toString(),
       );
     }
   }

@@ -37,6 +37,9 @@ class OrdersDetails {
 
 @JsonSerializable()
 class Details {
+  @JsonKey(name: "status")
+  String? status;
+
   @JsonKey(name: "customer")
   final Customer? customer;
 
@@ -71,6 +74,7 @@ class Details {
   final List<String>? staffAppointment;
 
   Details({
+    this.status,
     this.customer,
     this.driver,
     this.date,
@@ -107,12 +111,15 @@ class Customer {
   @JsonKey(name: "zone")
   final String? zone;
 
+  @JsonKey(name: "phone_number")
+  String? phoneNumber;
   Customer({
     this.customerId,
     this.customerName,
     this.location,
     this.locationUrl,
     this.zone,
+    this.phoneNumber,
   });
 
   factory Customer.fromJson(Map<String, dynamic> json) =>

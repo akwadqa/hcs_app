@@ -22,6 +22,9 @@ class MyOrdersState extends Equatable {
   final RequestStates ordersDetailsStates;
   final String? ordersDetailsMessage;
 
+  //cancelltion
+  final RequestStates orderCancelltionStates;
+  final String? orderCancelltionMessage;
   const MyOrdersState({
     //orders
     this.currentApprovedOrdersPage,
@@ -38,6 +41,10 @@ class MyOrdersState extends Equatable {
     this.ordersDetails,
     this.ordersDetailsStates = RequestStates.init,
     this.ordersDetailsMessage = '',
+
+    //cancelletion
+    this.orderCancelltionStates = RequestStates.init,
+    this.orderCancelltionMessage = '',
   });
   MyOrdersState copyWith({
     //orders
@@ -56,6 +63,10 @@ class MyOrdersState extends Equatable {
     Details? ordersDetails,
     RequestStates? ordersDetailsStates,
     String? ordersDetailsMessage,
+
+    //cancelletion
+    RequestStates? orderCancelltionStates,
+    String? orderCancelltionMessage,
   }) {
     return MyOrdersState(
       //orders
@@ -75,6 +86,11 @@ class MyOrdersState extends Equatable {
       ordersDetails: ordersDetails ?? this.ordersDetails,
       ordersDetailsMessage: ordersDetailsMessage ?? this.ordersDetailsMessage,
       ordersDetailsStates: ordersDetailsStates ?? this.ordersDetailsStates,
+      //cancelletion
+      orderCancelltionStates:
+          orderCancelltionStates ?? this.orderCancelltionStates,
+      orderCancelltionMessage:
+          orderCancelltionMessage ?? this.orderCancelltionMessage,
     );
   }
 
@@ -93,6 +109,10 @@ class MyOrdersState extends Equatable {
     ordersMessage,
 
     //Orders Details
-    ordersDetails, ordersDetailsMessage, ordersDetailsStates,
+    ordersDetails,
+    ordersDetailsMessage,
+    ordersDetailsStates,
+    orderCancelltionStates,
+    orderCancelltionMessage,
   ];
 }
