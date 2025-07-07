@@ -44,7 +44,7 @@ class CustomerRepository {
     }
   }
 
-  Future<CustomersModel> getCustomers({required int page,required String customerName}) async {
+  Future<CustomersModel> getCustomers({required int page,required String customerName,}) async {
     final response = await _networkService.get(
       ApiConstance.getCustomers(page: page.toString(),customerName: customerName),
     );

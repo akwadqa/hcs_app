@@ -19,20 +19,27 @@ class ShareToWhatsApp extends StatelessWidget {
         '''
 Booking Number:- $serviceOrderId
 
+Supervisor Name:- ${orderDetails?.supervisor?.supervisorName}
+
 ${orderDetails?.customer?.customerName}
 ${orderDetails?.customer?.zone}, ${orderDetails?.customer?.location}
 Mobile:- ${orderDetails?.customer?.phoneNumber}
 
 ${orderDetails?.customer?.locationUrl}
 
+Driver:- ${orderDetails?.driver?.driverName}
 Date:- ${orderDetails?.date}
-Number of Cleaners:- ${orderDetails?.staffAppointment?.length}
-Cleaning Material:- ${orderDetails?.withCleaningSupplies == 0 ? 'No' : "Yes"}
- 
+Service Type:- ${orderDetails?.serviceType}
 
+Shift Type:- ${orderDetails?.shiftType}
+Duration:- ${orderDetails?.shiftType == "Full Day" ? "10 Hours" : "5 Hours"}
+Names of Cleaners:-
+${(orderDetails?.staffAppointment as List?)?.join(',\n')}
+Cleaning Material:- ${orderDetails?.withCleaningSupplies == 0 ? 'NO' : "YES"}
+ 
 Payment collect by cash QR ${orderDetails?.totalNetAmount}
 
-https://admin.aldobi.com/homecleaning/hc-store/order/start/7926
+https://highclass.akwad.qa
 ''';
 
     final url = Uri.parse(

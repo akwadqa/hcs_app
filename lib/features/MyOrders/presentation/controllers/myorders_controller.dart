@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hcs/features/MyOrders/data/repositories/myorders_repository.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/myorders_state.dart';
 import 'package:hcs/src/enums/request_state.dart';
@@ -18,6 +19,7 @@ class MyOrdersController extends _$MyOrdersController {
       final ordersData = await myOrdersRepo.getServicesOrders(
         page: 1,
         status: 'Approved',
+        orderSearched: state.orderSearchedFor,
       );
 
       int? nextPage;
@@ -47,6 +49,7 @@ class MyOrdersController extends _$MyOrdersController {
       final ordersData = await myOrdersRepo.getServicesOrders(
         page: state.currentApprovedOrdersPage!,
         status: 'Approved',
+        orderSearched: state.orderSearchedFor,
       );
 
       int? nextPage;
@@ -78,6 +81,7 @@ class MyOrdersController extends _$MyOrdersController {
       final ordersData = await myOrdersRepo.getServicesOrders(
         page: 1,
         status: 'Pending',
+        orderSearched: state.orderSearchedFor,
       );
 
       int? nextPage;
@@ -107,6 +111,7 @@ class MyOrdersController extends _$MyOrdersController {
       final ordersData = await myOrdersRepo.getServicesOrders(
         page: state.currentPendingOrdersPage!,
         status: 'Pending',
+        orderSearched: state.orderSearchedFor,
       );
 
       int? nextPage;
@@ -130,6 +135,25 @@ class MyOrdersController extends _$MyOrdersController {
     }
   }
 
+  searchOrder({required String searchedOrder, required int tabIndex}) {
+    state = state.copyWith(orderSearchedFor: searchedOrder);
+    switch (tabIndex) {
+      case 0:
+        fetchApprovedOrders();
+        break;
+
+      case 1:
+        fetchPendingOrders();
+        break;
+
+      case 2:
+        fetchCancelledOrders();
+        break;
+      default:
+        fetchApprovedOrders();
+    }
+  }
+
   Future<void> fetchCancelledOrders() async {
     state = state.copyWith(cancelledOrdersStates: RequestStates.loading);
 
@@ -138,6 +162,7 @@ class MyOrdersController extends _$MyOrdersController {
       final ordersData = await myOrdersRepo.getServicesOrders(
         page: 1,
         status: 'Cancelled',
+        orderSearched: state.orderSearchedFor,
       );
 
       int? nextPage;
@@ -167,6 +192,7 @@ class MyOrdersController extends _$MyOrdersController {
       final ordersData = await myOrdersRepo.getServicesOrders(
         page: state.currentCancelledOrdersPage!,
         status: 'Cancelled',
+        orderSearched: state.orderSearchedFor,
       );
 
       int? nextPage;

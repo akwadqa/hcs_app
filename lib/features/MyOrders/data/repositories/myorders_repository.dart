@@ -21,9 +21,14 @@ class MyOrdersRepository {
   Future<ServicesOrders> getServicesOrders({
     required int page,
     required String status,
+    required String orderSearched,
   }) async {
     final response = await _networkService.get(
-      ApiConstance.myServicesOrders(page: page.toString(), status: status),
+      ApiConstance.myServicesOrders(
+        page: page.toString(),
+        status: status,
+        orderSearched: orderSearched,
+      ),
     );
 
     if (response.statusCode == 200) {

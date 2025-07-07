@@ -38,7 +38,10 @@ class OrdersDetails {
 @JsonSerializable()
 class Details {
   @JsonKey(name: "status")
-  String? status;
+  final String? status;
+
+  @JsonKey(name: "supervisor")
+  final Supervisor? supervisor;
 
   @JsonKey(name: "customer")
   final Customer? customer;
@@ -73,8 +76,12 @@ class Details {
   @JsonKey(name: "staff_appointment")
   final List<String>? staffAppointment;
 
+  @JsonKey(name: "days")
+  final List<String>? days;
+
   Details({
     this.status,
+    this.supervisor,
     this.customer,
     this.driver,
     this.date,
@@ -86,6 +93,7 @@ class Details {
     this.totalNetAmount,
     this.methodOfPayment,
     this.staffAppointment,
+    this.days,
   });
 
   factory Details.fromJson(Map<String, dynamic> json) =>
@@ -141,4 +149,19 @@ class Driver {
   factory Driver.fromJson(Map<String, dynamic> json) => _$DriverFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverToJson(this);
+}
+
+@JsonSerializable()
+class Supervisor {
+  @JsonKey(name: "supervisor")
+  String supervisor;
+  @JsonKey(name: "supervisor_name")
+  String supervisorName;
+
+  Supervisor({required this.supervisor, required this.supervisorName});
+
+  factory Supervisor.fromJson(Map<String, dynamic> json) =>
+      _$SupervisorFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SupervisorToJson(this);
 }

@@ -16,6 +16,7 @@ class MyOrdersState extends Equatable {
   final RequestStates pendingOrdersStates;
   final RequestStates cancelledOrdersStates;
   final String? ordersMessage;
+  final String orderSearchedFor;
 
   //Orders Details
   final Details? ordersDetails;
@@ -37,6 +38,8 @@ class MyOrdersState extends Equatable {
     this.pendingOrdersStates = RequestStates.init,
     this.cancelledOrdersStates = RequestStates.init,
     this.ordersMessage = '',
+    this.orderSearchedFor = '',
+
     //Orders Details
     this.ordersDetails,
     this.ordersDetailsStates = RequestStates.init,
@@ -58,6 +61,7 @@ class MyOrdersState extends Equatable {
     RequestStates? pendingOrdersStates,
     RequestStates? cancelledOrdersStates,
     String? ordersMessage,
+    String? orderSearchedFor,
 
     //Orders Details
     Details? ordersDetails,
@@ -81,7 +85,7 @@ class MyOrdersState extends Equatable {
       cancelledOrdersStates:
           cancelledOrdersStates ?? this.cancelledOrdersStates,
       ordersMessage: ordersMessage ?? this.ordersMessage,
-
+      orderSearchedFor: orderSearchedFor ?? this.orderSearchedFor,
       //Orders Details
       ordersDetails: ordersDetails ?? this.ordersDetails,
       ordersDetailsMessage: ordersDetailsMessage ?? this.ordersDetailsMessage,
@@ -107,7 +111,7 @@ class MyOrdersState extends Equatable {
     pendingOrdersStates,
     cancelledOrdersStates,
     ordersMessage,
-
+    orderSearchedFor,
     //Orders Details
     ordersDetails,
     ordersDetailsMessage,

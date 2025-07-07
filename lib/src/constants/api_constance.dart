@@ -84,8 +84,9 @@ class ApiConstance {
   static String myServicesOrders({
     required String page,
     required String status,
+    required String orderSearched
   }) =>
-      '$baseUrl/$baseDomain.api.service_order.service_orders?page=$page&limit=10&status=$status';
+      '$baseUrl/$baseDomain.api.service_order.service_orders?page=$page&limit=10&status=$status&search=$orderSearched';
 
   static String getServiceOrderDetails({required String serviceOrderId}) =>
       '$baseUrl/$baseDomain.api.service_order.service_order_details?service_order_id=$serviceOrderId';

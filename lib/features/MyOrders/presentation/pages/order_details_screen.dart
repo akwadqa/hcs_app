@@ -216,6 +216,10 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
 
           InfoRow("Service type", value: details?.serviceType),
           InfoRow("Shift type", value: details?.shiftType),
+          InfoRow(
+            "Work Days",
+            value: (details?.days as List?)?.join(',') ?? '',
+          ),
           InfoRow("Date", value: details?.date),
 
           // InfoRow("Service Category", value: "On Call"),
@@ -236,7 +240,7 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
             child: Divider(height: 0.1, color: AppColors.dividerGrey),
           ),
 
-          // InfoRow("Discount Type", value: details?.discountType),
+          InfoRow("Discount Type", value: details?.discountType),
           InfoRow(
             "Discount Percentage",
             value: details?.discountPercentage.toString(),
