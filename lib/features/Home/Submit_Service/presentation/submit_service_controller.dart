@@ -40,7 +40,7 @@ class SubmitServiceController extends _$SubmitServiceController {
           days: availabilityController.selectedDays,
           employees: employeesController.selectedEmployees,
           paymentMethod: driverPaymentController.selectedPaymentMethod,
-          discountType: driverPaymentController.selectedDiscount?.title,
+          discountType: driverPaymentController.selectedDiscount?.id,
           discountPercentage: driverPaymentController.discountPercentage
               .toString(),
           withCleaningSupplies: driverPaymentController.withCleaningSupplies,

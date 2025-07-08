@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/models/discount_type.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/models/drivers_model.dart';
@@ -57,6 +58,7 @@ class DriversPaymentController extends _$DriversPaymentController {
 
   // In this function we set note
   Future<void> setNote(String note) async {
+    debugPrint("note is $note");
     state = state.copyWith(note: note);
   }
 

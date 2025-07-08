@@ -216,10 +216,12 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
 
           InfoRow("Service type", value: details?.serviceType),
           InfoRow("Shift type", value: details?.shiftType),
-          InfoRow(
-            "Work Days",
-            value: (details?.days as List?)?.join(',') ?? '',
-          ),
+          details?.days != null && details!.days!.isNotEmpty
+              ? InfoRow(
+                  "Work Days",
+                  value: (details.days as List?)?.join(',') ?? '',
+                )
+              : SizedBox.shrink(),
           InfoRow("Date", value: details?.date),
 
           // InfoRow("Service Category", value: "On Call"),
@@ -251,7 +253,9 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
             padding: EdgeInsets.symmetric(vertical: 24.h),
             child: Divider(height: 0.1, color: AppColors.dividerGrey),
           ),
-
+          details?.note != null && details!.note!.isNotEmpty
+              ? InfoRow("Note", value: details.note)
+              : SizedBox.shrink(),
           InfoRow(
             "Cleaning supply",
             value: details?.withCleaningSupplies == 0 ? "No" : "Yes",

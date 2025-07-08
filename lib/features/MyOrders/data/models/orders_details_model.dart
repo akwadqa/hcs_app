@@ -76,6 +76,9 @@ class Details {
   @JsonKey(name: "staff_appointment")
   final List<String>? staffAppointment;
 
+  @JsonKey(name: "note")
+  final String? note;
+
   @JsonKey(name: "days")
   final List<String>? days;
 
@@ -93,6 +96,7 @@ class Details {
     this.totalNetAmount,
     this.methodOfPayment,
     this.staffAppointment,
+    this.note,
     this.days,
   });
 

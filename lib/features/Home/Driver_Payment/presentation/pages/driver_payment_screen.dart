@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' as tr;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,7 +32,7 @@ class DriverPaymentScreen extends ConsumerStatefulWidget {
 
 class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
   final _dropdownKey = GlobalKey<PaginatedDriverDropdownState>();
-
+  late TextEditingController noteController;
   @override
   void initState() {
     super.initState();
@@ -40,12 +40,14 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
       ref.read(driversPaymentControllerProvider.notifier).fetchDrivers();
       ref.read(driversPaymentControllerProvider.notifier).getDiscountType();
     });
+    noteController = TextEditingController(
+      text: ref.read(driversPaymentControllerProvider).note,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     // final driversPaymentState = ref.watch(driversPaymentControllerProvider);
-    debugPrint('sss 53 ');
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
@@ -253,23 +255,19 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                 8.verticalSpace,
                 Consumer(
                   builder: (context, ref, child) {
-                    final driversPaymentState = ref.watch(
-                      driversPaymentControllerProvider,
-                    );
                     return TextFormField(
-                      controller: TextEditingController(
-                        text: driversPaymentState.note,
-                      ),
+                      controller: noteController,
                       minLines: 3,
                       maxLines: 3,
-
+                      textDirection: TextDirection.ltr,
+                      textAlign: TextAlign.start,
                       onChanged: (value) {
                         ref
                             .read(driversPaymentControllerProvider.notifier)
                             .setNote(value);
                       },
                       decoration: InputDecoration(
-                        hintText: 'Add notes  if needed (optional)...',
+                        hintText: 'Add notes if needed (optional)...',
                         hintStyle: Theme.of(
                           context,
                         ).inputDecorationTheme.hintStyle,
@@ -348,7 +346,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                           }
                         });
                         return CustomButton(
-                          title: tr(context: context, AppStrings.submit),
+                          title: tr.tr(context: context, AppStrings.submit),
                           onPressed:
                               drvierDiscountState.selectedDriver == null ||
                                   submitServiceStates == RequestStates.loading

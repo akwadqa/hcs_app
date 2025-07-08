@@ -28,7 +28,7 @@ class AreCleaningSuppliesAvailable extends ConsumerWidget {
           runSpacing: 16.h,
           children: List.generate(options.length, (i) {
             var notifier = ref.read(driversPaymentControllerProvider.notifier);
-            var withCleaningSupplies = ref.read(
+            var withCleaningSupplies = ref.watch(
               driversPaymentControllerProvider.select(
                 (value) => value.withCleaningSupplies,
               ),
@@ -38,14 +38,9 @@ class AreCleaningSuppliesAvailable extends ConsumerWidget {
 
             return GestureDetector(
               onTap: () {
-                // setState(() => _selectedIndex = i);
                 notifier.withCleaningSupplies(options[i].toLowerCase());
               },
               child: Container(
-                // padding: EdgeInsets.symmetric(
-                //   horizontal: 40.w,
-                //   vertical: 10.h,
-                // ),
                 alignment: Alignment.center,
                 width: 162.w,
                 height: 50.h,

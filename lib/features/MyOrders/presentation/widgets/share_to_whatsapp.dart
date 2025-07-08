@@ -36,7 +36,8 @@ Duration:- ${orderDetails?.shiftType == "Full Day" ? "10 Hours" : "5 Hours"}
 Names of Cleaners:-
 ${(orderDetails?.staffAppointment as List?)?.join(',\n')}
 Cleaning Material:- ${orderDetails?.withCleaningSupplies == 0 ? 'NO' : "YES"}
- 
+${orderDetails?.note != null ? "Note:- ${orderDetails?.note}" : ""}
+
 Payment collect by cash QR ${orderDetails?.totalNetAmount}
 
 https://highclass.akwad.qa

@@ -46,6 +46,7 @@ Details _$DetailsFromJson(Map<String, dynamic> json) => Details(
   staffAppointment: (json['staff_appointment'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
+  note: json['note'] as String?,
   days: (json['days'] as List<dynamic>?)?.map((e) => e as String).toList(),
 );
 
@@ -63,6 +64,7 @@ Map<String, dynamic> _$DetailsToJson(Details instance) => <String, dynamic>{
   'total_net_amount': instance.totalNetAmount,
   'method_of_payment': instance.methodOfPayment,
   'staff_appointment': instance.staffAppointment,
+  'note': instance.note,
   'days': instance.days,
 };
 
