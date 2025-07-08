@@ -11,6 +11,8 @@ class SubmitServiceParams {
   final List<String>? days;
   final List<Employee> employees;
   final String paymentMethod;
+  final String note;
+  final String? discountType;
   final String discountPercentage;
   final String withCleaningSupplies;
 
@@ -24,6 +26,8 @@ class SubmitServiceParams {
     required this.days,
     required this.employees,
     required this.paymentMethod,
+    required this.note,
+    required this.discountType,
     required this.discountPercentage,
     required this.withCleaningSupplies,
   });
@@ -48,6 +52,8 @@ class SubmitServiceParams {
           )
           .toList(),
       'payment_method': paymentMethod,
+      'note': note,
+      'discount_type': discountType,
       'discount_percentage': discountPercentage,
       'with_cleaning_supplies': withCleaningSupplies == 'yes' ? 1 : 0,
     };

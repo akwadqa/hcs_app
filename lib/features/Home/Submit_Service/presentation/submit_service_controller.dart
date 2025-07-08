@@ -29,7 +29,7 @@ class SubmitServiceController extends _$SubmitServiceController {
         driversPaymentControllerProvider,
       );
 
-       await submitServiceRepo.submitService(
+      await submitServiceRepo.submitService(
         SubmitServiceParams(
           customerId: customerController.selectedCustomer!.customerId,
           customerName: customerController.selectedCustomer!.customerName,
@@ -40,9 +40,11 @@ class SubmitServiceController extends _$SubmitServiceController {
           days: availabilityController.selectedDays,
           employees: employeesController.selectedEmployees,
           paymentMethod: driverPaymentController.selectedPaymentMethod,
+          discountType: driverPaymentController.selectedDiscount?.title,
           discountPercentage: driverPaymentController.discountPercentage
               .toString(),
-          withCleaningSupplies: driverPaymentController.withCleaningSupplies ,
+          withCleaningSupplies: driverPaymentController.withCleaningSupplies,
+          note: driverPaymentController.note,
         ),
       );
 

@@ -44,13 +44,12 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final driversPaymentState = ref.watch(driversPaymentControllerProvider);
+    // final driversPaymentState = ref.watch(driversPaymentControllerProvider);
+    debugPrint('sss 53 ');
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
-        // 3) First close the overlay if it's open
         _dropdownKey.currentState?.closeOverlay();
-        // 4) Then allow the pop to happen
       },
       child: Scaffold(
         appBar: CustomAppbar(hasBackArrow: true),
@@ -69,6 +68,10 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                 8.verticalSpace,
                 Consumer(
                   builder: (context, ref, child) {
+                    final driversPaymentState = ref.watch(
+                      driversPaymentControllerProvider,
+                    );
+
                     if (driversPaymentState.driversStates ==
                         RequestStates.loaded) {
                       return PaginatedDriverDropdown(
@@ -103,6 +106,10 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
 
                 Consumer(
                   builder: (context, ref, child) {
+                    final driversPaymentState = ref.watch(
+                      driversPaymentControllerProvider,
+                    );
+
                     if (driversPaymentState.discountStates ==
                         RequestStates.loaded) {
                       return Column(
@@ -165,6 +172,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                                   ],
                                 )
                               : SizedBox.shrink(),
+
                           10.verticalSpace,
                           Text.rich(
                             TextSpan(
@@ -217,7 +225,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                 PaymentMethodChips(),
                 32.verticalSpace,
                 Divider(height: 0.1, color: AppColors.dividerGrey),
-                32.verticalSpace,
+
                 Consumer(
                   builder: (context, ref, child) {
                     var selectedServiceType = ref.watch(
@@ -227,8 +235,46 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                     );
 
                     return selectedServiceType != "Packages"
-                        ? AreCleaningSuppliesAvailable()
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              32.verticalSpace,
+                              AreCleaningSuppliesAvailable(),
+                            ],
+                          )
                         : SizedBox.shrink();
+                  },
+                ),
+                16.verticalSpace,
+                Text(
+                  context.tr(AppStrings.note),
+                  style: Theme.of(context).textTheme.displayMedium,
+                ),
+                8.verticalSpace,
+                Consumer(
+                  builder: (context, ref, child) {
+                    final driversPaymentState = ref.watch(
+                      driversPaymentControllerProvider,
+                    );
+                    return TextFormField(
+                      controller: TextEditingController(
+                        text: driversPaymentState.note,
+                      ),
+                      minLines: 3,
+                      maxLines: 3,
+
+                      onChanged: (value) {
+                        ref
+                            .read(driversPaymentControllerProvider.notifier)
+                            .setNote(value);
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Add notes  if needed (optional)...',
+                        hintStyle: Theme.of(
+                          context,
+                        ).inputDecorationTheme.hintStyle,
+                      ),
+                    );
                   },
                 ),
                 50.verticalSpace,

@@ -19,6 +19,9 @@ class DriverPaymentState extends Equatable {
   final double discountPercentage;
   final double originalCost;
   final double discountedCost;
+  //
+  final String note;
+
   const DriverPaymentState({
     //drivers
     this.currentDriversPage,
@@ -35,6 +38,8 @@ class DriverPaymentState extends Equatable {
     this.discountPercentage = 0.0,
     this.originalCost = 0.0,
     this.discountedCost = 0.0,
+    //
+    this.note = '',
   });
   DriverPaymentState copyWith({
     //drivers
@@ -53,6 +58,8 @@ class DriverPaymentState extends Equatable {
     double? discountPercentage,
     double? originalCost,
     double? discountedCost,
+    //
+    String? note,
   }) {
     return DriverPaymentState(
       //drivers
@@ -70,6 +77,7 @@ class DriverPaymentState extends Equatable {
       discountPercentage: discountPercentage ?? this.discountPercentage,
       originalCost: originalCost ?? this.originalCost,
       discountedCost: discountedCost ?? this.discountedCost,
+      note: note ?? this.note,
     );
   }
 
@@ -86,6 +94,6 @@ class DriverPaymentState extends Equatable {
     discountType,
     selectedDiscount, discountPercentage,
     originalCost,
-    discountedCost,
+    discountedCost, note,
   ];
 }

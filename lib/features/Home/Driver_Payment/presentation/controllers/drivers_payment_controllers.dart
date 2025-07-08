@@ -55,6 +55,11 @@ class DriversPaymentController extends _$DriversPaymentController {
     state = state.copyWith(selectedDiscount: selectedDiscount);
   }
 
+  // In this function we set note
+  Future<void> setNote(String note) async {
+    state = state.copyWith(note: note);
+  }
+
   // In this function calculate withCleaningSupplies
   double calculatewithCleaningSupplies() {
     final availabilityController = ref.read(availabilityControllerProvider);

@@ -50,6 +50,8 @@ class AppStrings {
   static const String firstVisitDate = 'firstVisitDate';
   static const String toDate = 'toDate';
   static const String paymentMethod = 'paymentMethod';
+  static const String note = 'note';
+  
 
   //My Orders
   static const String myOrders = 'myOrders';
