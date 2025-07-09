@@ -25,7 +25,7 @@ ${orderDetails?.customer?.customerName}
 Zone ${orderDetails?.customer?.zone}, ${orderDetails?.customer?.location}
 Mobile: ${orderDetails?.customer?.phoneNumber}
 
-${orderDetails?.customer?.locationUrl}
+${orderDetails?.customer?.locationUrl ?? ""}
 
 Driver: ${orderDetails?.driver?.driverName}
 Date: ${orderDetails?.date}
