@@ -17,28 +17,28 @@ class ShareToWhatsApp extends StatelessWidget {
   void shareToWhatsApp() async {
     final String message =
         '''
-Booking Number:- $serviceOrderId
+Booking Number: $serviceOrderId
 
-Supervisor Name:- ${orderDetails?.supervisor?.supervisorName}
+Supervisor Name: ${orderDetails?.supervisor?.supervisorName}
 
 ${orderDetails?.customer?.customerName}
-${orderDetails?.customer?.zone}, ${orderDetails?.customer?.location}
-Mobile:- ${orderDetails?.customer?.phoneNumber}
+Zone ${orderDetails?.customer?.zone}, ${orderDetails?.customer?.location}
+Mobile: ${orderDetails?.customer?.phoneNumber}
 
 ${orderDetails?.customer?.locationUrl}
 
-Driver:- ${orderDetails?.driver?.driverName}
-Date:- ${orderDetails?.date}
-Service Type:- ${orderDetails?.serviceType}
+Driver: ${orderDetails?.driver?.driverName}
+Date: ${orderDetails?.date}
+Service Type: ${orderDetails?.serviceType}
 
-Shift Type:- ${orderDetails?.shiftType}
-Duration:- ${orderDetails?.shiftType == "Full Day" ? "10 Hours" : "5 Hours"}
-Names of Cleaners:-
-${(orderDetails?.staffAppointment as List?)?.join(',\n')}
-Cleaning Material:- ${orderDetails?.withCleaningSupplies == 0 ? 'NO' : "YES"}
-${orderDetails?.note != null ? "Note:- ${orderDetails?.note}" : ""}
+Shift Type: ${orderDetails?.shiftType}
+Duration: ${orderDetails?.shiftType == "Full Day" ? "10 Hours" : "5 Hours"}
+Days: ${(orderDetails?.days as List?)?.join(', ')}
+Names of Cleaners: ${(orderDetails?.staffAppointment as List?)?.join(', ')}
+Cleaning Material: ${orderDetails?.withCleaningSupplies == 0 ? 'NO' : "YES"}
+${orderDetails?.note != null ? "Note: ${orderDetails?.note}" : ""}
 
-Payment collect by cash QR ${orderDetails?.totalNetAmount}
+Payment collect by ${orderDetails?.methodOfPayment} QR ${orderDetails?.totalNetAmount}
 
 https://highclass.akwad.qa
 ''';

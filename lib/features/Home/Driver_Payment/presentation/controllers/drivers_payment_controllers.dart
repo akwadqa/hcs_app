@@ -58,7 +58,6 @@ class DriversPaymentController extends _$DriversPaymentController {
 
   // In this function we set note
   Future<void> setNote(String note) async {
-    debugPrint("note is $note");
     state = state.copyWith(note: note);
   }
 

@@ -84,13 +84,25 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
             children: [
               StarredText('Customer Type'),
               8.verticalSpace,
-              DropDownField(
-                items: ['Company', 'Individual', 'On Call'],
-                value: 'Individual',
-                onChanged: (p0) {
-                  customerType = p0;
+              Consumer(
+                builder: (context, ref, child) {
+                  var selectedService = ref.watch(
+                    availabilityControllerProvider.select(
+                      (value) => value.selectedServiceType,
+                    ),
+                  );
+                  if (selectedService == "On Call") {
+                    customerType = 'On Call';
+                  }
+                  return DropDownField(
+                    items: ['Company', 'Individual', 'On Call'],
+                    value: customerType,
+                    onChanged: (p0) {
+                      customerType = p0;
+                    },
+                    enabled: true,
+                  );
                 },
-                enabled: true,
               ),
               24.verticalSpace,
               StarredText('Customer Name'),

@@ -60,7 +60,6 @@ class CustomerController extends _$CustomerController {
       } else {
         nextPage = null;
       }
-      debugPrint("ooo before $nextPage");
       state = state.copyWith(
         currentCustomersPage: nextPage,
         customers: customersData.data,
@@ -68,7 +67,6 @@ class CustomerController extends _$CustomerController {
         customersStates: RequestStates.loaded,
         customersMessage: '',
       );
-      debugPrint("ooo after ${state.currentCustomersPage}");
     } catch (e) {
       state = state.copyWith(
         customersStates: RequestStates.error,
