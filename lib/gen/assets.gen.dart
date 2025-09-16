@@ -71,6 +71,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
 
+  /// File path: assets/images/luck_icon.svg
+  SvgGenImage get luckIcon => const SvgGenImage('assets/images/luck_icon.svg');
+
   /// File path: assets/images/myorders_selected.svg
   SvgGenImage get myordersSelected =>
       const SvgGenImage('assets/images/myorders_selected.svg');
@@ -119,6 +122,7 @@ class $AssetsImagesGen {
     homeSelected,
     homeUnselected,
     logo,
+    luckIcon,
     myordersSelected,
     noDataMin,
     pending,

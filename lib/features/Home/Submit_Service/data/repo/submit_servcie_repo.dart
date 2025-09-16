@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/Home/Submit_Service/data/models/submit_service_params.dart';
 import 'package:hcs/src/constants/api_constance.dart';
@@ -15,18 +16,23 @@ class SubmitServiceRepository {
 
   SubmitServiceRepository(this._networkService);
 
-  Future<bool> submitService(SubmitServiceParams params) async {
+  Future<bool> submitService(SubmitServiceParams data) async {
 
-
-    final response = await _networkService.post(
+try {
+   final  response = await _networkService.post(
       ApiConstance.submitService(),
-      params.toMap(),
+      data.toMap(),
     );
+    final int? statusCode = response.data['status_code'];
 
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception(response.message ?? 'Failed to Get Drivers');
+    if (statusCode != 200) {
+      return false;
     }
-  }
+    return true;
+  
+} catch (e) {
+      throw AppException(e ?? 'Failed to Get Drivers');
+  
 }
+   
+}}

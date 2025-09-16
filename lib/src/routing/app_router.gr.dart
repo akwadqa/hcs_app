@@ -75,16 +75,6 @@ class CustomerRouteArgs {
   String toString() {
     return 'CustomerRouteArgs{key: $key, serviceType: $serviceType}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! CustomerRouteArgs) return false;
-    return key == other.key && serviceType == other.serviceType;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ serviceType.hashCode;
 }
 
 /// generated route for
@@ -285,16 +275,6 @@ class OrderDetailsRouteArgs {
   String toString() {
     return 'OrderDetailsRouteArgs{key: $key, serviceOrderID: $serviceOrderID}';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! OrderDetailsRouteArgs) return false;
-    return key == other.key && serviceOrderID == other.serviceOrderID;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ serviceOrderID.hashCode;
 }
 
 /// generated route for

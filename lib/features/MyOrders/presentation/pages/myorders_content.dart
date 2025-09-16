@@ -57,6 +57,7 @@ class _MyOrdersContentState extends ConsumerState<MyOrdersContentScreen>
         hasBackArrow: false,
         title: context.tr(AppStrings.myOrders),
         withTabs: true,
+        withouTitle: true,
         tabController: _tabController,
       ),
       body: Column(

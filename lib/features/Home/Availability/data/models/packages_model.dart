@@ -30,7 +30,7 @@ class PackagesData {
   @JsonKey(name: "id")
   String id;
   @JsonKey(name: "service_item")
-  String serviceItem;
+  String? serviceItem;
   @JsonKey(name: "service_cost")
   int serviceCost;
   @JsonKey(name: "number_of_visits")

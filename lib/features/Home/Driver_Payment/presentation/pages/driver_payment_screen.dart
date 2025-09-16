@@ -154,8 +154,8 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                                               .selectedDiscount
                                               ?.discountPercentage !=
                                           0,
-                                      keyboardType: TextInputType.number,
-                                      onFieldSubmitted: (value) {
+keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                            textInputAction: TextInputAction.done,                                      onFieldSubmitted: (value) {
                                         double? doubleDiscount =
                                             double.tryParse(value);
                                         ref
@@ -175,6 +175,41 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                                 )
                               : SizedBox.shrink(),
 
+                          16.verticalSpace,
+                          Text(
+                            context.tr("total_cost"),
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
+                          8.verticalSpace,
+
+                          TextFormField(
+                            controller: TextEditingController(
+                              text: driversPaymentState.discountedCost == null
+                                  ? driversPaymentState.originalCost.toString()
+                                  : driversPaymentState.discountedCost
+                                        .toString(),
+                            ),
+                            //  enabled:
+                            //     driversPaymentState
+                            //         .selectedDiscount
+                            //         ?.discountPercentage !=
+                            //     0,
+keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (value) {
+                              double? doubleDiscount = double.tryParse(value);
+                              ref
+                                  .read(
+                                    driversPaymentControllerProvider.notifier,
+                                  )
+                                  .overrideTotalCost(doubleDiscount);
+                            },
+                            decoration: InputDecoration(
+                              hintStyle: Theme.of(
+                                context,
+                              ).inputDecorationTheme.hintStyle,
+                            ),
+                          ),
                           10.verticalSpace,
                           Text.rich(
                             TextSpan(
@@ -187,24 +222,56 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                                 ),
                                 TextSpan(
                                   text:
-                                      '${driversPaymentState.discountedCost} ',
+                                      '${driversPaymentState.discountedCost == null ? driversPaymentState.originalCost.toString() : driversPaymentState.discountedCost.toString()} ',
                                   style: Theme.of(
                                     context,
                                   ).textTheme.displaySmall,
                                 ),
-
-                                TextSpan(
-                                  text: driversPaymentState.originalCost
-                                      .toString(),
-                                  style: Theme.of(context).textTheme.bodyMedium!
-                                      .copyWith(
-                                        decoration: TextDecoration.lineThrough,
-                                        fontSize: 13.sp,
-                                      ),
-                                ),
+                                if (driversPaymentState.discountedCost !=
+                                        null &&
+                                    driversPaymentState.discountedCost !=
+                                        driversPaymentState.originalCost)
+                                  TextSpan(
+                                    text: driversPaymentState.originalCost
+                                        .toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                          fontSize: 13.sp,
+                                        ),
+                                  ),
                               ],
                             ),
                           ),
+
+                          10.verticalSpace,
+                          if (driversPaymentState.withCleaningSupplies !=
+                                  "no" &&
+                              driversPaymentState.costAfterCleaningSuplies !=
+                                  null)
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Fees: ',
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.displayMedium,
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        '${driversPaymentState.costAfterCleaningSuplies} ',
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.displaySmall,
+                                  ),
+                                ],
+                              ),
+                            ),
+
                           32.verticalSpace,
                         ],
                       );
@@ -298,8 +365,28 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                         ref.listen<
                           SubmitServiceState
                         >(submitServiceControllerProvider, (previous, next) {
+                          if (next.submitServiceStates == RequestStates.error) {
+                            _dropdownKey.currentState?.closeOverlay();
+
+                            showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: Assets.images.errorX.svg(),
+                                content: Text(
+                                  next.submitServiceMessage ??
+                                      "An unexpected error occurred. Please try again.",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium!
+                                      .copyWith(fontSize: 20.sp),
+                                ),
+                              ),
+                            );
+                          }
                           if (next.submitServiceStates ==
                               RequestStates.loaded) {
+                            debugPrint("LOADEDEDEDEDEDEDEDEDEDEDED");
                             context.router.replaceAll([
                               MainRoute(children: [HomeRoute()]),
                             ]);
@@ -315,26 +402,6 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                                     : Assets.images.successful.svg(),
                                 content: Text(
                                   'Service has been\n requested successfully.',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displayMedium!
-                                      .copyWith(fontSize: 20.sp),
-                                ),
-                              ),
-                            );
-                          }
-
-                          if (next.submitServiceStates == RequestStates.error) {
-                            _dropdownKey.currentState?.closeOverlay();
-
-                            showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                title: Assets.images.errorX.svg(),
-                                content: Text(
-                                  next.submitServiceMessage ??
-                                      "An unexpected error occurred. Please try again.",
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme

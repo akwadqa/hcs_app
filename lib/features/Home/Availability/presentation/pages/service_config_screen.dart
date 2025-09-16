@@ -82,24 +82,57 @@ class _ServiceConfigurationScreenState
                       (value) => value.packages,
                     ),
                   );
+                  // final filteredPackages =
+                  //         packagesState.where((item) => item.id == "Company").toList();
+                  // 1) filter out "Company"
+                  final filtered = packagesState
+                      .where((p) => p.id != "Company")
+                      .toList();
+
+                  // 2) de-duplicate by id (in case backend sends duplicates)
+                  final filteredUnique = {
+                    for (final p in filtered) p.id: p,
+                  }.values.toList();
+
+                  // 3) ensure selected value exists exactly once in items
+                  final selectedPackage = ref.watch(
+                    availabilityControllerProvider.select(
+                      (v) => v.selectedPackage,
+                    ),
+                  );
+
+                  final selectedInList =
+                      selectedPackage != null &&
+                      filteredUnique.any((p) => p.id == selectedPackage.id);
+
+                  final effectiveSelected = selectedInList
+                      ? selectedPackage
+                      : filtered.first;
+
+                  final selectedServiceType = ref.watch(
+                    availabilityControllerProvider.select(
+                      (v) => v.selectedServiceType,
+                    ),
+                  );
+
                   var selectedPackageState = ref.watch(
                     availabilityControllerProvider.select(
                       (value) => value.selectedPackage,
                     ),
                   );
-                  var selectedServiceType = ref.watch(
-                    availabilityControllerProvider.select(
-                      (value) => value.selectedServiceType,
-                    ),
-                  );
+                  // var selectedServiceType = ref.watch(
+                  //   availabilityControllerProvider.select(
+                  //     (value) => value.selectedServiceType,
+                  //   ),
+                  // );
 
                   return stringToServiceType(selectedServiceType!) ==
                           ServiceType.packages
                       ? Column(
                           children: [
                             PackagesDropdown(
-                              items: packagesState,
-                              selectedPackage: selectedPackageState,
+                              items: filteredUnique,
+                              selectedPackage: effectiveSelected,
                               onSelected: (p0) {
                                 Future(
                                   () => ref

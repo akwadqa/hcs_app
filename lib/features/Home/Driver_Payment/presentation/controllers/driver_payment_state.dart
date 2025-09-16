@@ -16,9 +16,11 @@ class DriverPaymentState extends Equatable {
   final RequestStates discountStates;
   final List<Discount> discountType;
   final Discount? selectedDiscount;
-  final double discountPercentage;
+  final double? discountPercentage;
   final double originalCost;
-  final double discountedCost;
+  final double? discountedCost;
+  final double? newCost;
+  final double? costAfterCleaningSuplies;
   //
   final String note;
 
@@ -35,9 +37,11 @@ class DriverPaymentState extends Equatable {
     this.discountStates = RequestStates.init,
     this.selectedDiscount,
     this.discountType = const [],
-    this.discountPercentage = 0.0,
+    this.discountPercentage ,
     this.originalCost = 0.0,
-    this.discountedCost = 0.0,
+    this.discountedCost,
+    this.costAfterCleaningSuplies=0,
+    this.newCost,
     //
     this.note = '',
   });
@@ -58,6 +62,8 @@ class DriverPaymentState extends Equatable {
     double? discountPercentage,
     double? originalCost,
     double? discountedCost,
+    double? newCost,
+    double? costAfterCleaningSuplies,
     //
     String? note,
   }) {
@@ -78,6 +84,8 @@ class DriverPaymentState extends Equatable {
       originalCost: originalCost ?? this.originalCost,
       discountedCost: discountedCost ?? this.discountedCost,
       note: note ?? this.note,
+      newCost: newCost ?? this.newCost,
+      costAfterCleaningSuplies: costAfterCleaningSuplies ?? this.costAfterCleaningSuplies,
     );
   }
 
@@ -94,6 +102,8 @@ class DriverPaymentState extends Equatable {
     discountType,
     selectedDiscount, discountPercentage,
     originalCost,
+    newCost,
+    costAfterCleaningSuplies,
     discountedCost, note,
   ];
 }

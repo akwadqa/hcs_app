@@ -35,6 +35,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     return Scaffold(
       appBar: CustomAppbar(
         hasBackArrow: false,
+        withouTitle: true,
         title: context.tr(AppStrings.settings),
       ),
       body: Column(

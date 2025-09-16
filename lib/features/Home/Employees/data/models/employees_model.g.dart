@@ -27,7 +27,7 @@ Map<String, dynamic> _$EmployeesToJson(Employees instance) => <String, dynamic>{
 Employee _$EmployeeFromJson(Map<String, dynamic> json) => Employee(
   name: json['name'] as String,
   employeeName: json['employee_name'] as String,
-  designation: json['designation'] as String,
+  designation: json['designation'] as String?,
   serviceCost: (json['service_cost'] as num).toInt(),
   shift: json['shift'] as String,
 );

@@ -32,7 +32,12 @@ class ServiceCategoryChipsState extends ConsumerState<ServiceCategoryChips> {
       _selectedIndex = 0; // fallback if selectedChip is not found
     }
     Future.microtask(() {
-      _selectedIndex == 0 || _selectedIndex == 1
+      _selectedIndex == 0 || _selectedIndex == 3?
+       ref
+                .read(employeesControllerProvider.notifier)
+                .selectServiceCategory("Flexible"):
+
+     _selectedIndex == 1
           ? ref
                 .read(employeesControllerProvider.notifier)
                 .selectServiceCategory(serviceCategoryStringList[1])
@@ -63,8 +68,12 @@ class ServiceCategoryChipsState extends ConsumerState<ServiceCategoryChips> {
           onTap: () {
             setState(() => _selectedIndex = index);
             Future.microtask(() {
-              _selectedIndex == 0 || _selectedIndex == 1
-                  ? ref
+      _selectedIndex == 0 || _selectedIndex == 3?
+       ref
+                .read(employeesControllerProvider.notifier)
+                .selectServiceCategory("Flexible"):
+
+     _selectedIndex == 1                  ? ref
                         .read(employeesControllerProvider.notifier)
                         .selectServiceCategory(serviceCategoryStringList[1])
                   : ref

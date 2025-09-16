@@ -19,6 +19,10 @@ class AvailabilityController extends _$AvailabilityController {
   toggleDaySelection(String day) {
     final currentDays = List<String>.from(state.selectedDays);
     final isSelected = currentDays.contains(day);
+    if(currentDays.length>=int.parse(state.selectedPackage?.numberOfVisits??"") ){
+      currentDays.remove(currentDays.first);
+    }
+
     isSelected ? currentDays.remove(day) : currentDays.add(day);
 
     if (currentDays.isNotEmpty) {

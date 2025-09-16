@@ -106,7 +106,7 @@ class _HomeContentState extends ConsumerState<HomeContentScreen> {
           ),
         ),
       ),
-      appBar: CustomAppbar(isHome: true),
+      appBar: CustomAppbar(isHome: true,withouTitle: true,),
     );
   }
 }

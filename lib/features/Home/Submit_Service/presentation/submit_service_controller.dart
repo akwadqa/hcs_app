@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
 import 'package:hcs/features/Home/Customer/presentation/controllers/customer_controller.dart';
 import 'package:hcs/features/Home/Driver_Payment/presentation/controllers/drivers_payment_controllers.dart';
@@ -29,7 +30,7 @@ class SubmitServiceController extends _$SubmitServiceController {
         driversPaymentControllerProvider,
       );
 
-      await submitServiceRepo.submitService(
+  final bb=    await submitServiceRepo.submitService(
         SubmitServiceParams(
           customerId: customerController.selectedCustomer!.customerId,
           customerName: customerController.selectedCustomer!.customerName,
@@ -40,17 +41,23 @@ class SubmitServiceController extends _$SubmitServiceController {
           days: availabilityController.selectedDays,
           employees: employeesController.selectedEmployees,
           paymentMethod: driverPaymentController.selectedPaymentMethod,
+          totalAmount: driverPaymentController.originalCost.toString(),
+          totalNetAmount: driverPaymentController.newCost ,
+          discountCost: driverPaymentController.discountedCost,
           discountType: driverPaymentController.selectedDiscount?.id,
+          cleaningSuppliesFees:driverPaymentController.costAfterCleaningSuplies ,
           discountPercentage: driverPaymentController.discountPercentage
               .toString(),
           withCleaningSupplies: driverPaymentController.withCleaningSupplies,
           note: driverPaymentController.note,
+          
         ),
       );
-
+debugPrint("BBBBBBBBBBBBBB$bb");
+debugPrint("BBBBBBBBBBBBBB${driverPaymentController.withCleaningSupplies}");
       state = state.copyWith(
-        submitServiceStates: RequestStates.loaded,
-        submitServiceMessage: 'loadded successfully',
+        submitServiceStates:bb? RequestStates.loaded:RequestStates.error,
+        submitServiceMessage: bb?'loadded successfully':"server error",
       );
     } catch (e) {
       state = state.copyWith(

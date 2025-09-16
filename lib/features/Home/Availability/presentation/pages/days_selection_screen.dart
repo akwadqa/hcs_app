@@ -25,7 +25,8 @@ class _DaysSelectionScreenState extends ConsumerState<DaysSelectionScreen> {
   void initState() {
     super.initState();
     Future(
-      () => ref
+      () =>
+       ref
           .read(availabilityControllerProvider.notifier)
           .calculateVisitDates(),
     );

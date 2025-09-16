@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
 import 'package:hcs/features/Home/Employees/data/models/employees_model.dart';
 import 'package:hcs/features/Home/Employees/data/models/get_employees_params.dart';
@@ -10,6 +11,8 @@ part 'employees_controller.g.dart';
 
 @riverpod
 class EmployeesController extends _$EmployeesController {
+    bool _isLoadingMore = false; // <-- guard
+
   @override
   EmployeesState build() => EmployeesState();
 
@@ -72,16 +75,13 @@ class EmployeesController extends _$EmployeesController {
         ),
       );
 
-      int? nextPage;
-      //if there is a second page ?
-      if (employeesData.pagination.totalPages > 1) {
-        nextPage = 2;
-      } else {
-        nextPage = null;
-      }
+      final totalPages = employeesData.pagination.totalPages;
+      final nextPage = totalPages > 1 ? 2 : null;
+
       state = state.copyWith(
-        currentEmployeesPage: nextPage,
         employees: employeesData.data,
+        currentEmployeesPage: nextPage,
+        // setCurrentEmployeesPage: true,  
         employeesStates: RequestStates.loaded,
         employeesMessage: '',
       );
@@ -94,10 +94,18 @@ class EmployeesController extends _$EmployeesController {
   }
 
   Future<void> onLoadMoreEmployees() async {
+        final next = state.currentEmployeesPage;
+    // if (_isLoadingMore || next == null) return; // <-- guards
+
+    _isLoadingMore = true;
+    debugPrint('[Employees] load-more -> requesting page=$next');
+
     try {
+
       final employeesRepo = ref.read(employeesRepositoryProvider);
       final availabilityController = ref.read(availabilityControllerProvider);
- 
+     debugPrint('[Employees] load-more -> requesting page=$next');
+
       final employeesData = await employeesRepo.getEmployees(
         getEmployeesParams: GetEmployeesParams(
           serviceType: availabilityController.selectedPackage?.id ?? 'Daily',
@@ -106,7 +114,7 @@ class EmployeesController extends _$EmployeesController {
           shift: availabilityController.selectedShiftType,
           serviceCategory: state.serviceCategory,
           employeeName: state.employeeSearchedFor,
-          page: state.currentEmployeesPage!,
+          page: next!,
         ),
       );
 
@@ -118,11 +126,11 @@ class EmployeesController extends _$EmployeesController {
         nextPage = null;
       }
       state = state.copyWith(
-        currentEmployeesPage: nextPage,
         employees: [...state.employees, ...employeesData.data],
+        currentEmployeesPage: nextPage,
         employeesStates: RequestStates.loaded,
-        employeesMessage: '',
       );
+
     } catch (e) {
       state = state.copyWith(
         employeesStates: RequestStates.error,
@@ -130,4 +138,51 @@ class EmployeesController extends _$EmployeesController {
       );
     }
   }
+
+  //   Future<void> onLoadMoreEmployees() async {
+  //     debugPrint('[onLoadMore] page=${state.currentEmployeesPage}');
+  //   // hard guards
+  //   if (_isLoadingMore) return;
+  //     debugPrint('onLoadMoreEmployees called2');
+
+  //   final next = state.currentEmployeesPage;
+  //   if (next == null) return;
+  //     debugPrint('onLoadMoreEmployees called3');
+
+  //   _isLoadingMore = true;
+  //   try {
+  //     final employeesRepo = ref.read(employeesRepositoryProvider);
+  //     final availability = ref.read(availabilityControllerProvider);
+
+  //     final resp = await employeesRepo.getEmployees(
+  //       getEmployeesParams: GetEmployeesParams(
+  //         serviceType: availability.selectedPackage?.id ?? 'Daily',
+  //         date: availability.selectedDate,
+  //         days: availability.selectedDays,
+  //         shift: availability.selectedShiftType,
+  //         serviceCategory: state.serviceCategory,
+  //         employeeName: state.employeeSearchedFor,
+  //         page: next,
+  //       ),
+  //     );
+
+  //     // compute next page safely
+  //     final p = resp.pagination.page;
+  //     final total = resp.pagination.totalPages;
+  //     final newNext = (total > p) ? p + 1 : null;
+
+  //     state = state.copyWith(
+  //       employees: [...state.employees, ...resp.data],
+  //       currentEmployeesPage: newNext,
+  //       // keep overall state as loaded; don't flip to loading/error for load-more
+  //       employeesStates: RequestStates.loaded,
+  //       employeesMessage: '',
+  //     );
+  //   } catch (e) {
+  //     // keep existing list; optionally stash the error message
+  //     state = state.copyWith(employeesMessage: e.toString());
+  //   } finally {
+  //     _isLoadingMore = false;
+  //   }
+  // }
 }

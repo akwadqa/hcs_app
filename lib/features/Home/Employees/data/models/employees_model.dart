@@ -36,7 +36,7 @@ class Employee {
   @JsonKey(name: "employee_name")
   final String employeeName;
   @JsonKey(name: "designation")
-  final String designation;
+  final String? designation;
   @JsonKey(name: "service_cost")
   final int serviceCost;
   @JsonKey(name: "shift")

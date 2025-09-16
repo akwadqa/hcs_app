@@ -25,7 +25,7 @@ Map<String, dynamic> _$PackagesTypeToJson(PackagesType instance) =>
 
 PackagesData _$PackagesDataFromJson(Map<String, dynamic> json) => PackagesData(
   id: json['id'] as String,
-  serviceItem: json['service_item'] as String,
+  serviceItem: json['service_item'] as String?,
   serviceCost: (json['service_cost'] as num).toInt(),
   numberOfVisits: json['number_of_visits'] as String?,
 );

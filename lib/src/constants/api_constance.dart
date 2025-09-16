@@ -46,7 +46,7 @@ class ApiConstance {
       'shift': shift,
       'designation': '',
       'page': page,
-      'limit': '10',
+      'limit': '50',
     };
 
     if (serviceCategory != null && serviceCategory.isNotEmpty) {
@@ -86,7 +86,7 @@ class ApiConstance {
     required String status,
     required String orderSearched
   }) =>
-      '$baseUrl/$baseDomain.api.service_order.service_orders?page=$page&limit=10&status=$status&search=$orderSearched';
+      '$baseUrl/$baseDomain.api.service_order.service_orders?page=$page&limit=10&status=$status&search=$orderSearched&action=supervisor';
 
   static String getServiceOrderDetails({required String serviceOrderId}) =>
       '$baseUrl/$baseDomain.api.service_order.service_order_details?service_order_id=$serviceOrderId';

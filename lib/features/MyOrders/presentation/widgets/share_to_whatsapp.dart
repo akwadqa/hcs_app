@@ -43,17 +43,28 @@ Payment collect by ${orderDetails?.methodOfPayment} QR ${orderDetails?.totalNetA
 https://highclass.akwad.qa
 ''';
 
-    final url = Uri.parse(
-      "https://wa.me/?text=${Uri.encodeComponent(message)}",
-    );
+final waScheme = Uri.parse('whatsapp://send?text=${Uri.encodeComponent(message)}');
+  final waWeb    = Uri.parse('https://wa.me/?text=${Uri.encodeComponent(message)}');
 
-    if (await canLaunchUrl(url)) {
-      try {
-        await launchUrl(url, mode: LaunchMode.externalApplication);
-      } catch (e) {
-        debugPrint("Error launching WhatsApp: $e");
-      }
-    }
+  // Try the WhatsApp app first
+  final launched = await launchUrl(
+    waScheme,
+    mode: LaunchMode.externalApplication,
+  ).catchError((_) => false);
+
+  if (launched == true) return;
+
+  // Fallback to web (needs a browser)
+  final webLaunched = await launchUrl(
+    waWeb,
+    mode: LaunchMode.externalApplication,
+  ).catchError((_) => false);
+
+  if (webLaunched != true) {
+    debugPrint('No app/browser available to handle WhatsApp link');
+    // Show a snackbar/toast to the user if you want
+  }
+
   }
 
   @override

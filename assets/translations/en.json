@@ -75,6 +75,7 @@
   "enterNewPassword": "Enter New Password",
   "confirmNewPassword": "Confirm New Password",
   "save": "Save",
+  "total_cost": "Total Cost",
   "emptyData":"There is no data to show",
   "fieldRequired": "This Field Required"
 }

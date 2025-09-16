@@ -14,6 +14,10 @@ class SubmitServiceParams {
   final String note;
   final String? discountType;
   final String discountPercentage;
+  final String totalAmount;
+  final double? totalNetAmount;
+  final double? discountCost;
+  final double? cleaningSuppliesFees;
   final String withCleaningSupplies;
 
   SubmitServiceParams({
@@ -27,12 +31,25 @@ class SubmitServiceParams {
     required this.employees,
     required this.paymentMethod,
     required this.note,
+    required this.totalAmount,
+    required this.totalNetAmount,
+    required this.discountCost,
     required this.discountType,
     required this.discountPercentage,
+    required this.cleaningSuppliesFees,
     required this.withCleaningSupplies,
   });
 
   Map<String, dynamic> toMap() {
+    // final totalCostWithSuplies=(discountCost?? totalNetAmount?? totalAmount)+(cleaningSuppliesFees??0);
+      final baseNet = discountCost ?? totalNetAmount ?? double.tryParse(totalAmount) ?? 0.0;
+      final baseAmount = double.tryParse(totalAmount) ?? 0.0;
+  final suppliesCost = cleaningSuppliesFees ?? 0.0;
+
+  // Add supplies only if cost > 0
+  final netWithSupplies = baseNet + (suppliesCost > 0 ? suppliesCost : 0);
+  final baseAmountWithSupplies = baseAmount + (suppliesCost > 0 ? suppliesCost : 0);
+
     return {
       'customer_name': customerName,
       'customer': customerId,
@@ -53,9 +70,12 @@ class SubmitServiceParams {
           .toList(),
       'payment_method': paymentMethod,
       'note': note,
-      'discount_type': discountType,
+     if(discountType!=null) 'discount_type': discountType,
+      "total_amount":baseAmountWithSupplies,
+      "total_net_amount":netWithSupplies,
       'discount_percentage': discountPercentage,
       'with_cleaning_supplies': withCleaningSupplies == 'yes' ? 1 : 0,
+      'cleaning_fee': cleaningSuppliesFees,
     };
   }
 
