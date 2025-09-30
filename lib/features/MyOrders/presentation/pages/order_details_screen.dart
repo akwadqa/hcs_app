@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/MyOrders/data/models/orders_details_model.dart';
+import 'package:hcs/features/MyOrders/domain/models/orders_details_model.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/myorders_controller.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/myorders_state.dart';
 import 'package:hcs/features/MyOrders/presentation/widgets/info_row.dart';
@@ -207,6 +207,7 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                     locationName: details.customer!.location!,
                   )
                 : null,
+            value: details?.customer?.locationUrl,
           ),
 
           Padding(
@@ -259,6 +260,12 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
           InfoRow(
             "Cleaning supply",
             value: details?.withCleaningSupplies == 0 ? "No" : "Yes",
+          ),
+          InfoRow(
+            "Outstanding amount",
+            value: details?.outstandingAmount != null
+                ? details?.outstandingAmount.toString()
+                : null,
           ),
 
           24.verticalSpace,

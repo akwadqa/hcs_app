@@ -28,6 +28,7 @@ Future<void> main() async {
           supportedLocales: const [Locale('en'), Locale('ar')],
           path: 'assets/translations',
           child: const App(),
+          
         ),
       ),
     ),

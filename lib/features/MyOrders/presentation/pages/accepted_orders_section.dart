@@ -72,7 +72,10 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
                 .read(myOrdersControllerProvider.notifier)
                 .fetchApprovedOrders();
           },
-          child: Assets.images.noDataMin.image(),
+          child: ListView(
+            physics: AlwaysScrollableScrollPhysics(),
+            children: [Assets.images.noDataMin.image()],
+          ),
         );
       }
       return RefreshIndicator(
@@ -82,6 +85,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
               .fetchApprovedOrders();
         },
         child: ListView.builder(
+          physics: AlwaysScrollableScrollPhysics(),
           controller: _scrollController,
           shrinkWrap: true,
           itemCount: ordersState.approvedOrders.length + 1,
@@ -106,7 +110,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
                 context.pushRoute(
                   OrderDetailsRoute(
                     serviceOrderID:
-                        ordersState.approvedOrders[index].serviceOrderId,
+                        ordersState.approvedOrders[index].serviceOrderId ?? 'bb',
                   ),
                 );
               },
@@ -126,7 +130,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          ordersState.approvedOrders[index].serviceOrderId,
+                          ordersState.approvedOrders[index].serviceOrderId ?? 'bb',
                           style: Theme.of(context).textTheme.displaySmall!
                               .copyWith(
                                 fontSize: 14.sp,

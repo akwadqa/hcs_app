@@ -29,6 +29,8 @@ Details _$DetailsFromJson(Map<String, dynamic> json) => Details(
   supervisor: json['supervisor'] == null
       ? null
       : Supervisor.fromJson(json['supervisor'] as Map<String, dynamic>),
+  outstandingAmount: (json['outstanding_amount'] as num?)?.toInt(),
+  skipcashLink: json['skipcash_link'] as String?,
   customer: json['customer'] == null
       ? null
       : Customer.fromJson(json['customer'] as Map<String, dynamic>),
@@ -66,6 +68,8 @@ Map<String, dynamic> _$DetailsToJson(Details instance) => <String, dynamic>{
   'staff_appointment': instance.staffAppointment,
   'note': instance.note,
   'days': instance.days,
+  'outstanding_amount': instance.outstandingAmount,
+  'skipcash_link': instance.skipcashLink,
 };
 
 Customer _$CustomerFromJson(Map<String, dynamic> json) => Customer(

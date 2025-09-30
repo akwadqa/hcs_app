@@ -154,8 +154,13 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                                               .selectedDiscount
                                               ?.discountPercentage !=
                                           0,
-keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
-                            textInputAction: TextInputAction.done,                                      onFieldSubmitted: (value) {
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                            signed: true,
+                                            decimal: true,
+                                          ),
+                                      textInputAction: TextInputAction.done,
+                                      onFieldSubmitted: (value) {
                                         double? doubleDiscount =
                                             double.tryParse(value);
                                         ref
@@ -194,7 +199,10 @@ keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
                             //         .selectedDiscount
                             //         ?.discountPercentage !=
                             //     0,
-keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                            keyboardType: TextInputType.numberWithOptions(
+                              signed: true,
+                              decimal: true,
+                            ),
                             textInputAction: TextInputAction.done,
                             onFieldSubmitted: (value) {
                               double? doubleDiscount = double.tryParse(value);

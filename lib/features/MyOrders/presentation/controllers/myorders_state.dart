@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:hcs/features/MyOrders/data/models/orders_details_model.dart';
-import 'package:hcs/features/MyOrders/data/models/services_orders_model.dart';
+import 'package:hcs/features/MyOrders/domain/models/orders_details_model.dart';
+import 'package:hcs/features/MyOrders/domain/models/services_orders_model.dart';
 
 import 'package:hcs/src/enums/request_state.dart';
 

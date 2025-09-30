@@ -63,7 +63,17 @@ class _PendingOrdersScreenState extends ConsumerState<PendingOrdersScreen> {
       return Center(child: FadeCircleLoadingIndicator());
     } else if (ordersState.pendingOrdersStates == RequestStates.loaded) {
       if (ordersState.pendingOrders.isEmpty) {
-        return Assets.images.noDataMin.image();
+        return RefreshIndicator(
+          onRefresh: () async {
+            await ref
+                .read(myOrdersControllerProvider.notifier)
+                .fetchPendingOrders();
+          },
+          child: ListView(
+            physics: AlwaysScrollableScrollPhysics(),
+            children: [Assets.images.noDataMin.image()],
+          ),
+        );
       }
       return RefreshIndicator(
         onRefresh: () async {
@@ -73,6 +83,7 @@ class _PendingOrdersScreenState extends ConsumerState<PendingOrdersScreen> {
         },
         child: ListView.builder(
           controller: _scrollController,
+          physics: AlwaysScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: ordersState.pendingOrders.length + 1,
           itemBuilder: (context, index) {
@@ -96,7 +107,7 @@ class _PendingOrdersScreenState extends ConsumerState<PendingOrdersScreen> {
                 context.pushRoute(
                   OrderDetailsRoute(
                     serviceOrderID:
-                        ordersState.pendingOrders[index].serviceOrderId,
+                        ordersState.pendingOrders[index].serviceOrderId ?? 'bb',
                   ),
                 );
               },
@@ -116,7 +127,8 @@ class _PendingOrdersScreenState extends ConsumerState<PendingOrdersScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          ordersState.pendingOrders[index].serviceOrderId,
+                          ordersState.pendingOrders[index].serviceOrderId ??
+                              'bb',
                           style: Theme.of(context).textTheme.displaySmall!
                               .copyWith(
                                 fontSize: 14.sp,

@@ -17,6 +17,7 @@ class MyOrdersController extends _$MyOrdersController {
       final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
       final ordersData = await myOrdersRepo.getServicesOrders(
         page: 1,
+        
         status: 'Approved',
         orderSearched: state.orderSearchedFor,
       );
@@ -30,7 +31,7 @@ class MyOrdersController extends _$MyOrdersController {
       }
       state = state.copyWith(
         currentApprovedOrdersPage: nextPage,
-        approvedOrders: ordersData.data,
+        approvedOrders: ordersData.data.orders,
         approvedOrdersStates: RequestStates.loaded,
         ordersMessage: '',
       );
@@ -60,7 +61,7 @@ class MyOrdersController extends _$MyOrdersController {
       }
       state = state.copyWith(
         currentApprovedOrdersPage: nextPage,
-        approvedOrders: [...state.approvedOrders, ...ordersData.data],
+        approvedOrders: [...state.approvedOrders, ...ordersData.data.orders],
         approvedOrdersStates: RequestStates.loaded,
         ordersMessage: '',
       );
@@ -92,7 +93,7 @@ class MyOrdersController extends _$MyOrdersController {
       }
       state = state.copyWith(
         currentPendingOrdersPage: nextPage,
-        pendingOrders: ordersData.data,
+        pendingOrders: ordersData.data.orders,
         pendingOrdersStates: RequestStates.loaded,
         ordersMessage: '',
       );
@@ -122,7 +123,7 @@ class MyOrdersController extends _$MyOrdersController {
       }
       state = state.copyWith(
         currentPendingOrdersPage: nextPage,
-        pendingOrders: [...state.pendingOrders, ...ordersData.data],
+        pendingOrders: [...state.pendingOrders, ...ordersData.data.orders],
         pendingOrdersStates: RequestStates.loaded,
         ordersMessage: '',
       );
@@ -173,7 +174,7 @@ class MyOrdersController extends _$MyOrdersController {
       }
       state = state.copyWith(
         currentCancelledOrdersPage: nextPage,
-        cancelledOrders: ordersData.data,
+        cancelledOrders: ordersData.data.orders,
         cancelledOrdersStates: RequestStates.loaded,
         ordersMessage: '',
       );
@@ -203,7 +204,7 @@ class MyOrdersController extends _$MyOrdersController {
       }
       state = state.copyWith(
         currentCancelledOrdersPage: nextPage,
-        cancelledOrders: [...state.cancelledOrders, ...ordersData.data],
+        cancelledOrders: [...state.cancelledOrders, ...ordersData.data.orders],
         cancelledOrdersStates: RequestStates.loaded,
         ordersMessage: '',
       );

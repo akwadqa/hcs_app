@@ -1,9 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // To parse this JSON data, do
 //
 //     final servicesOrders = servicesOrdersFromJson(jsonString);
 
-import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
+
+import 'package:json_annotation/json_annotation.dart';
 
 part 'services_orders_model.g.dart';
 
@@ -23,7 +25,7 @@ class ServicesOrders {
   @JsonKey(name: "pagination")
   Pagination pagination;
   @JsonKey(name: "data")
-  List<Orders> data;
+  Data data;
 
   ServicesOrders({
     required this.statusCode,
@@ -42,7 +44,7 @@ class ServicesOrders {
 @JsonSerializable()
 class Orders {
   @JsonKey(name: "service_order_id")
-  String serviceOrderId;
+  String? serviceOrderId;
   @JsonKey(name: "status")
   String status;
   @JsonKey(name: "posting_date")
@@ -63,6 +65,42 @@ class Orders {
   factory Orders.fromJson(Map<String, dynamic> json) => _$OrdersFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrdersToJson(this);
+}
+
+@JsonSerializable()
+class Data {
+  @JsonKey(name: "orders")
+  List<Orders> orders;
+  @JsonKey(name: "totals")
+  Totals totals;
+  
+  Data({
+    required this.orders,
+    required this.totals,
+  });
+  factory Data.fromJson(Map<String, dynamic> json) =>
+      _$DataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DataToJson(this);
+}
+
+@JsonSerializable()
+class Totals {
+  @JsonKey(name: "total_outstanding_amount")
+  int totalOutstandingAmount;
+  @JsonKey(name: "total_net_amount")
+  int totalNetAmount;
+  @JsonKey(name: "total_received_amount")
+  int totalReceivedAmount;
+  Totals({
+    required this.totalOutstandingAmount,
+    required this.totalNetAmount,
+    required this.totalReceivedAmount,
+  });
+  factory Totals.fromJson(Map<String, dynamic> json) =>
+      _$TotalsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TotalsToJson(this);
 }
 
 @JsonSerializable()

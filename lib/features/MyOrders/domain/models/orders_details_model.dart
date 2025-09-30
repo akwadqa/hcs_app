@@ -82,9 +82,17 @@ class Details {
   @JsonKey(name: "days")
   final List<String>? days;
 
+  @JsonKey(name: "outstanding_amount")
+  final int? outstandingAmount;
+
+  @JsonKey(name: "skipcash_link")
+  final String? skipcashLink;
+
   Details({
     this.status,
     this.supervisor,
+    this.outstandingAmount,
+    this.skipcashLink,
     this.customer,
     this.driver,
     this.date,

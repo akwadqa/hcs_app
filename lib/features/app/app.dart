@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hcs/features/report/presentation/pages/report_screen.dart';
 import 'package:hcs/src/localization/current_language.dart';
 import 'package:hcs/src/routing/app_router_provider.dart';
 import 'package:hcs/src/theme/app_theme.dart';
@@ -30,6 +31,7 @@ class _AppState extends ConsumerState<App> {
     final appRouter = ref.watch(appRouterProvider);
     final currentLanguage = ref.watch(currentLanguageProvider);
     return MaterialApp.router(
+      // home: ReportScreen(),
       debugShowCheckedModeBanner: false,
       routerDelegate: appRouter.delegate(
         deepLinkBuilder: (deepLink) => DeepLink.defaultPath,

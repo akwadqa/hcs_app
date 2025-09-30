@@ -27,21 +27,41 @@ class ShiftTypeChips extends ConsumerWidget {
     );
     final notifier = ref.read(availabilityControllerProvider.notifier);
 
+    final selectedDateState = ref.watch(
+      availabilityControllerProvider.select((value) => value.selectedDate),
+    );
+
+    final bool _isEvening =
+        (DateFormat('yyyy-MM-dd').parse(selectedDateState) ==
+            DateFormat('yyyy-MM-dd').parse(DateTime.now().toString()) &&
+        (DateTime.now().hour > 10));
+
+    if (_isEvening && selectedShift == shiftTypeToString(ShiftType.morning)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        notifier.selectShift(shiftTypeToString(ShiftType.evening));
+      });
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
       children: [
+        Container(),
         Text(
           context.tr(AppStrings.shiftType),
           style: Theme.of(context).textTheme.displayMedium,
         ),
         8.verticalSpace,
         Wrap(
-          spacing: 19.w,
+          spacing: 10.w,
           runSpacing: 16.h,
           children: List.generate(options.length, (i) {
-            final label = options[i];
+            var label = options[i];
             final isSelected = label == selectedShift;
+            if (i == 0) {
+              if (_isEvening)
+               return SizedBox.shrink();
+            }
             return GestureDetector(
               onTap: () => notifier.selectShift(label),
               child: Container(

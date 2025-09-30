@@ -11,7 +11,7 @@ part 'employees_controller.g.dart';
 
 @riverpod
 class EmployeesController extends _$EmployeesController {
-    bool _isLoadingMore = false; // <-- guard
+  bool _isLoadingMore = false; // <-- guard
 
   @override
   EmployeesState build() => EmployeesState();
@@ -21,13 +21,11 @@ class EmployeesController extends _$EmployeesController {
       serviceCategory: serviceCategory,
       selectedEmployees: [],
     );
-
   }
 
   searchEmployee(String employeeName) {
     state = state.copyWith(employeeSearchedFor: employeeName);
     fetchEmployees();
-
   }
 
   selectEmployee(Employee selectedEmployee) {
@@ -39,8 +37,6 @@ class EmployeesController extends _$EmployeesController {
       employeesList.add(selectedEmployee);
       state = state.copyWith(selectedEmployees: employeesList);
     }
-
-
   }
 
   unSelectEmployee(Employee unSelectedEmployee) {
@@ -61,8 +57,6 @@ class EmployeesController extends _$EmployeesController {
       final employeesRepo = ref.read(employeesRepositoryProvider);
       final availabilityController = ref.read(availabilityControllerProvider);
 
-   
-
       final employeesData = await employeesRepo.getEmployees(
         getEmployeesParams: GetEmployeesParams(
           serviceType: availabilityController.selectedPackage?.id ?? 'Daily',
@@ -81,7 +75,7 @@ class EmployeesController extends _$EmployeesController {
       state = state.copyWith(
         employees: employeesData.data,
         currentEmployeesPage: nextPage,
-        // setCurrentEmployeesPage: true,  
+        // setCurrentEmployeesPage: true,
         employeesStates: RequestStates.loaded,
         employeesMessage: '',
       );
@@ -94,17 +88,18 @@ class EmployeesController extends _$EmployeesController {
   }
 
   Future<void> onLoadMoreEmployees() async {
-        final next = state.currentEmployeesPage;
+    final next = state.currentEmployeesPage!;
+    // final next = state.currentEmployeesPage! + 1;
     // if (_isLoadingMore || next == null) return; // <-- guards
 
     _isLoadingMore = true;
     debugPrint('[Employees] load-more -> requesting page=$next');
 
-    try {
 
+    try {
       final employeesRepo = ref.read(employeesRepositoryProvider);
       final availabilityController = ref.read(availabilityControllerProvider);
-     debugPrint('[Employees] load-more -> requesting page=$next');
+      debugPrint('[Employees] load-more -> requesting page=$next');
 
       final employeesData = await employeesRepo.getEmployees(
         getEmployeesParams: GetEmployeesParams(
@@ -128,9 +123,10 @@ class EmployeesController extends _$EmployeesController {
       state = state.copyWith(
         employees: [...state.employees, ...employeesData.data],
         currentEmployeesPage: nextPage,
+        setCurrentEmployeesPage: true,
         employeesStates: RequestStates.loaded,
       );
-
+      // if (employeesData.data.isEmpty)
     } catch (e) {
       state = state.copyWith(
         employeesStates: RequestStates.error,

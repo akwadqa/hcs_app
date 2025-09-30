@@ -16,6 +16,7 @@ import 'package:hcs/src/shared_widgets/app_error_widget.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 import 'package:hcs/src/shared_widgets/fade_circle_loading_indicator.dart';
+import 'package:hcs/src/theme/app_colors.dart';
 
 @RoutePage()
 class EmployeesScreen extends ConsumerStatefulWidget {
@@ -58,20 +59,22 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
     return Scaffold(
       body: _buildContent(),
       appBar: CustomAppbar(hasBackArrow: true),
-       bottomNavigationBar: Padding(
+      bottomNavigationBar: Padding(
         padding: EdgeInsets.fromLTRB(24.w, 8, 24.w, 16.h),
-        child: Consumer(builder: (context, ref, _) {
-          final selected = ref.watch(
-            employeesControllerProvider.select((s) => s.selectedEmployees),
-          );
-          return CustomButton(
-            title: tr(context: context, AppStrings.next),
-            onPressed:
-                selected.isEmpty ? null : () => context.pushRoute(DriverPaymentRoute()),
-          );
-        }),
+        child: Consumer(
+          builder: (context, ref, _) {
+            final selected = ref.watch(
+              employeesControllerProvider.select((s) => s.selectedEmployees),
+            );
+            return CustomButton(
+              title: tr(context: context, AppStrings.next),
+              onPressed: selected.isEmpty
+                  ? null
+                  : () => context.pushRoute(DriverPaymentRoute()),
+            );
+          },
+        ),
       ),
-    
     );
   }
 
@@ -99,6 +102,38 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                             );
 
                             epmloyeeNotifier.searchEmployee(value);
+                          },
+                        ),
+                        12.verticalSpace,
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final employeesState = ref.watch(
+                              employeesControllerProvider,
+                            );
+
+                            return Align(
+                              alignment: Alignment.centerLeft,
+                              child: Wrap(
+                                alignment: WrapAlignment.start,
+                                spacing: 8.w,
+                                runSpacing: 4.h,
+                                children: employeesState.selectedEmployees
+                                    .map(
+                                      (e) => SelectedEmployeeCard(
+                                        name: e.employeeName,
+                                        onTap: () {
+                                          ref
+                                              .read(
+                                                employeesControllerProvider
+                                                    .notifier,
+                                              )
+                                              .unSelectEmployee(e);
+                                        },
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            );
                           },
                         ),
                         24.verticalSpace,
@@ -198,6 +233,7 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                       ],
                     ),
                   ),
+
                   // Padding(
                   //   padding: EdgeInsets.symmetric(
                   //     vertical: 25.h,
@@ -223,10 +259,48 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                   //     },
                   //   ),
                   // ),
-              
                 ],
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SelectedEmployeeCard extends StatelessWidget {
+  final String name;
+  final void Function() onTap;
+  const SelectedEmployeeCard({
+    super.key,
+    required this.name,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 4.w),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.r),
+        color: AppColors.unSelectedGrey,
+        border: Border.all(style: BorderStyle.solid, color: AppColors.primary),
+      ),
+
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            name,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium!.copyWith(color: AppColors.blackText),
+          ),
+          8.horizontalSpace,
+          GestureDetector(
+            onTap: onTap,
+            child: Icon(Icons.remove, color: AppColors.blackText),
           ),
         ],
       ),

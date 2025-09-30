@@ -77,5 +77,12 @@
   "save": "Save",
   "total_cost": "Total Cost",
   "emptyData":"There is no data to show",
-  "fieldRequired": "This Field Required"
+  "fieldRequired": "This Field Required",
+  "totalAmount" : "Total Amount",
+  "totalPaidAmount" : "Total Paid Amount",
+  "outstandingAmount" : "Outstanding Amount",
+  "recentTransactions" : "Recent Transactions",
+  "reports " : "Reports",
+  "qr" : " QR "
+  
 }

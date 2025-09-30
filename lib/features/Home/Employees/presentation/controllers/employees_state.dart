@@ -16,7 +16,7 @@ class EmployeesState extends Equatable {
 
   const EmployeesState({
     //employees
-    this.currentEmployeesPage=1,
+    this.currentEmployeesPage = 1,
     this.employees = const [],
     this.employeesStates = RequestStates.init,
     this.employeesMessage = '',
@@ -33,14 +33,18 @@ class EmployeesState extends Equatable {
     String? employeesMessage,
     List<Employee>? selectedEmployees,
     String? employeeSearchedFor,
-    bool setCurrentEmployeesPage = false, 
+    bool setCurrentEmployeesPage = false,
     //service category
     String? serviceCategory,
   }) {
     return EmployeesState(
       //employees
-  currentEmployeesPage:currentEmployeesPage ?? this.currentEmployeesPage,
-            employees: employees ?? this.employees,
+      // currentEmployeesPage:currentEmployeesPage ?? this.currentEmployeesPage,
+      currentEmployeesPage: setCurrentEmployeesPage
+          ? currentEmployeesPage // يسمح نمرّر null صراحةً
+          : (currentEmployeesPage ?? this.currentEmployeesPage),
+
+      employees: employees ?? this.employees,
       employeesStates: employeesStates ?? this.employeesStates,
       employeesMessage: employeesMessage ?? this.employeesMessage,
       selectedEmployees: selectedEmployees ?? this.selectedEmployees,

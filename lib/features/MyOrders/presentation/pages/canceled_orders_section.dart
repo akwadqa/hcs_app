@@ -72,7 +72,10 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
                 .read(myOrdersControllerProvider.notifier)
                 .fetchCancelledOrders();
           },
-          child: Assets.images.noDataMin.image(),
+          child: ListView(
+            physics: AlwaysScrollableScrollPhysics(),
+            children: [Assets.images.noDataMin.image()],
+          ),
         );
       }
       return RefreshIndicator(
@@ -83,6 +86,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
         },
         child: ListView.builder(
           controller: _scrollController,
+          physics: AlwaysScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: ordersState.cancelledOrders.length + 1,
           itemBuilder: (context, index) {
@@ -106,7 +110,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
                 context.pushRoute(
                   OrderDetailsRoute(
                     serviceOrderID:
-                        ordersState.cancelledOrders[index].serviceOrderId,
+                        ordersState.cancelledOrders[index].serviceOrderId ?? 'bb',
                   ),
                 );
               },
@@ -126,7 +130,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          ordersState.cancelledOrders[index].serviceOrderId,
+                          ordersState.cancelledOrders[index].serviceOrderId ?? 'bb',
                           style: Theme.of(context).textTheme.displaySmall!
                               .copyWith(
                                 fontSize: 14.sp,

@@ -1,8 +1,8 @@
 // home_repository.dart
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hcs/features/MyOrders/data/models/orders_details_model.dart';
-import 'package:hcs/features/MyOrders/data/models/services_orders_model.dart';
+import 'package:hcs/features/MyOrders/domain/models/orders_details_model.dart';
+import 'package:hcs/features/MyOrders/domain/models/services_orders_model.dart';
 import 'package:hcs/src/constants/api_constance.dart';
 import 'package:hcs/src/network/network_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -26,6 +26,7 @@ class MyOrdersRepository {
     final response = await _networkService.get(
       ApiConstance.myServicesOrders(
         page: page.toString(),
+        
         status: status,
         orderSearched: orderSearched,
       ),

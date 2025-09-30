@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/MyOrders/data/models/orders_details_model.dart';
+import 'package:hcs/features/MyOrders/domain/models/orders_details_model.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -40,31 +40,37 @@ ${orderDetails?.note != null ? "Note: ${orderDetails?.note}" : ""}
 
 Payment collect by ${orderDetails?.methodOfPayment} QR ${orderDetails?.totalNetAmount}
 
+
+${(orderDetails?.skipcashLink != null) ? 'Skip Cash ${orderDetails!.skipcashLink}' : ''}
+
 https://highclass.akwad.qa
 ''';
 
-final waScheme = Uri.parse('whatsapp://send?text=${Uri.encodeComponent(message)}');
-  final waWeb    = Uri.parse('https://wa.me/?text=${Uri.encodeComponent(message)}');
+    final waScheme = Uri.parse(
+      'whatsapp://send?text=${Uri.encodeComponent(message)}',
+    );
+    final waWeb = Uri.parse(
+      'https://wa.me/?text=${Uri.encodeComponent(message)}',
+    );
 
-  // Try the WhatsApp app first
-  final launched = await launchUrl(
-    waScheme,
-    mode: LaunchMode.externalApplication,
-  ).catchError((_) => false);
+    // Try the WhatsApp app first
+    final launched = await launchUrl(
+      waScheme,
+      mode: LaunchMode.externalApplication,
+    ).catchError((_) => false);
 
-  if (launched == true) return;
+    if (launched == true) return;
 
-  // Fallback to web (needs a browser)
-  final webLaunched = await launchUrl(
-    waWeb,
-    mode: LaunchMode.externalApplication,
-  ).catchError((_) => false);
+    // Fallback to web (needs a browser)
+    final webLaunched = await launchUrl(
+      waWeb,
+      mode: LaunchMode.externalApplication,
+    ).catchError((_) => false);
 
-  if (webLaunched != true) {
-    debugPrint('No app/browser available to handle WhatsApp link');
-    // Show a snackbar/toast to the user if you want
-  }
-
+    if (webLaunched != true) {
+      debugPrint('No app/browser available to handle WhatsApp link');
+      // Show a snackbar/toast to the user if you want
+    }
   }
 
   @override

@@ -28,6 +28,11 @@ class ApiConstance {
   static String getPackages =
       '$baseUrl/$baseDomain.api.service_type.service_types';
 
+  //////////////////* Report //////////////////////////
+  //TODO :
+  static String getReport =
+      'https://highclass.akwad.qa/api/method/highclass.api.service_order.service_orders';
+
   ////////////////// *  Employees   /////////////////////
 
   static String getEmployees({
@@ -84,7 +89,7 @@ class ApiConstance {
   static String myServicesOrders({
     required String page,
     required String status,
-    required String orderSearched
+    required String orderSearched,
   }) =>
       '$baseUrl/$baseDomain.api.service_order.service_orders?page=$page&limit=10&status=$status&search=$orderSearched&action=supervisor';
 
