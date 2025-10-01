@@ -23,12 +23,12 @@ class ReportRepository {
       final result = await _remoteDatasource.getReport(page);
 
       if (result.hasFailed) {
-        throw Exception(result.message ?? 'Failed to fetch Reports');
+        throw AppException(result.message ?? 'Failed to fetch Reports');
       }
 
       return result;
     } catch (e) {
-      throw Exception('Failed to Get Reports: $e');
+      throw AppException('Failed to Get Reports: $e');
     }
   }
 }

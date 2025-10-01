@@ -80,7 +80,7 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
 
   Widget _buildContent() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      padding: EdgeInsets.symmetric(horizontal: 18.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -116,7 +116,7 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                               child: Wrap(
                                 alignment: WrapAlignment.start,
                                 spacing: 8.w,
-                                runSpacing: 4.h,
+                                runSpacing: 5.h,
                                 children: employeesState.selectedEmployees
                                     .map(
                                       (e) => SelectedEmployeeCard(
