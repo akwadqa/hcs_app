@@ -1,4 +1,6 @@
 import 'package:hcs/features/MyOrders/data/repositories/myorders_repository.dart';
+import 'package:hcs/features/MyOrders/domain/models/order_details/order_details_model.dart';
+import 'package:hcs/features/MyOrders/domain/models/services_order/services_order_model.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/myorders_state.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,258 +10,205 @@ part 'myorders_controller.g.dart';
 @riverpod
 class MyOrdersController extends _$MyOrdersController {
   @override
-  MyOrdersState build() => const MyOrdersState();
+  FutureOr<List<Order>?> build() {
+    return fetchApprovedOrders(page: 1);
+  }
 
-  Future<void> fetchApprovedOrders() async {
-    state = state.copyWith(approvedOrdersStates: RequestStates.loading);
+  List<Order> _pendingList = [];
+  List<Order> _acceptList = [];
+  List<Order> _cancelledList = [];
+  String _orderShared = '';
+  int _currentPage = 1;
+  int _totalPages = 1;
 
+  Future<List<Order>?> fetchApprovedOrders({
+    bool showLoading = true,
+    required int page,
+  }) async {
     try {
-      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
-      final ordersData = await myOrdersRepo.getServicesOrders(
-        page: 1,
-        
+      if (showLoading) state = AsyncLoading();
+      final repo = ref.watch(myOrdersRepositoryProvider);
+      final response = await repo.getServicesOrders(
+        page: page,
         status: 'Approved',
-        orderSearched: state.orderSearchedFor,
+        orderSearched: _orderShared,
       );
+      _currentPage = response.pagination?.currentPage ?? _currentPage;
+      _totalPages = response.pagination?.totalPages ?? _totalPages;
 
-      int? nextPage;
-      //if there is a second page ?
-      if (ordersData.pagination.totalPages > 1) {
-        nextPage = 2;
-      } else {
-        nextPage = null;
+      if (response.data == null || response.data?.orders == null) {
+        throw Exception('Failed to fetch orders');
       }
-      state = state.copyWith(
-        currentApprovedOrdersPage: nextPage,
-        approvedOrders: ordersData.data.orders,
-        approvedOrdersStates: RequestStates.loaded,
-        ordersMessage: '',
-      );
-    } catch (e) {
-      state = state.copyWith(
-        approvedOrdersStates: RequestStates.error,
-        ordersMessage: e.toString(),
-      );
+
+      if (page == 1) {
+        _acceptList = List.from(response.data?.orders ?? []);
+      } else {
+        // _acceptList.addAll([..._acceptList , ...response.data!.orders!]);
+        _acceptList.addAll(response.data?.orders ?? []);
+      }
+      state = AsyncData(_acceptList);
+      return _acceptList;
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      return null;
     }
   }
 
-  Future<void> onLoadMoreApprovedOrders() async {
-    try {
-      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
-      final ordersData = await myOrdersRepo.getServicesOrders(
-        page: state.currentApprovedOrdersPage!,
-        status: 'Approved',
-        orderSearched: state.orderSearchedFor,
-      );
+  Future<bool> onLoadMoreApprovedOrders() async {
+    if (_currentPage >= _totalPages) return false;
+    final nextPage = _currentPage + 1;
+    final result = await fetchApprovedOrders(
+      showLoading: false,
+      page: nextPage,
+    );
 
-      int? nextPage;
-      //if we reach the limit or not ?
-      if (ordersData.pagination.totalPages > ordersData.pagination.page) {
-        nextPage = ordersData.pagination.page + 1;
-      } else {
-        nextPage = null;
-      }
-      state = state.copyWith(
-        currentApprovedOrdersPage: nextPage,
-        approvedOrders: [...state.approvedOrders, ...ordersData.data.orders],
-        approvedOrdersStates: RequestStates.loaded,
-        ordersMessage: '',
-      );
-    } catch (e) {
-      state = state.copyWith(
-        approvedOrdersStates: RequestStates.error,
-        ordersMessage: e.toString(),
-      );
-    }
+    return result?.isNotEmpty ?? false;
   }
 
-  Future<void> fetchPendingOrders() async {
-    state = state.copyWith(pendingOrdersStates: RequestStates.loading);
-
+  Future<List<Order>?> fetchPendingOrders({
+    bool showLoading = true,
+    required int page,
+  }) async {
     try {
-      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
-      final ordersData = await myOrdersRepo.getServicesOrders(
-        page: 1,
+      if (showLoading) state = AsyncLoading();
+      final repo = ref.watch(myOrdersRepositoryProvider);
+      final response = await repo.getServicesOrders(
+        page: page,
         status: 'Pending',
-        orderSearched: state.orderSearchedFor,
+        orderSearched: _orderShared,
       );
-
-      int? nextPage;
-      //if there is a second page ?
-      if (ordersData.pagination.totalPages > 1) {
-        nextPage = 2;
-      } else {
-        nextPage = null;
+      _currentPage = response.pagination?.currentPage ?? _currentPage;
+      _totalPages = response.pagination?.totalPages ?? _totalPages;
+      if (response.data == null || response.data?.orders == null) {
+        throw Exception('Failed to fetch orders');
       }
-      state = state.copyWith(
-        currentPendingOrdersPage: nextPage,
-        pendingOrders: ordersData.data.orders,
-        pendingOrdersStates: RequestStates.loaded,
-        ordersMessage: '',
-      );
-    } catch (e) {
-      state = state.copyWith(
-        pendingOrdersStates: RequestStates.error,
-        ordersMessage: e.toString(),
-      );
+      if (page == 1) {
+        _pendingList = List.from(response.data?.orders ?? []);
+      } else {
+        _pendingList.addAll(response.data?.orders ?? []);
+      }
+      state = AsyncData(_pendingList);
+      return _pendingList;
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      return null;
     }
   }
 
-  Future<void> onLoadMorePendingOrders() async {
-    try {
-      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
-      final ordersData = await myOrdersRepo.getServicesOrders(
-        page: state.currentPendingOrdersPage!,
-        status: 'Pending',
-        orderSearched: state.orderSearchedFor,
-      );
+  Future<bool> onLoadMorePendingOrders() async {
+    if (_currentPage >= _totalPages) return false;
+    final nextPage = _currentPage + 1;
+    final result = await fetchPendingOrders(showLoading: false, page: nextPage);
 
-      int? nextPage;
-      //if we reach the limit or not ?
-      if (ordersData.pagination.totalPages > ordersData.pagination.page) {
-        nextPage = ordersData.pagination.page + 1;
-      } else {
-        nextPage = null;
-      }
-      state = state.copyWith(
-        currentPendingOrdersPage: nextPage,
-        pendingOrders: [...state.pendingOrders, ...ordersData.data.orders],
-        pendingOrdersStates: RequestStates.loaded,
-        ordersMessage: '',
-      );
-    } catch (e) {
-      state = state.copyWith(
-        pendingOrdersStates: RequestStates.error,
-        ordersMessage: e.toString(),
-      );
-    }
+    return result?.isNotEmpty ?? false;
   }
 
   searchOrder({required String searchedOrder, required int tabIndex}) {
-    state = state.copyWith(orderSearchedFor: searchedOrder);
+    // state = state.copyWith(orderSearchedFor: searchedOrder);
+    _orderShared = searchedOrder;
     switch (tabIndex) {
       case 0:
-        fetchApprovedOrders();
+        fetchApprovedOrders(page: 1);
         break;
 
       case 1:
-        fetchPendingOrders();
+        fetchPendingOrders(page: 1);
         break;
 
       case 2:
-        fetchCancelledOrders();
+        fetchCancelledOrders(page: 1);
         break;
       default:
-        fetchApprovedOrders();
+        fetchApprovedOrders(page: 1);
     }
   }
 
-  Future<void> fetchCancelledOrders() async {
-    state = state.copyWith(cancelledOrdersStates: RequestStates.loading);
-
+  Future<List<Order>?> fetchCancelledOrders({
+    bool showLoading = true,
+    required int page,
+  }) async {
     try {
-      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
-      final ordersData = await myOrdersRepo.getServicesOrders(
-        page: 1,
+      if (showLoading) state = AsyncLoading();
+      final repo = ref.watch(myOrdersRepositoryProvider);
+      final response = await repo.getServicesOrders(
+        page: page,
         status: 'Cancelled',
-        orderSearched: state.orderSearchedFor,
+        orderSearched: _orderShared,
       );
+      _currentPage = response.pagination?.currentPage ?? _currentPage;
+      _totalPages = response.pagination?.totalPages ?? _totalPages;
 
-      int? nextPage;
-      //if there is a second page ?
-      if (ordersData.pagination.totalPages > 1) {
-        nextPage = 2;
-      } else {
-        nextPage = null;
+      if (response.data == null || response.data?.orders == null) {
+        throw Exception('Failed to fetch orders');
       }
-      state = state.copyWith(
-        currentCancelledOrdersPage: nextPage,
-        cancelledOrders: ordersData.data.orders,
-        cancelledOrdersStates: RequestStates.loaded,
-        ordersMessage: '',
-      );
-    } catch (e) {
-      state = state.copyWith(
-        cancelledOrdersStates: RequestStates.error,
-        ordersMessage: e.toString(),
-      );
+      if (page == 1) {
+        _cancelledList = List.from(response.data?.orders ?? []);
+      } else {
+        _cancelledList.addAll(response.data?.orders ?? []);
+      }
+      state = AsyncData(_cancelledList);
+      return _cancelledList;
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      return null;
     }
+   
   }
 
-  Future<void> onLoadMoreCancelledOrders() async {
-    try {
-      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
-      final ordersData = await myOrdersRepo.getServicesOrders(
-        page: state.currentCancelledOrdersPage!,
-        status: 'Cancelled',
-        orderSearched: state.orderSearchedFor,
-      );
-
-      int? nextPage;
-      //if we reach the limit or not ?
-      if (ordersData.pagination.totalPages > ordersData.pagination.page) {
-        nextPage = ordersData.pagination.page + 1;
-      } else {
-        nextPage = null;
-      }
-      state = state.copyWith(
-        currentCancelledOrdersPage: nextPage,
-        cancelledOrders: [...state.cancelledOrders, ...ordersData.data.orders],
-        cancelledOrdersStates: RequestStates.loaded,
-        ordersMessage: '',
-      );
-    } catch (e) {
-      state = state.copyWith(
-        cancelledOrdersStates: RequestStates.error,
-        ordersMessage: e.toString(),
-      );
-    }
-  }
-
-  Future<void> fetchOrdersDetails({required String serviceOrderID}) async {
-    state = state.copyWith(
-      ordersDetailsStates: RequestStates.loading,
-      orderCancelltionStates: RequestStates.init,
+  Future<bool> onLoadMoreCancelledOrders() async {
+    if (_currentPage >= _totalPages) return false;
+    final nextPage = _currentPage + 1;
+    final result = await fetchCancelledOrders(
+      showLoading: false,
+      page: nextPage,
     );
 
-    try {
-      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
-      final ordersDetails = await myOrdersRepo.getServicesOrderDetails(
-        serviceOrderId: serviceOrderID,
-      );
+    return result?.isNotEmpty ?? false;
 
-      state = state.copyWith(
-        ordersDetails: ordersDetails.details,
-        ordersDetailsStates: RequestStates.loaded,
-        ordersDetailsMessage: '',
-        orderCancelltionStates: RequestStates.init,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        ordersDetailsStates: RequestStates.error,
-        ordersDetailsMessage: e.toString(),
-      );
-    }
   }
 
   Future<void> orderCancelltion({required String serviceOrderID}) async {
-    state = state.copyWith(orderCancelltionStates: RequestStates.loading);
+    // state = state.copyWith(orderCancelltionStates: RequestStates.loading);
 
-    try {
-      final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
-      await myOrdersRepo.orderCancelltion(serviceOrderId: serviceOrderID);
+    // try {
+    //   final myOrdersRepo = ref.read(myOrdersRepositoryProvider);
+    //   await myOrdersRepo.orderCancelltion(serviceOrderId: serviceOrderID);
 
-      state = state.copyWith(
-        orderCancelltionStates: RequestStates.loaded,
-        orderCancelltionMessage: '',
-      );
+    //   state = state.copyWith(
+    //     orderCancelltionStates: RequestStates.loaded,
+    //     orderCancelltionMessage: '',
+    //   );
 
-      fetchOrdersDetails(serviceOrderID: serviceOrderID);
-    } catch (e) {
-      state = state.copyWith(
-        orderCancelltionStates: RequestStates.error,
-        orderCancelltionMessage: e.toString(),
-      );
-    }
+    //   fetchOrdersDetails(serviceOrderID: serviceOrderID);
+    // } catch (e) {
+    //   state = state.copyWith(
+    //     orderCancelltionStates: RequestStates.error,
+    //     orderCancelltionMessage: e.toString(),
+    //   );
+    // }
+  }
+
+  Future<bool> refreshApproved() async {
+    _acceptList.clear();
+    _currentPage = 1;
+    _totalPages = 1;
+    await fetchApprovedOrders(page: 1, showLoading: true);
+    return true;
+  }
+
+  Future<bool> refreshPending() async {
+    _pendingList.clear();
+    _currentPage = 1;
+    _totalPages = 1;
+    await fetchPendingOrders(page: 1, showLoading: true);
+    return true;
+  }
+
+  Future<bool> refreshCancelled() async {
+    _cancelledList.clear();
+    _currentPage = 1;
+    _totalPages = 1;
+    await fetchCancelledOrders(page: 1, showLoading: true);
+    return true;
   }
 }

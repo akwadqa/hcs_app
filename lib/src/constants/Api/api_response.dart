@@ -1,6 +1,6 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hcs/features/MyOrders/domain/models/services_orders_model.dart';
+import 'package:hcs/src/constants/Api/pagination.dart';
 // part 'api_response.g.dart';
 @JsonSerializable(genericArgumentFactories: true)
 class ApiResponse<T> {

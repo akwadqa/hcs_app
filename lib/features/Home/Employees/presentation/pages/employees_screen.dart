@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +29,9 @@ class EmployeesScreen extends ConsumerStatefulWidget {
 }
 
 class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
-  final ScrollController _scrollController = ScrollController();
+  ScrollController _scrollController = ScrollController();
+    Timer? _loadMoreTimer;
+
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -36,15 +40,28 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
 
     // pagination listener only once:
     _scrollController.addListener(() {
-      final max = _scrollController.position.maxScrollExtent;
-      final pos = _scrollController.position.pixels;
-      final nextPage = ref
-          .read(employeesControllerProvider)
-          .currentEmployeesPage;
+       final appointmentsStates = ref.read(employeesControllerProvider);
+    final hasMore = appointmentsStates.currentEmployeesPage != null;
+  
+    if (_scrollController.position.pixels >
+            _scrollController.position.maxScrollExtent - 100 &&
+        hasMore) {
+      _loadMoreTimer?.cancel();
+      _loadMoreTimer = Timer(const Duration(milliseconds: 500), () {
+        ref
+            .read(employeesControllerProvider.notifier)
+            .onLoadMoreEmployees();
+      });
+    }
+      // final max = _scrollController.position.maxScrollExtent;
+      // final pos = _scrollController.position.pixels;
+      // final nextPage = ref
+      //     .read(employeesControllerProvider)
+      //     .currentEmployeesPage;
 
-      if (pos == max && nextPage != null) {
-        ref.read(employeesControllerProvider.notifier).onLoadMoreEmployees();
-      }
+      // if (pos == max && nextPage != null) {
+      //   ref.read(employeesControllerProvider.notifier).onLoadMoreEmployees();
+      // }
     });
   }
 

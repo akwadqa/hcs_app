@@ -41,17 +41,18 @@ class _MyOrdersContentState extends ConsumerState<MyOrdersContentScreen>
   @override
   Widget build(BuildContext context) {
     final notifier = ref.read(myOrdersControllerProvider.notifier);
-    // listen for external changes to the searchQuery in state
-    ref.listen<String>(
-      myOrdersControllerProvider.select((state) => state.orderSearchedFor),
-      (previous, next) {
-        if (_searchController.text != next) {
-          _searchController
-            ..text = next
-            ..selection = TextSelection.collapsed(offset: next.length);
-        }
-      },
-    );
+    //TODO : 
+    // // listen for external changes to the searchQuery in state
+    // ref.listen<String>(
+    //   myOrdersControllerProvider.select((state) => state.orderSearchedFor),
+    //   (previous, next) {
+    //     if (_searchController.text != next) {
+    //       _searchController
+    //         ..text = next
+    //         ..selection = TextSelection.collapsed(offset: next.length);
+    //     }
+    //   },
+    // );
     return Scaffold(
       appBar: CustomAppbar(
         hasBackArrow: false,

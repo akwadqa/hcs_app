@@ -51,7 +51,7 @@ class ApiConstance {
       'shift': shift,
       'designation': '',
       'page': page,
-      'limit': '50',
+      'limit': '10',
     };
 
     if (serviceCategory != null && serviceCategory.isNotEmpty) {
@@ -86,16 +86,21 @@ class ApiConstance {
       '$baseUrl/$baseDomain.api.service_order.service_order';
 
   //////////////////! *  MyOrders Services   /////////////////////
-  static String myServicesOrders({
-    required String page,
-    required String status,
-    required String orderSearched,
-  }) =>
-      '$baseUrl/$baseDomain.api.service_order.service_orders?page=$page&limit=10&status=$status&search=$orderSearched&action=supervisor';
+  static String myServicesOrders() =>
+      '$baseUrl/$baseDomain.api.service_order.service_orders';
+  // static String myServicesOrders({
+  //   required String page,
+  //   required String status,
+  //   required String orderSearched,
+  // }) =>
+  //     '$baseUrl/$baseDomain.api.service_order.service_orders?page=$page&limit=10&status=$status&search=$orderSearched&action=supervisor';
 
-  static String getServiceOrderDetails({required String serviceOrderId}) =>
-      '$baseUrl/$baseDomain.api.service_order.service_order_details?service_order_id=$serviceOrderId';
+  // static String getServiceOrderDetails({required String serviceOrderId}) =>
+  //     '$baseUrl/$baseDomain.api.service_order.service_order_details?service_order_id=$serviceOrderId';
 
-  static String orderCancelltion() =>
+  static String getServiceOrderDetails =
+      '$baseUrl/$baseDomain.api.service_order.service_order_details';
+
+  static String orderCancelltion =
       '$baseUrl/$baseDomain.api.service_order.cancel_service_order';
 }

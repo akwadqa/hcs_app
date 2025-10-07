@@ -23,7 +23,7 @@ class ReportController extends _$ReportController {
 
       final repo = ref.watch(reportRepositoryProvider);
       final response = await repo.getReport(page);
-      _currentPage = response.pagination?.page ?? _currentPage;
+      _currentPage = response.pagination?.currentPage ?? _currentPage;
       _totalPages = response.pagination?.totalPages ?? _totalPages;
 
       if (page == 1) {
