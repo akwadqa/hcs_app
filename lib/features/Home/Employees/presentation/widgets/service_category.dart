@@ -46,7 +46,7 @@ class ServiceCategoryChipsState extends ConsumerState<ServiceCategoryChips> {
                 .selectServiceCategory(
                   serviceCategoryStringList[_selectedIndex],
                 );
-      ref.read(employeesControllerProvider.notifier).fetchEmployees();
+      ref.read(employeesControllerProvider.notifier).fetchEmployees(page: 1);
     });
   }
 
@@ -81,7 +81,7 @@ class ServiceCategoryChipsState extends ConsumerState<ServiceCategoryChips> {
                         .selectServiceCategory(
                           serviceCategoryStringList[_selectedIndex],
                         );
-              ref.read(employeesControllerProvider.notifier).fetchEmployees();
+              ref.read(employeesControllerProvider.notifier).fetchEmployees(page: 1);
             });
           },
           child: Container(

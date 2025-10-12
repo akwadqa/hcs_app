@@ -4,13 +4,14 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'fade_circle_loading_indicator.dart';
 
 class AppPaginationWidget extends StatefulWidget {
-  const AppPaginationWidget(
-      {super.key,
-      required this.child,
-      required this.onLoading,
-      this.enableLoadingOnScrollStart = false,
-      this.enablePullDown = false,
-      this.onRefresh});
+  const AppPaginationWidget({
+    super.key,
+    required this.child,
+    required this.onLoading,
+    this.enableLoadingOnScrollStart = false,
+    this.enablePullDown = false,
+    this.onRefresh,
+  });
   final Widget child;
   final Future<bool> Function(int page) onLoading;
   final Future<bool> Function()? onRefresh;
@@ -23,8 +24,9 @@ class AppPaginationWidget extends StatefulWidget {
 }
 
 class _AppPaginationWidgetState extends State<AppPaginationWidget> {
-  final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  final RefreshController _refreshController = RefreshController(
+    initialRefresh: false,
+  );
 
   int _page = 1;
 
@@ -64,17 +66,29 @@ class _AppPaginationWidgetState extends State<AppPaginationWidget> {
         enablePullDown: widget.enablePullDown,
         enablePullUp: true,
         footer: CustomFooter(
-          builder: (BuildContext context, LoadStatus? mode) {
-            return SizedBox(
-              height: 55.0,
-              child: Center(
-                child: mode == LoadStatus.loading||mode == LoadStatus.canLoading
-                    ? const FadeCircleLoadingIndicator()
-                    : const SizedBox.shrink(),
-              ),
-            );
+          builder: (context, mode) {
+            if (mode == LoadStatus.loading || mode == LoadStatus.canLoading) {
+              return const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: FadeCircleLoadingIndicator(),
+              );
+            }
+            return const SizedBox.shrink();
           },
         ),
+
+        // footer: CustomFooter(
+        //   builder: (BuildContext context, LoadStatus? mode) {
+        //     return SizedBox(
+        //       height: 55.0,
+        //       child: Center(
+        //         child: mode == LoadStatus.loading||mode == LoadStatus.canLoading
+        //             ? const FadeCircleLoadingIndicator()
+        //             : const SizedBox.shrink(),
+        //       ),
+        //     );
+        //   },
+        // ),
         // header: CustomHeader(
         //   builder: (context, mode) {
         //     return SizedBox(
@@ -87,7 +101,6 @@ class _AppPaginationWidgetState extends State<AppPaginationWidget> {
         //     );
         //   },
         // ),
-      
         controller: _refreshController,
         onLoading: widget.enableLoadingOnScrollStart ? null : _onLoading,
         onRefresh: widget.enablePullDown ? _onRefresh : null,

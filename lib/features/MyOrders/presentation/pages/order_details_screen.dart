@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hcs/features/MyOrders/domain/models/appointment/appoitnment_model.dart';
 import 'package:hcs/features/MyOrders/domain/models/order_details/order_details_model.dart';
 import 'package:hcs/features/MyOrders/domain/models/services_order/services_order_model.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/cancelling_order_controller.dart';
@@ -16,6 +17,7 @@ import 'package:hcs/features/MyOrders/presentation/widgets/share_to_whatsapp.dar
 import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/manager/app_strings.dart';
+import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
@@ -118,6 +120,14 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
               ShareToWhatsApp(
                 serviceOrderId: widget.serviceOrderID,
                 orderDetails: data,
+              ),
+              IconButton(
+                onPressed: () {
+                  context.pushRoute(
+                    AppoinmentRoute(serviceOrderID: widget.serviceOrderID),
+                  );
+                },
+                icon: Icon(Icons.details),
               ),
             ];
           },

@@ -168,7 +168,9 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                                               driversPaymentControllerProvider
                                                   .notifier,
                                             )
-                                            .calculateTotalCost(doubleDiscount);
+                                            .calculateTotalCost(
+                                              doubleDiscount ?? 0,
+                                            );
                                       },
                                       decoration: InputDecoration(
                                         hintStyle: Theme.of(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/MyOrders/domain/models/services_order/services_order_model.dart';
+import 'package:hcs/features/MyOrders/presentation/controllers/accept_orders_controller.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/myorders_controller.dart';
 import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/enums/request_state.dart';
@@ -28,7 +29,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
     super.initState();
     Future(
       () => ref
-          .read(myOrdersControllerProvider.notifier)
+          .read(acceptOrdersControllerProvider.notifier)
           .fetchApprovedOrders(page: 1),
     );
   }
@@ -72,11 +73,11 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
     return AppPaginationWidget(
       enablePullDown: true,
       onRefresh: () {
-        return ref.read(myOrdersControllerProvider.notifier).refreshApproved();
+        return ref.read(acceptOrdersControllerProvider.notifier).refreshApproved();
       },
       onLoading: (page) {
         return ref
-            .read(myOrdersControllerProvider.notifier)
+            .read(acceptOrdersControllerProvider.notifier)
             .onLoadMoreApprovedOrders();
       },
       child: ListView.builder(
@@ -169,12 +170,12 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = ref.watch(myOrdersControllerProvider);
+    final controller = ref.watch(acceptOrdersControllerProvider);
     return controller.when(
       error: (e, st) => AppErrorWidget(
         onTap: () {
           ref
-              .read(myOrdersControllerProvider.notifier)
+              .read(acceptOrdersControllerProvider.notifier)
               .fetchApprovedOrders(page: 1);
         },
       ),
@@ -186,7 +187,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
           return RefreshIndicator(
             onRefresh: () async {
               await ref
-                  .read(myOrdersControllerProvider.notifier)
+                  .read(acceptOrdersControllerProvider.notifier)
                   .fetchApprovedOrders(page: 1);
             },
             child: ListView(

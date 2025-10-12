@@ -42,9 +42,20 @@ class $AssetsImagesGen {
   SvgGenImage get creditCard =>
       const SvgGenImage('assets/images/credit_card.svg');
 
+  /// File path: assets/images/date.svg
+  SvgGenImage get date => const SvgGenImage('assets/images/date.svg');
+
+  /// File path: assets/images/driver_status.svg
+  SvgGenImage get driverStatus =>
+      const SvgGenImage('assets/images/driver_status.svg');
+
   /// File path: assets/images/dummycard.png
   AssetGenImage get dummycard =>
       const AssetGenImage('assets/images/dummycard.png');
+
+  /// File path: assets/images/employee_name.svg
+  SvgGenImage get employeeName =>
+      const SvgGenImage('assets/images/employee_name.svg');
 
   /// File path: assets/images/error404-min.png
   AssetGenImage get error404Min =>
@@ -92,6 +103,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/search.svg
   SvgGenImage get search => const SvgGenImage('assets/images/search.svg');
 
+  /// File path: assets/images/service_type.svg
+  SvgGenImage get serviceType =>
+      const SvgGenImage('assets/images/service_type.svg');
+
   /// File path: assets/images/settings_selected.svg
   SvgGenImage get settingsSelected =>
       const SvgGenImage('assets/images/settings_selected.svg');
@@ -114,7 +129,10 @@ class $AssetsImagesGen {
     calendar,
     cash,
     creditCard,
+    date,
+    driverStatus,
     dummycard,
+    employeeName,
     error404Min,
     errorX,
     goodbye,
@@ -128,6 +146,7 @@ class $AssetsImagesGen {
     pending,
     redSuccessful,
     search,
+    serviceType,
     settingsSelected,
     settingsUnselected,
     splashLogo,

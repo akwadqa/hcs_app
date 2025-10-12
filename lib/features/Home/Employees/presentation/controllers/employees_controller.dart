@@ -24,8 +24,11 @@ class EmployeesController extends _$EmployeesController {
   }
 
   searchEmployee(String employeeName) {
-    state = state.copyWith(employeeSearchedFor: employeeName);
-    fetchEmployees();
+    state = state.copyWith(
+      employeeSearchedFor: employeeName,
+      currentEmployeesPage: null,
+    );
+    fetchEmployees(page: 1);
   }
 
   selectEmployee(Employee selectedEmployee) {
@@ -50,10 +53,14 @@ class EmployeesController extends _$EmployeesController {
     state = state.copyWith(selectedEmployees: employeeList);
   }
 
-  Future<void> fetchEmployees() async {
-    state = state.copyWith(employeesStates: RequestStates.loading);
-
+  Future<List<Employee>> fetchEmployees({
+    bool showLoading = true,
+    required int page,
+  }) async {
     try {
+      if (showLoading)
+        state = state.copyWith(employeesStates: RequestStates.loading);
+
       final employeesRepo = ref.read(employeesRepositoryProvider);
       final availabilityController = ref.read(availabilityControllerProvider);
 
@@ -65,74 +72,139 @@ class EmployeesController extends _$EmployeesController {
           shift: availabilityController.selectedShiftType,
           serviceCategory: state.serviceCategory,
           employeeName: state.employeeSearchedFor,
-          page: 1,
+          page: page,
         ),
       );
+      _currentPage = employeesData.pagination?.page ?? _currentPage;
+      _totalPages = employeesData.pagination?.totalPages ?? _totalPages;
 
-      final totalPages = employeesData.pagination.totalPages;
-      final nextPage = totalPages > 1 ? 2 : null;
-
-      state = state.copyWith(
-        employees: employeesData.data,
-        currentEmployeesPage: nextPage,
-        // setCurrentEmployeesPage: true,
-        employeesStates: RequestStates.loaded,
-        employeesMessage: '',
-      );
-    } catch (e) {
+      if (page == 1) {
+        // _reports = List.from(response.data?.reports ?? []);
+        state = state.copyWith(
+          employees: employeesData.data,
+          currentEmployeesPage: _currentPage,
+          // setCurrentEmployeesPage: true,
+          employeesStates: RequestStates.loaded,
+          employeesMessage: '',
+        );
+      } else {
+        // _reports.addAll(response.data?.reports ?? []);
+        final newList = [...state.employees, ...employeesData.data];
+        state = state.copyWith(
+          // employees: employeesData.data,
+          employees: newList,
+          currentEmployeesPage: _currentPage,
+          // setCurrentEmployeesPage: true,
+          employeesStates: RequestStates.loaded,
+          employeesMessage: '',
+        );
+      }
+      return employeesData.data;
+      // return response.data;
+      // final orderReport = OrdersReport(
+      //   reports: _reports,
+      //   total: response.data!.total,
+      // );
+      // state = AsyncData(orderReport);
+      // return orderReport;
+    } catch (e, st) {
+      // state = AsyncError(e, st);
+      // return null;
       state = state.copyWith(
         employeesStates: RequestStates.error,
         employeesMessage: e.toString(),
       );
+      return [];
     }
+
+    // state = state.copyWith(employeesStates: RequestStates.loading);
+
+    // try {
+    //   final employeesRepo = ref.read(employeesRepositoryProvider);
+    //   final availabilityController = ref.read(availabilityControllerProvider);
+
+    //   final employeesData = await employeesRepo.getEmployees(
+    //     getEmployeesParams: GetEmployeesParams(
+    //       serviceType: availabilityController.selectedPackage?.id ?? 'Daily',
+    //       date: availabilityController.selectedDate,
+    //       days: availabilityController.selectedDays,
+    //       shift: availabilityController.selectedShiftType,
+    //       serviceCategory: state.serviceCategory,
+    //       employeeName: state.employeeSearchedFor,
+    //       page: 1,
+    //     ),
+    //   );
+
+    //   final totalPages = employeesData.pagination.totalPages;
+    //   final nextPage = totalPages > 1 ? 2 : null;
+
+    //   state = state.copyWith(
+    //     employees: employeesData.data,
+    //     currentEmployeesPage: nextPage,
+    //     // setCurrentEmployeesPage: true,
+    //     employeesStates: RequestStates.loaded,
+    //     employeesMessage: '',
+    //   );
+    // } catch (e) {
+    //   state = state.copyWith(
+    //     employeesStates: RequestStates.error,
+    //     employeesMessage: e.toString(),
+    //   );
+    // }
   }
 
-  Future<void> onLoadMoreEmployees() async {
-    final next = state.currentEmployeesPage!;
-    // final next = state.currentEmployeesPage! + 1;
-    // if (_isLoadingMore || next == null) return; // <-- guards
+  int _currentPage = 1;
+  int _totalPages = 1;
 
-    _isLoadingMore = true;
-    debugPrint('[Employees] load-more -> requesting page=$next');
+  Future<bool> onLoadMoreEmployees() async {
+    if (_currentPage >= _totalPages) return false;
+    final nextPage = _currentPage + 1;
+    final result = await fetchEmployees(showLoading: false, page: nextPage);
+    return result.isNotEmpty;
+    // final next = state.currentEmployeesPage!;
+    // // final next = state.currentEmployeesPage! + 1;
+    // // if (_isLoadingMore || next == null) return; // <-- guards
 
+    // _isLoadingMore = true;
+    // debugPrint('[Employees] load-more -> requesting page=$next');
 
-    try {
-      final employeesRepo = ref.read(employeesRepositoryProvider);
-      final availabilityController = ref.read(availabilityControllerProvider);
-      debugPrint('[Employees] load-more -> requesting page=$next');
+    // try {
+    //   final employeesRepo = ref.read(employeesRepositoryProvider);
+    //   final availabilityController = ref.read(availabilityControllerProvider);
+    //   debugPrint('[Employees] load-more -> requesting page=$next');
 
-      final employeesData = await employeesRepo.getEmployees(
-        getEmployeesParams: GetEmployeesParams(
-          serviceType: availabilityController.selectedPackage?.id ?? 'Daily',
-          date: availabilityController.selectedDate,
-          days: availabilityController.selectedDays,
-          shift: availabilityController.selectedShiftType,
-          serviceCategory: state.serviceCategory,
-          employeeName: state.employeeSearchedFor,
-          page: next!,
-        ),
-      );
+    //   final employeesData = await employeesRepo.getEmployees(
+    //     getEmployeesParams: GetEmployeesParams(
+    //       serviceType: availabilityController.selectedPackage?.id ?? 'Daily',
+    //       date: availabilityController.selectedDate,
+    //       days: availabilityController.selectedDays,
+    //       shift: availabilityController.selectedShiftType,
+    //       serviceCategory: state.serviceCategory,
+    //       employeeName: state.employeeSearchedFor,
+    //       page: next!,
+    //     ),
+    //   );
 
-      int? nextPage;
-      //if we reach the limit or not ?
-      if (employeesData.pagination.totalPages > employeesData.pagination.page) {
-        nextPage = employeesData.pagination.page + 1;
-      } else {
-        nextPage = null;
-      }
-      state = state.copyWith(
-        employees: [...state.employees, ...employeesData.data],
-        currentEmployeesPage: nextPage,
-        setCurrentEmployeesPage: true,
-        employeesStates: RequestStates.loaded,
-      );
-      // if (employeesData.data.isEmpty)
-    } catch (e) {
-      state = state.copyWith(
-        employeesStates: RequestStates.error,
-        employeesMessage: e.toString(),
-      );
-    }
+    //   int? nextPage;
+    //   //if we reach the limit or not ?
+    //   if (employeesData.pagination.totalPages > employeesData.pagination.page) {
+    //     nextPage = employeesData.pagination.page + 1;
+    //   } else {
+    //     nextPage = null;
+    //   }
+    //   state = state.copyWith(
+    //     employees: [...state.employees, ...employeesData.data],
+    //     currentEmployeesPage: nextPage,
+    //     setCurrentEmployeesPage: true,
+    //     employeesStates: RequestStates.loaded,
+    //   );
+    //   // if (employeesData.data.isEmpty)
+    // } catch (e) {
+    //   state = state.copyWith(
+    //     employeesStates: RequestStates.error,
+    //     employeesMessage: e.toString(),
+    //   );
+    // }
   }
 
   //   Future<void> onLoadMoreEmployees() async {

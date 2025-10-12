@@ -49,11 +49,14 @@ class ReportModel {
   String postingDate;
   @JsonKey(name: 'service_type')
   String serviceType;
+  @JsonKey(name: 'method_of_payment')
+  String methodOfPayment;
   @JsonKey(name: 'total_net_amount')
   int totalNetAmount;
   ReportModel({
     required this.serviceOrderId,
     required this.status,
+    required this.methodOfPayment,
     required this.postingDate,
     required this.serviceType,
     required this.totalNetAmount,

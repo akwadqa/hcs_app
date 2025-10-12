@@ -41,6 +41,9 @@ class DriversPaymentController extends _$DriversPaymentController {
 
       state = state.copyWith(
         discountType: driverPaymentData.data,
+
+        //? Add this :
+        discountPercentage: 0.0,
         // selectedDiscount: driverPaymentData.data[0],
         // discountPercentage: driverPaymentData.data[0].discountPercentage
         //     .toDouble(),

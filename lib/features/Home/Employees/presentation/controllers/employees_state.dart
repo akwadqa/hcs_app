@@ -39,10 +39,10 @@ class EmployeesState extends Equatable {
   }) {
     return EmployeesState(
       //employees
-      // currentEmployeesPage:currentEmployeesPage ?? this.currentEmployeesPage,
-      currentEmployeesPage: setCurrentEmployeesPage
-          ? currentEmployeesPage // يسمح نمرّر null صراحةً
-          : (currentEmployeesPage ?? this.currentEmployeesPage),
+      currentEmployeesPage:currentEmployeesPage?? null,
+      // currentEmployeesPage: setCurrentEmployeesPage
+      //     ? currentEmployeesPage // يسمح نمرّر null صراحةً
+      //     : (currentEmployeesPage ?? this.currentEmployeesPage),
 
       employees: employees ?? this.employees,
       employeesStates: employeesStates ?? this.employeesStates,

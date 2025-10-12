@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/MyOrders/domain/models/services_order/services_order_model.dart';
+import 'package:hcs/features/MyOrders/presentation/controllers/cancelled_orders_controller.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/myorders_controller.dart';
 import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/enums/request_state.dart';
@@ -29,7 +30,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
     super.initState();
     Future(
       () => ref
-          .read(myOrdersControllerProvider.notifier)
+          .read(cancelledOrdersControllerProvider.notifier)
           .fetchCancelledOrders(page: 1),
     );
   }
@@ -74,11 +75,11 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
     return AppPaginationWidget(
       enablePullDown: true,
       onRefresh: () {
-        return ref.read(myOrdersControllerProvider.notifier).refreshCancelled();
+        return ref.read(cancelledOrdersControllerProvider.notifier).refreshCancelled();
       },
       onLoading: (page) {
         return ref
-            .read(myOrdersControllerProvider.notifier)
+            .read(cancelledOrdersControllerProvider.notifier)
             .onLoadMoreCancelledOrders();
       },
       child: ListView.builder(
@@ -171,12 +172,12 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = ref.watch(myOrdersControllerProvider);
+    final controller = ref.watch(cancelledOrdersControllerProvider);
     return controller.when(
       error: (e, st) => AppErrorWidget(
         onTap: () {
           ref
-              .read(myOrdersControllerProvider.notifier)
+              .read(cancelledOrdersControllerProvider.notifier)
               .fetchCancelledOrders(page: 1);
         },
       ),
@@ -188,7 +189,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
           return RefreshIndicator(
             onRefresh: () async {
               await ref
-                  .read(myOrdersControllerProvider.notifier)
+                  .read(cancelledOrdersControllerProvider.notifier)
                   .fetchCancelledOrders(page: 1);
             },
             child: ListView(

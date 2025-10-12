@@ -15,6 +15,7 @@ import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
+import 'package:hcs/src/shared_widgets/app_pagination_widget.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 import 'package:hcs/src/shared_widgets/fade_circle_loading_indicator.dart';
@@ -29,8 +30,8 @@ class EmployeesScreen extends ConsumerStatefulWidget {
 }
 
 class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
-  ScrollController _scrollController = ScrollController();
-    Timer? _loadMoreTimer;
+  // ScrollController _scrollController = ScrollController();
+  //   Timer? _loadMoreTimer;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -39,37 +40,31 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
     super.initState();
 
     // pagination listener only once:
-    _scrollController.addListener(() {
-       final appointmentsStates = ref.read(employeesControllerProvider);
-    final hasMore = appointmentsStates.currentEmployeesPage != null;
-  
-    if (_scrollController.position.pixels >
-            _scrollController.position.maxScrollExtent - 100 &&
-        hasMore) {
-      _loadMoreTimer?.cancel();
-      _loadMoreTimer = Timer(const Duration(milliseconds: 500), () {
-        ref
-            .read(employeesControllerProvider.notifier)
-            .onLoadMoreEmployees();
-      });
-    }
-      // final max = _scrollController.position.maxScrollExtent;
-      // final pos = _scrollController.position.pixels;
-      // final nextPage = ref
-      //     .read(employeesControllerProvider)
-      //     .currentEmployeesPage;
+    // _scrollController.addListener(() {
+    //    final appointmentsStates = ref.read(employeesControllerProvider);
+    // final hasMore = appointmentsStates.currentEmployeesPage != null;
 
-      // if (pos == max && nextPage != null) {
-      //   ref.read(employeesControllerProvider.notifier).onLoadMoreEmployees();
-      // }
-    });
+    // if (_scrollController.position.pixels >
+    //         _scrollController.position.maxScrollExtent - 100 &&
+    //     hasMore) {
+    //   _loadMoreTimer?.cancel();
+    //   _loadMoreTimer = Timer(const Duration(milliseconds: 500), () {
+    //     ref
+    //         .read(employeesControllerProvider.notifier)
+    //         .onLoadMoreEmployees();
+    //   });
   }
 
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
+  // final max = _scrollController.position.maxScrollExtent;
+  // final pos = _scrollController.position.pixels;
+  // final nextPage = ref
+  //     .read(employeesControllerProvider)
+  //     .currentEmployeesPage;
+
+  // if (pos == max && nextPage != null) {
+  //   ref.read(employeesControllerProvider.notifier).onLoadMoreEmployees();
+  // }
+  // });
 
   @override
   Widget build(BuildContext context) {
@@ -190,32 +185,19 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                               }
                               return SizedBox(
                                 height: 304.h,
-                                child: ListView.separated(
-                                  controller: _scrollController,
-                                  itemCount:
-                                      employeesState.employees.length + 1,
-                                  shrinkWrap: true,
-                                  physics: BouncingScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    if (index ==
-                                        employeesState.employees.length) {
-                                      // Check if currentEmployeesPage is null and state is loaded
-                                      if (employeesState.currentEmployeesPage ==
-                                          null) {
-                                        return Center(
-                                          child: Text(
-                                            'No More Employees',
-                                            style: Theme.of(
-                                              context,
-                                            ).textTheme.bodyMedium,
-                                          ),
-                                        );
-                                      } else {
-                                        return Center(
-                                          child: FadeCircleLoadingIndicator(),
-                                        );
-                                      }
-                                    } else {
+                                child: AppPaginationWidget(
+                                  onLoading: (page) => ref
+                                      .read(
+                                        employeesControllerProvider.notifier,
+                                      )
+                                      .onLoadMoreEmployees(),
+                                  child: ListView.separated(
+                                    // controller: _scrollController,
+                                    itemCount: employeesState.employees.length,
+                                    shrinkWrap: true,
+                                    // physics: BouncingScrollPhysics(),
+                                    // physics: NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
                                       return EmployeeBarChip(
                                         employee:
                                             employeesState.employees[index],
@@ -225,9 +207,39 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                                               employeesState.employees[index],
                                             ),
                                       );
-                                    }
-                                  },
-                                  separatorBuilder: (_, __) => 16.verticalSpace,
+                                      // if (index ==
+                                      //     employeesState.employees.length) {
+                                      //   // Check if currentEmployeesPage is null and state is loaded
+                                      //   if ((employeesState.currentEmployeesPage ==
+                                      //       null)) {
+                                      //     return Center(
+                                      //       child: Text(
+                                      //         'No More Employees',
+                                      //         style: Theme.of(
+                                      //           context,
+                                      //         ).textTheme.bodyMedium,
+                                      //       ),
+                                      //     );
+                                      //   } else {
+                                      //     return Center(
+                                      //       child: FadeCircleLoadingIndicator(),
+                                      //     );
+                                      //   }
+                                      // } else {
+                                      //   return EmployeeBarChip(
+                                      //     employee:
+                                      //         employeesState.employees[index],
+                                      //     enabled: employeesState
+                                      //         .selectedEmployees
+                                      //         .contains(
+                                      //           employeesState.employees[index],
+                                      //         ),
+                                      //   );
+                                      // }
+                                    },
+                                    separatorBuilder: (_, __) =>
+                                        16.verticalSpace,
+                                  ),
                                 ),
                               );
                             } else if (employeesState.employeesStates ==
@@ -235,7 +247,7 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
                               return AppErrorWidget(
                                 onTap: () => ref
                                     .read(employeesControllerProvider.notifier)
-                                    .fetchEmployees(),
+                                    .fetchEmployees(page: 1),
                               );
                             } else if (employeesState.employeesStates ==
                                 RequestStates.loading) {

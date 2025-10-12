@@ -31,6 +31,7 @@ Map<String, dynamic> _$TotalsToJson(Totals instance) => <String, dynamic>{
 ReportModel _$ReportModelFromJson(Map<String, dynamic> json) => ReportModel(
   serviceOrderId: json['service_order_id'] as String,
   status: json['status'] as String,
+  methodOfPayment: json['method_of_payment'] as String,
   postingDate: json['posting_date'] as String,
   serviceType: json['service_type'] as String,
   totalNetAmount: (json['total_net_amount'] as num).toInt(),
@@ -42,5 +43,6 @@ Map<String, dynamic> _$ReportModelToJson(ReportModel instance) =>
       'status': instance.status,
       'posting_date': instance.postingDate,
       'service_type': instance.serviceType,
+      'method_of_payment': instance.methodOfPayment,
       'total_net_amount': instance.totalNetAmount,
     };

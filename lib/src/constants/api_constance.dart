@@ -101,6 +101,10 @@ class ApiConstance {
   static String getServiceOrderDetails =
       '$baseUrl/$baseDomain.api.service_order.service_order_details';
 
+  //? This for appointment :
+  static String appontmentsLogs() =>
+      '$baseUrl/$baseDomain.api.staff_appointment_log.staff_appointment_logs?limit=10';
+
   static String orderCancelltion =
       '$baseUrl/$baseDomain.api.service_order.cancel_service_order';
 }

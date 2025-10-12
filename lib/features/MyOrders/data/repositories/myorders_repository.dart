@@ -2,6 +2,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/MyOrders/data/datasources/my_orders_data_source.dart';
+import 'package:hcs/features/MyOrders/domain/models/appointment/appoitnment_model.dart';
 import 'package:hcs/features/MyOrders/domain/models/order_details/order_details_model.dart';
 import 'package:hcs/features/MyOrders/domain/models/services_order/services_order_model.dart';
 import 'package:hcs/src/constants/Api/api_response.dart';
@@ -14,13 +15,14 @@ part 'myorders_repository.g.dart';
 @Riverpod(keepAlive: true)
 MyOrdersRepository myOrdersRepository(Ref ref) {
   final networkService = ref.watch(networkServiceProvider());
-  return MyOrdersRepository(MyOrdersDataSource(networkService));
+  return MyOrdersRepository(MyOrdersDataSource(networkService),networkService);
 }
 
 class MyOrdersRepository {
   final MyOrdersDataSource _remoteDatasource;
+  final NetworkService networkService;
 
-  MyOrdersRepository(this._remoteDatasource);
+  MyOrdersRepository(this._remoteDatasource,this.networkService);
 
   Future<ApiResponse<ServicesOrder>> getServicesOrders({
     required int page,
@@ -40,7 +42,6 @@ class MyOrdersRepository {
     } catch (e) {
       throw Exception('Failed to fetch Orders : $e');
     }
-
   }
 
   Future<ApiResponse<OrderDetails>> getServicesOrderDetails({
@@ -57,7 +58,6 @@ class MyOrdersRepository {
     } catch (e) {
       throw Exception('Failed to fetch Order Details : $e');
     }
-
   }
 
   Future<ApiResponse<List>> orderCancelltion({
@@ -74,6 +74,27 @@ class MyOrdersRepository {
       return response;
     } catch (e) {
       throw Exception('Failed to cancel order : $e');
+    }
+  }
+
+  Future<AppointmentModel> getAppontments({
+    required int page,
+    required String orderId,
+    String? dateType,
+  }) async {
+    final response = await networkService.get(
+      ApiConstance.appontmentsLogs(),
+      queryParameters: {'page': page, 'date_type': dateType},
+      data: FormData.fromMap({'order_id': orderId}),
+    );
+
+    if (response.statusCode == 200) {
+      print('----------------');
+      print(dateType);
+      print('----------------');
+      return AppointmentModel.fromJson(response.data);
+    } else {
+      throw Exception(response.message ?? 'Failed to get Appontments');
     }
   }
 }

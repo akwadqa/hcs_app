@@ -42,7 +42,7 @@ class ReportPageNodeData extends StatelessWidget {
             //? status
             Text(
               // 'Online',
-              report?.status ?? 'status',
+              report?.methodOfPayment ?? 'payment',
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
                 color: AppColors.primary,
                 fontSize: 14.sp,

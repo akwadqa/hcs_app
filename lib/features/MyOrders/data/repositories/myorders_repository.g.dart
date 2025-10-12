@@ -7,7 +7,7 @@ part of 'myorders_repository.dart';
 // **************************************************************************
 
 String _$myOrdersRepositoryHash() =>
-    r'bdee0f9af07536e96855bc03d22cda3ab4023c06';
+    r'0da79310db7048c4789d06ed3a7cd8cd28ec17f6';
 
 /// See also [myOrdersRepository].
 @ProviderFor(myOrdersRepository)
