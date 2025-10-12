@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/Auth/application/auth_service.dart';
+import 'package:hcs/src/constants/api_constance.dart';
 import 'package:hcs/src/localization/current_language.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -40,7 +41,7 @@ Dio dio(Ref ref) {
   const duration = Duration(milliseconds: 120000);
   final Dio dio = Dio(
     BaseOptions(
-      baseUrl: ServicesUrls.baseUrl,
+      baseUrl: ApiConstance.baseUrl,
       receiveTimeout: duration,
       connectTimeout: duration,
       sendTimeout: duration,

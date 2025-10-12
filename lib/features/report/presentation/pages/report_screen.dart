@@ -81,8 +81,9 @@ class ReportScreen extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final reportItem = report?.reports[index];
                 if (index == 0) return ReportNodeTile.first(reportItem);
-                if (index == report!.reports.length - 1)
+                if (index == report!.reports.length - 1) {
                   return ReportNodeTile.last(reportItem);
+                }
                 return ReportNodeTile.middle(reportItem);
               },
             ),
