@@ -152,6 +152,27 @@ class _ServiceConfigurationScreenState
 
               ShiftTypeChips(),
               24.verticalSpace,
+              Row(
+                children: [
+                  Consumer(
+                    builder: (context, ref, _) {
+                      bool isPartTime = ref
+                          .watch(availabilityControllerProvider)
+                          .isPartTime;
+                      return Checkbox(
+                        value: isPartTime,
+                        onChanged: (val) {
+                          ref
+                              .read(availabilityControllerProvider.notifier)
+                              .changePartTime(val ?? false);
+                        },
+                      );
+                    },
+                  ),
+                  Text('is Part Time', style: TextStyle()),
+                ],
+              ),
+              24.verticalSpace,
 
               Consumer(
                 builder: (context, ref, child) {

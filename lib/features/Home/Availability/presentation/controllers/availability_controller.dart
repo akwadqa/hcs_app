@@ -41,6 +41,10 @@ class AvailabilityController extends _$AvailabilityController {
     state = state.copyWith(selectedShiftType: selectedShiftType);
   }
 
+  changePartTime(bool isPartTime) {
+    state = state.copyWith(isPartTime: isPartTime);
+  }
+
   selectDate(String selectedDate) {
     state = state.copyWith(selectedDate: selectedDate);
   }

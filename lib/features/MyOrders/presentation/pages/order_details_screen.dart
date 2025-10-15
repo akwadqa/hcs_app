@@ -121,14 +121,6 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                 serviceOrderId: widget.serviceOrderID,
                 orderDetails: data,
               ),
-              IconButton(
-                onPressed: () {
-                  context.pushRoute(
-                    AppoinmentRoute(serviceOrderID: widget.serviceOrderID),
-                  );
-                },
-                icon: Icon(Icons.details),
-              ),
             ];
           },
         ),
@@ -137,86 +129,109 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
       bottomNavigationBar: Consumer(
         builder: (context, ref, child) {
           final controllerCancel = ref.watch(cancellingOrderControllerProvider);
-          if (orderStatus == 'Approved') {
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 17.h, horizontal: 26.w),
-              child: CustomButton(
-                title: AppStrings.cancelOrder.tr(context: context),
-                buttonColor: AppColors.blueText,
-                onPressed: controllerCancel.isLoading
-                    ? null
-                    : () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text(
-                              AppStrings.cancelOrder.tr(context: context),
-                            ),
-                            content: Text(
-                              "Are you sure you want to cancel this order?",
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text("No"),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  ref
-                                      .read(
-                                        cancellingOrderControllerProvider
-                                            .notifier,
-                                      )
-                                      .orderCancelltion(
-                                        serviceOrderID: widget.serviceOrderID,
-                                      );
-                                },
-                                child: Text("Yes"),
-                              ),
-                            ],
+          final order = ref.watch(orderDetailsControllerProvider);
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 17.h, horizontal: 26.w),
+            child: Row(
+              children: [
+                if (!order.isLoading)
+                  Expanded(
+                    child: CustomButton(
+                      title: 'Apointment',
+                      onPressed: () {
+                        context.pushRoute(
+                          AppoinmentRoute(
+                            serviceOrderID: widget.serviceOrderID,
                           ),
                         );
                       },
+                      buttonColor: AppColors.blueText,
+                    ),
+                  ),
+                if (orderStatus == 'Approved') 5.horizontalSpace,
+                if (orderStatus == 'Approved')
+                  Expanded(
+                    child: CustomButton(
+                      title: AppStrings.cancelOrder.tr(context: context),
+                      buttonColor: AppColors.red,
+                      onPressed: controllerCancel.isLoading
+                          ? null
+                          : () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text(
+                                    AppStrings.cancelOrder.tr(context: context),
+                                  ),
+                                  content: Text(
+                                    "Are you sure you want to cancel this order?",
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text("No"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        ref
+                                            .read(
+                                              cancellingOrderControllerProvider
+                                                  .notifier,
+                                            )
+                                            .orderCancelltion(
+                                              serviceOrderID:
+                                                  widget.serviceOrderID,
+                                            );
+                                      },
+                                      child: Text("Yes"),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
 
-                //  orderCancelltionStates != RequestStates.loading
-                //     ? () {
-                //         showDialog(
-                //           context: context,
-                //           builder: (context) => AlertDialog(
-                //             title: Text(
-                //               AppStrings.cancelOrder.tr(context: context),
-                //             ),
-                //             content: Text(
-                //               "Are you sure you want to cancel this order?",
-                //             ),
-                //             actions: [
-                //               TextButton(
-                //                 onPressed: () => Navigator.pop(context),
-                //                 child: Text("No"),
-                //               ),
-                //               TextButton(
-                //                 onPressed: () {
-                //                   Navigator.pop(context);
-                //                   ref
-                //                       .read(
-                //                         myOrdersControllerProvider.notifier,
-                //                       )
-                //                       .orderCancelltion(
-                //                         serviceOrderID:
-                //                             widget.serviceOrderID,
-                //                       );
-                //                 },
-                //                 child: Text("Yes"),
-                //               ),
-                //             ],
-                //           ),
-                //         );
-                //       }
-                //     : null,
-              ),
-            );
-          }
+                      //  orderCancelltionStates != RequestStates.loading
+                      //     ? () {
+                      //         showDialog(
+                      //           context: context,
+                      //           builder: (context) => AlertDialog(
+                      //             title: Text(
+                      //               AppStrings.cancelOrder.tr(context: context),
+                      //             ),
+                      //             content: Text(
+                      //               "Are you sure you want to cancel this order?",
+                      //             ),
+                      //             actions: [
+                      //               TextButton(
+                      //                 onPressed: () => Navigator.pop(context),
+                      //                 child: Text("No"),
+                      //               ),
+                      //               TextButton(
+                      //                 onPressed: () {
+                      //                   Navigator.pop(context);
+                      //                   ref
+                      //                       .read(
+                      //                         myOrdersControllerProvider.notifier,
+                      //                       )
+                      //                       .orderCancelltion(
+                      //                         serviceOrderID:
+                      //                             widget.serviceOrderID,
+                      //                       );
+                      //                 },
+                      //                 child: Text("Yes"),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         );
+                      //       }
+                      //     : null,
+                    ),
+                  ),
+              ],
+            ),
+          );
+
           return SizedBox.shrink();
         },
 

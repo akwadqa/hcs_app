@@ -9,11 +9,14 @@ part of 'login_response_model.dart';
 LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
     LoginResponse(
       message: json['message'] as String,
-      homePage: json['home_page'] as String,
-      fullName: json['full_name'] as String,
+      homePage: json['home_page'] as String?,
+      fullName: json['full_name'] as String?,
       statusCode: (json['status_code'] as num).toInt(),
       error: (json['error'] as num).toInt(),
-      data: Data.fromJson(json['data'] as Map<String, dynamic>),
+      //TODO : 
+      data: json['data'] != null
+          ? Data.fromJson(json['data'] as Map<String, dynamic>)
+          : null,
     );
 
 Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>

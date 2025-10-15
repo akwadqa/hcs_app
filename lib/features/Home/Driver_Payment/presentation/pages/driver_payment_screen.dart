@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
+import 'package:hcs/features/Home/Driver_Payment/data/models/discount_type.dart';
 import 'package:hcs/features/Home/Driver_Payment/presentation/controllers/drivers_payment_controllers.dart';
 import 'package:hcs/features/Home/Driver_Payment/presentation/widgets/discount_dropdown.dart';
 import 'package:hcs/features/Home/Driver_Payment/presentation/widgets/paginated_dropdown_drivers.dart';
@@ -212,7 +213,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                                   .read(
                                     driversPaymentControllerProvider.notifier,
                                   )
-                                  .overrideTotalCost(doubleDiscount);
+                                  .overrideTotalCost(doubleDiscount, true);
                             },
                             decoration: InputDecoration(
                               hintStyle: Theme.of(

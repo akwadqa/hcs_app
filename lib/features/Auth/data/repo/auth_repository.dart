@@ -46,7 +46,7 @@ class AuthRepository {
 
     final data = json.encode(response.data);
     if (response.statusCode == 200) {
-      return (loginResponseFromJson(data).data.token,loginResponseFromJson(data).fullName);
+      return (loginResponseFromJson(data).data!.token,loginResponseFromJson(data).fullName ?? '');
     } else {
       throw Exception(response.message ?? "An unknown error occurred");
     }

@@ -17,15 +17,15 @@ Map<String, dynamic> _$OrdersReportToJson(OrdersReport instance) =>
     <String, dynamic>{'orders': instance.reports, 'totals': instance.total};
 
 Totals _$TotalsFromJson(Map<String, dynamic> json) => Totals(
-  totalOutstandingAmount: (json['total_outstanding_amount'] as num).toInt(),
+  totalOutstandingAmount: (json['outstanding_amount'] as num).toInt(),
   totalNetAmount: (json['total_net_amount'] as num).toInt(),
-  totalReceivedAmount: (json['total_received_amount'] as num).toInt(),
+  totalReceivedAmount: (json['received_amount'] as num).toInt(),
 );
 
 Map<String, dynamic> _$TotalsToJson(Totals instance) => <String, dynamic>{
-  'total_outstanding_amount': instance.totalOutstandingAmount,
+  'outstanding_amount': instance.totalOutstandingAmount,
   'total_net_amount': instance.totalNetAmount,
-  'total_received_amount': instance.totalReceivedAmount,
+  'received_amount': instance.totalReceivedAmount,
 };
 
 ReportModel _$ReportModelFromJson(Map<String, dynamic> json) => ReportModel(

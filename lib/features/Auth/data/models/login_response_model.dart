@@ -17,15 +17,15 @@ class LoginResponse {
   @JsonKey(name: "message")
   String message;
   @JsonKey(name: "home_page")
-  String homePage;
+  String? homePage;
   @JsonKey(name: "full_name")
-  String fullName;  
+  String? fullName;  
   @JsonKey(name: "status_code")
   int statusCode;
   @JsonKey(name: "error")
   int error;
   @JsonKey(name: "data")
-  Data data;
+  Data? data;
 
   LoginResponse({
     required this.message,

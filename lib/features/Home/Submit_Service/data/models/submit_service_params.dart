@@ -5,6 +5,7 @@ class SubmitServiceParams {
   final String customerId;
   final String customerName;
   final String driver;
+  final bool isPartTime;
   final String date;
   final String serviceType;
   final String shiftType;
@@ -26,6 +27,7 @@ class SubmitServiceParams {
     required this.driver,
     required this.date,
     required this.serviceType,
+    required this.isPartTime,
     required this.shiftType,
     required this.days,
     required this.employees,
@@ -42,15 +44,19 @@ class SubmitServiceParams {
 
   Map<String, dynamic> toMap() {
     // final totalCostWithSuplies=(discountCost?? totalNetAmount?? totalAmount)+(cleaningSuppliesFees??0);
-      final baseNet = discountCost ?? totalNetAmount ?? double.tryParse(totalAmount) ?? 0.0;
-      final baseAmount = double.tryParse(totalAmount) ?? 0.0;
-  final suppliesCost = cleaningSuppliesFees ?? 0.0;
+    final baseNet =
+        discountCost ?? totalNetAmount ?? double.tryParse(totalAmount) ?? 0.0;
+    final baseAmount = double.tryParse(totalAmount) ?? 0.0;
+    final suppliesCost = cleaningSuppliesFees ?? 0.0;
 
-  // Add supplies only if cost > 0
-  final netWithSupplies = baseNet + (suppliesCost > 0 ? suppliesCost : 0);
-  final baseAmountWithSupplies = baseAmount + (suppliesCost > 0 ? suppliesCost : 0);
+    // Add supplies only if cost > 0
+    final netWithSupplies = baseNet + (suppliesCost > 0 ? suppliesCost : 0);
+    final baseAmountWithSupplies =
+        baseAmount + (suppliesCost > 0 ? suppliesCost : 0);
+    final partTime = isPartTime ? 1 : 0;
 
     return {
+      'is_part_time' : partTime,
       'customer_name': customerName,
       'customer': customerId,
       'driver': driver,
@@ -70,9 +76,9 @@ class SubmitServiceParams {
           .toList(),
       'payment_method': paymentMethod,
       'note': note,
-     if(discountType!=null) 'discount_type': discountType,
-      "total_amount":baseAmountWithSupplies,
-      "total_net_amount":netWithSupplies,
+      if (discountType != null) 'discount_type': discountType,
+      "total_amount": baseAmountWithSupplies,
+      "total_net_amount": netWithSupplies,
       'discount_percentage': discountPercentage,
       'with_cleaning_supplies': withCleaningSupplies == 'yes' ? 1 : 0,
       'cleaning_fee': cleaningSuppliesFees,

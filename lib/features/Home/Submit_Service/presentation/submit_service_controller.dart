@@ -30,8 +30,9 @@ class SubmitServiceController extends _$SubmitServiceController {
         driversPaymentControllerProvider,
       );
 
-  final bb=    await submitServiceRepo.submitService(
+      final bb = await submitServiceRepo.submitService(
         SubmitServiceParams(
+          isPartTime: availabilityController.isPartTime,
           customerId: customerController.selectedCustomer!.customerId,
           customerName: customerController.selectedCustomer!.customerName,
           driver: driverPaymentController.selectedDriver!.driverId,
@@ -42,22 +43,24 @@ class SubmitServiceController extends _$SubmitServiceController {
           employees: employeesController.selectedEmployees,
           paymentMethod: driverPaymentController.selectedPaymentMethod,
           totalAmount: driverPaymentController.originalCost.toString(),
-          totalNetAmount: driverPaymentController.newCost ,
+          totalNetAmount: driverPaymentController.newCost,
           discountCost: driverPaymentController.discountedCost,
           discountType: driverPaymentController.selectedDiscount?.id,
-          cleaningSuppliesFees:driverPaymentController.costAfterCleaningSuplies ,
+          cleaningSuppliesFees:
+              driverPaymentController.costAfterCleaningSuplies,
           discountPercentage: driverPaymentController.discountPercentage
               .toString(),
           withCleaningSupplies: driverPaymentController.withCleaningSupplies,
           note: driverPaymentController.note,
-          
         ),
       );
-debugPrint("BBBBBBBBBBBBBB$bb");
-debugPrint("BBBBBBBBBBBBBB${driverPaymentController.withCleaningSupplies}");
+      debugPrint("BBBBBBBBBBBBBB$bb");
+      debugPrint(
+        "BBBBBBBBBBBBBB${driverPaymentController.withCleaningSupplies}",
+      );
       state = state.copyWith(
-        submitServiceStates:bb? RequestStates.loaded:RequestStates.error,
-        submitServiceMessage: bb?'loadded successfully':"server error",
+        submitServiceStates: bb ? RequestStates.loaded : RequestStates.error,
+        submitServiceMessage: bb ? 'loadded successfully' : "server error",
       );
     } catch (e) {
       state = state.copyWith(
