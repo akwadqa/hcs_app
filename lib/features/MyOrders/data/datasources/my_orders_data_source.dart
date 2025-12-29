@@ -12,8 +12,11 @@ class MyOrdersDataSource {
 
   Future<ApiResponse<ServicesOrder>> getServicesOrders({
     required int page,
-    required String status,
-    required String orderSearched,
+    String? status,
+    String? orderSearched,
+    String? dateType,
+
+    String? date,
   }) async {
     try {
       final response = await _networkService.get(
@@ -21,8 +24,10 @@ class MyOrdersDataSource {
         queryParameters: {
           'page': page,
           'limit': 10,
-          'status': status,
-          'search': orderSearched,
+          if (status != null) "status": status,
+          if (orderSearched != null) "search": orderSearched,
+          if (date != null) "for_date": date,
+          if (dateType != null) "date_type": dateType,
           'action': 'supervisor',
         },
       );

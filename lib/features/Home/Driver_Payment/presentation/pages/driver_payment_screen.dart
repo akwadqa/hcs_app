@@ -40,6 +40,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
     Future.microtask(() {
       ref.read(driversPaymentControllerProvider.notifier).fetchDrivers();
       ref.read(driversPaymentControllerProvider.notifier).getDiscountType();
+      ref.read(driversPaymentControllerProvider.notifier).getCustomerBalance();
     });
     noteController = TextEditingController(
       text: ref.read(driversPaymentControllerProvider).note,
@@ -48,7 +49,9 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final driversPaymentState = ref.watch(driversPaymentControllerProvider);
+    final driversPaymentNotifier = ref.read(
+      driversPaymentControllerProvider.notifier,
+    );
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
@@ -93,9 +96,14 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                     } else if (driversPaymentState.driversStates ==
                         RequestStates.error) {
                       return SimpleErrorWidget(
-                        onTap: () => ref
-                            .read(driversPaymentControllerProvider.notifier)
-                            .fetchDrivers(),
+                        onTap: () {
+                          ref
+                              .read(driversPaymentControllerProvider.notifier)
+                              .fetchDrivers();
+                          ref
+                              .read(driversPaymentControllerProvider.notifier)
+                              .getCustomerBalance();
+                        },
                       );
                     } else {
                       return const SizedBox.shrink();
@@ -192,7 +200,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
 
                           TextFormField(
                             controller: TextEditingController(
-                              text: driversPaymentState.discountedCost == null
+                              text: driversPaymentState.discountedCost == null||driversPaymentState.discountedCost!<=0
                                   ? driversPaymentState.originalCost.toString()
                                   : driversPaymentState.discountedCost
                                         .toString(),
@@ -207,13 +215,14 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                               decimal: true,
                             ),
                             textInputAction: TextInputAction.done,
+                            enabled: false,
                             onFieldSubmitted: (value) {
-                              double? doubleDiscount = double.tryParse(value);
-                              ref
-                                  .read(
-                                    driversPaymentControllerProvider.notifier,
-                                  )
-                                  .overrideTotalCost(doubleDiscount, true);
+                              // double? doubleDiscount = double.tryParse(value);
+                              // ref
+                              //     .read(
+                              //       driversPaymentControllerProvider.notifier,
+                              //     )
+                              //     .overrideTotalCost(doubleDiscount, true);
                             },
                             decoration: InputDecoration(
                               hintStyle: Theme.of(
@@ -221,6 +230,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                               ).inputDecorationTheme.hintStyle,
                             ),
                           ),
+
                           10.verticalSpace,
                           Text.rich(
                             TextSpan(
@@ -233,7 +243,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                                 ),
                                 TextSpan(
                                   text:
-                                      '${driversPaymentState.discountedCost == null ? driversPaymentState.originalCost.toString() : driversPaymentState.discountedCost.toString()} ',
+                                      '${driversPaymentState.discountedCost == null||driversPaymentState.discountedCost!<=0 ? driversPaymentState.originalCost.toString() : driversPaymentState.discountedCost.toString()} ',
                                   style: Theme.of(
                                     context,
                                   ).textTheme.displaySmall,
@@ -257,33 +267,84 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                               ],
                             ),
                           ),
+                          10.verticalSpace,
+
+                          Consumer(
+                            builder: (context, ref, child) {
+                              var selectedServiceType = ref.watch(
+                                availabilityControllerProvider.select(
+                                  (value) => value.selectedServiceType,
+                                ),
+                              );
+
+                              return selectedServiceType != "Packages"
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        32.verticalSpace,
+                                        AreCleaningSuppliesAvailable(),
+                                      ],
+                                    )
+                                  : SizedBox.shrink();
+                            },
+                          ),
 
                           10.verticalSpace,
-                          if (driversPaymentState.withCleaningSupplies !=
-                                  "no" &&
+                          if (driversPaymentState.withCleaningSupplies &&
                               driversPaymentState.costAfterCleaningSuplies !=
                                   null)
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Fees: ',
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.displayMedium,
-                                  ),
-                                  TextSpan(
-                                    text:
-                                        '${driversPaymentState.costAfterCleaningSuplies} ',
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.displaySmall,
-                                  ),
-                                ],
+                            TextFormField(
+                              controller: TextEditingController(
+                                text:
+                                    '${driversPaymentState.fees ?? driversPaymentState.costAfterCleaningSuplies}',
+                              ),
+                              //  enabled:
+                              //     driversPaymentState
+                              //         .selectedDiscount
+                              //         ?.discountPercentage !=
+                              //     0,
+                              keyboardType: TextInputType.numberWithOptions(
+                                signed: true,
+                                decimal: true,
+                              ),
+                              textInputAction: TextInputAction.done,
+                              onFieldSubmitted: (value) {
+                                driversPaymentNotifier.editFeesAmount(
+                                  double.tryParse(value),
+                                );
+                              },
+                              // onChanged: (value) {
+                              //  driversPaymentNotifier.editFeesAmount(value);
+
+                              // },
+                              decoration: InputDecoration(
+                                labelText: "Fees",
+                                hintStyle: Theme.of(
+                                  context,
+                                ).inputDecorationTheme.hintStyle,
                               ),
                             ),
 
-                          32.verticalSpace,
+                          // Text.rich(
+                          //   TextSpan(
+                          //     children: [
+                          //       TextSpan(
+                          //         text: 'Fees: ',
+                          //         style: Theme.of(
+                          //           context,
+                          //         ).textTheme.displayMedium,
+                          //       ),
+                          //       TextSpan(
+                          //         text:
+                          //             '${driversPaymentState.costAfterCleaningSuplies} ',
+                          //         style: Theme.of(
+                          //           context,
+                          //         ).textTheme.displaySmall,
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       );
                     } else if (driversPaymentState.discountStates ==
@@ -301,30 +362,275 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                     }
                   },
                 ),
+                20.verticalSpace,
 
+                Consumer(
+                  builder: (context, ref, child) {
+                    final driversPaymentState = ref.watch(
+                      driversPaymentControllerProvider,
+                    );
+
+                    if (driversPaymentState.customerBalanceState ==
+                        RequestStates.loaded) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                        children: [
+                          Divider(height: 0.1, color: AppColors.dividerGrey),
+                          16.verticalSpace,
+                          Text(
+                            context.tr("Outstanding Balance"),
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
+                          8.verticalSpace,
+
+                          TextFormField(
+                            controller: TextEditingController(
+                              text: driversPaymentState
+                                  .customerBalanceData
+                                  ?.outstandingBalance
+                                  .toString(),
+                            ),
+                            //  enabled:
+                            //     driversPaymentState
+                            //         .selectedDiscount
+                            //         ?.discountPercentage !=
+                            //     0,
+                            readOnly: true,
+
+                            textInputAction: TextInputAction.done,
+
+                            decoration: InputDecoration(
+                              hintStyle: Theme.of(
+                                context,
+                              ).inputDecorationTheme.hintStyle,
+                            ),
+                          ),
+                          20.verticalSpace,
+                          Text(
+                            context.tr("Advance Balance Amount"),
+                            style: Theme.of(context).textTheme.displayMedium,
+                          ),
+                          12.verticalSpace,
+
+                          Row(
+                            children: [
+                              Flexible(
+                                child: TextFormField(
+                                  controller: TextEditingController(
+                                    text: driversPaymentState.isAdvancedBalance
+                                        ? "0"
+                                        : driversPaymentState
+                                              .customerBalanceData
+                                              ?.advanceBalance
+                                              .toString(),
+                                  ),
+                                  //  enabled:
+                                  //     driversPaymentState
+                                  //         .selectedDiscount
+                                  //         ?.discountPercentage !=
+                                  //     0,
+                                  readOnly: true,
+
+                                  textInputAction: TextInputAction.done,
+
+                                  decoration: InputDecoration(
+                                    hintStyle: Theme.of(
+                                      context,
+                                    ).inputDecorationTheme.hintStyle,
+                                  ),
+                                ),
+                              ),
+                              Checkbox(
+                                value: driversPaymentState.isAdvancedBalance,
+                                onChanged: (d) {
+                                  ref
+                                      .read(
+                                        driversPaymentControllerProvider
+                                            .notifier,
+                                      )
+                                      .idAdvancedToggle();
+                                },
+                              ),
+                            ],
+                          ),
+                          20.verticalSpace,
+                          if (driversPaymentState.isAdvancedBalance) ...[
+                            Text(
+                              context.tr("Used Advance Amount"),
+                              style: Theme.of(context).textTheme.displayMedium,
+                            ),
+                            8.verticalSpace,
+
+                            TextFormField(
+                              controller: TextEditingController(
+                                text: driversPaymentState
+                                    .customerBalanceData
+                                    ?.advanceBalance
+                                    .toString(),
+                              ),
+                              //  enabled:
+                              //     driversPaymentState
+                              //         .selectedDiscount
+                              //         ?.discountPercentage !=
+                              //     0,
+                              readOnly: true,
+
+                              textInputAction: TextInputAction.done,
+
+                              decoration: InputDecoration(
+                                hintStyle: Theme.of(
+                                  context,
+                                ).inputDecorationTheme.hintStyle,
+                              ),
+                            ),
+                          ],
+                          32.verticalSpace,
+                        ],
+                      );
+                    } else if (driversPaymentState.customerBalanceState ==
+                        RequestStates.loading) {
+                      return const LinearProgressIndicator(
+                        backgroundColor: AppColors.disabledButtonBackground,
+                        color: AppColors.primary,
+                      );
+                    } else if (driversPaymentState.customerBalanceState ==
+                        RequestStates.error) {
+                      return SimpleErrorWidget(
+                        onTap: () => ref
+                            .read(driversPaymentControllerProvider.notifier)
+                            .getCustomerBalance(),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
+
+                // (driversPaymentState.customerBalanceState ==
+                //         RequestStates.loading)
+                //     ? LinearProgressIndicator(
+                //         backgroundColor: AppColors.disabledButtonBackground,
+                //         color: AppColors.primary,
+                //       )
+                //     : Column(
+                //         children: [
+                //           Divider(height: 0.1, color: AppColors.dividerGrey),
+                //           16.verticalSpace,
+                //           Text(
+                //             context.tr("Customer balance"),
+                //             style: Theme.of(context).textTheme.displayMedium,
+                //           ),
+                //           8.verticalSpace,
+
+                //           TextFormField(
+                //             controller: TextEditingController(
+                //               text: driversPaymentState
+                //                   .customerBalanceData
+                //                   ?.outstandingBalance
+                //                   .toString(),
+                //             ),
+                //             //  enabled:
+                //             //     driversPaymentState
+                //             //         .selectedDiscount
+                //             //         ?.discountPercentage !=
+                //             //     0,
+                //             readOnly: true,
+
+                //             textInputAction: TextInputAction.done,
+
+                //             decoration: InputDecoration(
+                //               hintStyle: Theme.of(
+                //                 context,
+                //               ).inputDecorationTheme.hintStyle,
+                //             ),
+                //           ),
+                //           20.verticalSpace,
+                //           Text(
+                //             context.tr("advanced Balnce"),
+                //             style: Theme.of(context).textTheme.displayMedium,
+                //           ),
+                //           12.verticalSpace,
+
+                //           Row(
+                //             children: [
+                //               Flexible(
+                //                 child: TextFormField(
+                //                   controller: TextEditingController(
+                //                     text: driversPaymentState.isAdvancedBalance
+                //                         ? "0"
+                //                         : driversPaymentState
+                //                               .customerBalanceData
+                //                               ?.advanceBalance
+                //                               .toString(),
+                //                   ),
+                //                   //  enabled:
+                //                   //     driversPaymentState
+                //                   //         .selectedDiscount
+                //                   //         ?.discountPercentage !=
+                //                   //     0,
+                //                   readOnly: true,
+
+                //                   textInputAction: TextInputAction.done,
+
+                //                   decoration: InputDecoration(
+                //                     hintStyle: Theme.of(
+                //                       context,
+                //                     ).inputDecorationTheme.hintStyle,
+                //                   ),
+                //                 ),
+                //               ),
+                //               Checkbox(
+                //                 value: driversPaymentState.isAdvancedBalance,
+                //                 onChanged: (d) {
+                //                   ref
+                //                       .read(
+                //                         driversPaymentControllerProvider
+                //                             .notifier,
+                //                       )
+                //                       .idAdvancedToggle();
+                //                 },
+                //               ),
+                //             ],
+                //           ),
+                //           20.verticalSpace,
+                //           if (driversPaymentState.isAdvancedBalance) ...[
+                //             Text(
+                //               context.tr("Used advanced balance"),
+                //               style: Theme.of(context).textTheme.displayMedium,
+                //             ),
+                //             8.verticalSpace,
+
+                //             TextFormField(
+                //               controller: TextEditingController(
+                //                 text: driversPaymentState
+                //                     .customerBalanceData
+                //                     ?.advanceBalance
+                //                     .toString(),
+                //               ),
+                //               //  enabled:
+                //               //     driversPaymentState
+                //               //         .selectedDiscount
+                //               //         ?.discountPercentage !=
+                //               //     0,
+                //               readOnly: true,
+
+                //               textInputAction: TextInputAction.done,
+
+                //               decoration: InputDecoration(
+                //                 hintStyle: Theme.of(
+                //                   context,
+                //                 ).inputDecorationTheme.hintStyle,
+                //               ),
+                //             ),
+                //           ],
+                //         ],
+                //       ),
+                32.verticalSpace,
                 PaymentMethodChips(),
                 32.verticalSpace,
                 Divider(height: 0.1, color: AppColors.dividerGrey),
 
-                Consumer(
-                  builder: (context, ref, child) {
-                    var selectedServiceType = ref.watch(
-                      availabilityControllerProvider.select(
-                        (value) => value.selectedServiceType,
-                      ),
-                    );
-
-                    return selectedServiceType != "Packages"
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              32.verticalSpace,
-                              AreCleaningSuppliesAvailable(),
-                            ],
-                          )
-                        : SizedBox.shrink();
-                  },
-                ),
                 16.verticalSpace,
                 Text(
                   context.tr(AppStrings.note),
@@ -429,15 +735,20 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                               drvierDiscountState.selectedDriver == null ||
                                   submitServiceStates == RequestStates.loading
                               ? null
-                              : () {
+                              : () async {
                                   _dropdownKey.currentState?.closeOverlay();
 
-                                  ref
+                                  final fs = await ref
                                       .watch(
                                         submitServiceControllerProvider
                                             .notifier,
                                       )
                                       .submitService();
+                                  if (fs) {
+                                    context.router.replaceAll([
+                                      MainRoute(children: [HomeRoute()]),
+                                    ]);
+                                  }
                                 },
                         );
                       },

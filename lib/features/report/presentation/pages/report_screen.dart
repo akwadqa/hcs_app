@@ -23,7 +23,7 @@ class ReportScreen extends ConsumerWidget {
     final controller = ref.watch(reportControllerProvider);
 
     return Scaffold(
-      appBar: CustomAppbar(title: context.tr('reports'), hasBackArrow: true),
+      appBar: CustomAppbar(title: context.tr('Reports'), hasBackArrow: true),
       body: controller.when(
         loading: () => Center(child: FadeCircleLoadingIndicator()),
         data: (data) {

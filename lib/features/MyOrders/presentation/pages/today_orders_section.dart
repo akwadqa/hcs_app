@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/MyOrders/domain/models/services_order/services_order_model.dart';
-import 'package:hcs/features/MyOrders/presentation/controllers/accept_orders_controller.dart';
+import 'package:hcs/features/MyOrders/presentation/controllers/today_orders_controller.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/myorders_controller.dart';
 import 'package:hcs/gen/assets.gen.dart';
+import 'package:hcs/src/enums/orders_status_enums.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
@@ -29,8 +30,8 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
     super.initState();
     Future(
       () => ref
-          .read(acceptOrdersControllerProvider.notifier)
-          .fetchApprovedOrders(page: 1),
+          .read(todayOrdersControllerProvider.notifier)
+          .fetchTodayOrders(page: 1),
     );
   }
 
@@ -73,12 +74,12 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
     return AppPaginationWidget(
       enablePullDown: true,
       onRefresh: () {
-        return ref.read(acceptOrdersControllerProvider.notifier).refreshApproved();
+        return ref.read(todayOrdersControllerProvider.notifier).refreshToday();
       },
       onLoading: (page) {
         return ref
-            .read(acceptOrdersControllerProvider.notifier)
-            .onLoadMoreApprovedOrders();
+            .read(todayOrdersControllerProvider.notifier)
+            .onLoadMoreTodayOrders();
       },
       child: ListView.builder(
         itemCount: orders.length,
@@ -119,7 +120,7 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
                           Assets.images.pending.svg(),
                           9.horizontalSpace,
                           Text(
-                            orders[index].status.toString(),
+                            orders[index].status.toString().status,
                             style: Theme.of(context).textTheme.displayMedium!
                                 .copyWith(fontSize: 14.sp),
                           ),
@@ -170,13 +171,13 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = ref.watch(acceptOrdersControllerProvider);
+    final controller = ref.watch(todayOrdersControllerProvider);
     return controller.when(
       error: (e, st) => AppErrorWidget(
         onTap: () {
           ref
-              .read(acceptOrdersControllerProvider.notifier)
-              .fetchApprovedOrders(page: 1);
+              .read(todayOrdersControllerProvider.notifier)
+              .fetchTodayOrders(page: 1);
         },
       ),
       loading: () {
@@ -187,8 +188,8 @@ class _AcceptedOrdersScreenState extends ConsumerState<AcceptedOrdersScreen> {
           return RefreshIndicator(
             onRefresh: () async {
               await ref
-                  .read(acceptOrdersControllerProvider.notifier)
-                  .fetchApprovedOrders(page: 1);
+                  .read(todayOrdersControllerProvider.notifier)
+                  .fetchTodayOrders(page: 1);
             },
             child: ListView(
               physics: AlwaysScrollableScrollPhysics(),

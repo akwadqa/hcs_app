@@ -30,6 +30,7 @@ class EmployeesRepository {
         serviceCategory: getEmployeesParams.serviceCategory,
         days: getEmployeesParams.days,
         employeeName: getEmployeesParams.employeeName,
+        overTimeHours: getEmployeesParams.overtimeHours,
         page: getEmployeesParams.page.toString(),
       ),
     );

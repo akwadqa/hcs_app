@@ -1,5 +1,7 @@
 class ApiConstance {
-  static const String baseUrl = "https://highclass.akwad.qa/api/method";
+  static const String devBaseUrl = "https://highclass.akwad.qa/api/method";
+  static const String prodBaseUrl = "https://erp.hcs.qa/api/method";
+  static const String baseUrl = prodBaseUrl;
   static const String baseDomain = "highclass";
   static const String baseImageUrl = 'https://$baseDomain.akwad.qa/';
 
@@ -17,6 +19,9 @@ class ApiConstance {
   static String forgotPassword(String email) =>
       '$baseUrl/frappe.core.doctype.user.user.reset_password?user=$email';
   ////////////////// *  Customers   /////////////////////
+  ///
+  static String getCustomerBalance({required String customerId}) =>
+      '$baseUrl/$baseDomain.api.customer.get_customer_balances?customer=$customerId';
   static String getCustomers({
     required String page,
     required String customerName,
@@ -29,9 +34,8 @@ class ApiConstance {
       '$baseUrl/$baseDomain.api.service_type.service_types';
 
   //////////////////* Report //////////////////////////
-  //TODO :
   static String getReport =
-      'https://highclass.akwad.qa/api/method/highclass.api.service_order.service_orders';
+      '$baseUrl/$baseDomain.api.service_order.service_orders';
 
   ////////////////// *  Employees   /////////////////////
 
@@ -42,6 +46,7 @@ class ApiConstance {
     required String shift,
     String? serviceCategory,
     String? employeeName,
+    String? overTimeHours,
     required String page,
   }) {
     // return 'https://highclass.akwad.qa/api/method/highclass.api.employee.employees?service_type=Flexible – 8 visits/month&date=2025-06-28&shift=Full Day&designation=&service_category=Company&days=["monday", "wednesday"]&page=1&limit=10';
@@ -49,7 +54,8 @@ class ApiConstance {
       'service_type': serviceType,
       'date': date,
       'shift': shift,
-      'designation': '',
+     if(overTimeHours!=null) "overtime_hours":overTimeHours,
+      // 'designation': '',
       'page': page,
       'limit': '10',
     };
@@ -83,7 +89,7 @@ class ApiConstance {
       '$baseUrl/$baseDomain.api.discount_type.discount_types';
   ////////////////// *  SubmitService   /////////////////////
   static String submitService() =>
-      '$baseUrl/$baseDomain.api.service_order.service_order';
+      '$baseUrl/$baseDomain.api.service_order.create_service_order';
 
   //////////////////! *  MyOrders Services   /////////////////////
   static String myServicesOrders() =>

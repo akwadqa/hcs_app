@@ -29,17 +29,17 @@ class PackagesType {
 class PackagesData {
   @JsonKey(name: "id")
   String id;
-  @JsonKey(name: "service_item")
-  String? serviceItem;
-  @JsonKey(name: "service_cost")
-  int serviceCost;
+  // @JsonKey(name: "service_item")
+  // String? serviceItem;
+  // @JsonKey(name: "service_cost")
+  // int serviceCost;
   @JsonKey(name: "number_of_visits")
-  String? numberOfVisits;
+  int? numberOfVisits;
 
   PackagesData({
     required this.id,
-    required this.serviceItem,
-    required this.serviceCost,
+    // required this.serviceItem,
+    // required this.serviceCost,
     required this.numberOfVisits,
   });
 

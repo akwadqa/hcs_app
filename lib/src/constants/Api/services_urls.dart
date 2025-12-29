@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hcs/src/constants/Api/dotenv_keys.dart';
 
-class ServicesUrls {
-  static String baseUrl = '';
-  static String imageUrl = '';
-  static init() {
-    baseUrl = dotenv.get(DotenvKeys.baseUrl);
-    imageUrl = dotenv.get(DotenvKeys.imageUrl);
-    debugPrint('mnor $baseUrl');
-  }
-}
+// class ServicesUrls {
+//   static String baseUrl = '';
+//   static String imageUrl = '';
+//   static init() {
+//     baseUrl = dotenv.get(DotenvKeys.baseUrl);
+//     imageUrl = dotenv.get(DotenvKeys.imageUrl);
+//     debugPrint('mnor $baseUrl');
+//   }
+// }

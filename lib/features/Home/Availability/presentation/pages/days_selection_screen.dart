@@ -69,6 +69,7 @@ class _DaysSelectionScreenState extends ConsumerState<DaysSelectionScreen> {
               style: Theme.of(context).textTheme.displayMedium!,
             ),
             16.verticalSpace,
+            
             DaysSelectionChips(),
 
             Consumer(

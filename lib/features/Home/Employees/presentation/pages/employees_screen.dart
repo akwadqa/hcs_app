@@ -9,17 +9,20 @@ import 'package:hcs/features/Home/Availability/presentation/controllers/availabi
 import 'package:hcs/features/Home/Employees/presentation/controllers/employees_controller.dart';
 import 'package:hcs/features/Home/Employees/presentation/widgets/employee_bar_chips.dart';
 import 'package:hcs/features/Home/Employees/presentation/widgets/search_field.dart';
-import 'package:hcs/features/Home/Employees/presentation/widgets/service_category.dart';
+import 'package:hcs/features/Home/Employees/presentation/widgets/service_filter_sheet.dart';
 import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/enums/request_state.dart';
+import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/manager/app_strings.dart';
-import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
 import 'package:hcs/src/shared_widgets/app_pagination_widget.dart';
 import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 import 'package:hcs/src/shared_widgets/fade_circle_loading_indicator.dart';
 import 'package:hcs/src/theme/app_colors.dart';
+
+import '../../../../../src/routing/app_router.gr.dart';
+import '../../../Driver_Payment/presentation/pages/order_summary_page.dart';
 
 @RoutePage()
 class EmployeesScreen extends ConsumerStatefulWidget {
@@ -38,7 +41,12 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
   @override
   void initState() {
     super.initState();
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future(
+        () => ref.read(availabilityControllerProvider.notifier).fetchPackages(),
+      );
+      showServiceFilterSheet(context: context, firstTime: true);
+    });
     // pagination listener only once:
     // _scrollController.addListener(() {
     //    final appointmentsStates = ref.read(employeesControllerProvider);
@@ -68,23 +76,278 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildContent(),
-      appBar: CustomAppbar(hasBackArrow: true),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.fromLTRB(24.w, 8, 24.w, 16.h),
-        child: Consumer(
-          builder: (context, ref, _) {
-            final selected = ref.watch(
-              employeesControllerProvider.select((s) => s.selectedEmployees),
-            );
-            return CustomButton(
-              title: tr(context: context, AppStrings.next),
-              onPressed: selected.isEmpty
-                  ? null
-                  : () => context.pushRoute(DriverPaymentRoute()),
-            );
-          },
+    var selectedPackageState = ref.watch(
+      availabilityControllerProvider.select((value) => value.selectedPackage),
+    );
+    final selectedServiceType = ref.watch(
+      availabilityControllerProvider.select((s) => s.selectedServiceType),
+    );
+    final bool dailyService =
+        selectedPackageState?.id == 'Daily' ||
+        stringToServiceType(selectedServiceType ?? "On Call") !=
+            ServiceType.packages;
+    final availabilityNotifier = ref.read(
+      availabilityControllerProvider.notifier,
+    );
+    final stillMissing = availabilityNotifier.missingVisits;
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        ref.read(availabilityControllerProvider.notifier).resetAllSelections();
+      },
+      child: Scaffold(
+        body: _buildContent(),
+        appBar: CustomAppbar(
+          hasBackArrow: true,
+          actions: [
+            GestureDetector(
+              onTap: () {
+                // availabilityNotifier.resetSelectedDays();
+
+                availabilityNotifier.resetSelectionsOnFilterChange();
+                showServiceFilterSheet(context: context, firstTime: false);
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.filter_alt_sharp, color: AppColors.primary),
+                  6.horizontalSpace,
+                  Text(
+                    "filter".tr(),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.fromLTRB(24.w, 8, 24.w, 16.h),
+          child: Consumer(
+            builder: (context, ref, _) {
+              final selected = ref.watch(
+                employeesControllerProvider.select((s) => s.selectedEmployees),
+              );
+              final availabilityState = ref.read(
+                availabilityControllerProvider,
+              );
+
+              // ✅ Check actual assigned vs required
+              final assignedCount =
+                  availabilityState.assignedDates?.length ?? 0;
+              final requiredCount = availabilityNotifier.requiredVisits;
+              final allAssigned = assignedCount >= requiredCount;
+
+              return Row(
+                children: [
+                  //? Show save button if we have select employee and service type is package
+                  if (selected.isNotEmpty && !dailyService)
+                    Flexible(
+                      child: CustomButton(
+                        title: tr(context: context, AppStrings.save),
+                        onPressed: selected.isEmpty
+                            ? null
+                            : () {
+                                final remaining =
+                                    availabilityNotifier.remainingVisits;
+
+                                if (remaining.isEmpty) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Text("No Dates Available"),
+                                      content: Text(
+                                        "Please reopen filter to select dates.",
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: Text("OK"),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                // Lock current dates with employees
+                                final sc = ref
+                                    .read(employeesControllerProvider)
+                                    .serviceCategory;
+
+                                availabilityNotifier.assignEmployees(
+                                  selected,
+                                  sc,
+                                );
+                                ref
+                                    .read(
+                                      availabilityControllerProvider.notifier,
+                                    )
+                                    .submitSelectedDays();
+                                // Clear selection
+                                ref
+                                    .read(employeesControllerProvider.notifier)
+                                    .clearSelectedEmployees();
+
+                                // Check remaining
+                                final newAssignedCount =
+                                    availabilityNotifier.assignedDatesCount;
+
+                                final stillMissing =
+                                    availabilityNotifier.missingVisits;
+
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text("Saved"),
+                                    content: Text(
+                                      stillMissing > 0
+                                          ? "Employees assigned to ${remaining.length} visit(s)!\n\n"
+                                                "You still have $stillMissing visit(s) remaining.\n"
+                                                "Reopen filter to assign remaining visits."
+                                          : "All visits assigned!",
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text("OK"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+
+                                //     final selectedEmployees = ref.read(employeesControllerProvider).selectedEmployees;
+                                // ref.read(availabilityControllerProvider.notifier)
+                                //    .assignEmployees(selectedEmployees);
+
+                                // context.pushRoute(DriverPaymentRoute());
+                              },
+                      ),
+                    ),
+
+                  10.horizontalSpace,
+                  Flexible(
+                    child: CustomButton(
+                      title: tr(context: context, AppStrings.next),
+                      onPressed: selected.isEmpty && dailyService
+                          // allAssigned||    stillMissing == 0
+                          ? null
+                          : () {
+                              if (dailyService) {
+                                context.pushRoute(DriverPaymentRoute());
+                                return;
+                              }
+
+                              // final availabilityNotifier = ref.read(
+                              //   availabilityControllerProvider.notifier,
+                              // );
+                              // final availabilityState = ref.read(
+                              //   availabilityControllerProvider,
+                              // );
+
+                              // // debug print the current filter & date state
+                              // debugPrint(
+                              //   '[EmployeesScreen] before assign - selectedPackage=${availabilityState.selectedPackage?.id} selectedShift=${availabilityState.selectedShiftType} selectedDays=${availabilityState.selectedDays} generatedDates=${availabilityState.generatedDates?.map((d) => availabilityNotifier.format(d)).toList()} assignedDates=${availabilityState.assignedDates?.map((d) => availabilityNotifier.format(d)).toList()}',
+                              // );
+
+                              // if (availability.hasUnassignedVisits) {
+                              //   showDialog(
+                              //     context: context,
+                              //     builder: (context) => AlertDialog(
+                              //       title: Text("Notice"),
+                              //       content: Text(
+                              //         "You still have ${int.parse(availability.requiredVisits.toString()) - availability.selectedDatesCount} visits not assigned to any days.",
+                              //       ),
+                              //       actions: [
+                              //         TextButton(
+                              //           onPressed: () => Navigator.pop(context),
+                              //           child: Text("OK"),
+                              //         ),
+                              //       ],
+                              //     ),
+                              //   );
+                              //   return;
+                              // }
+                              // final employees = ref
+                              //     .read(employeesControllerProvider)
+                              //     .selectedEmployees;
+                              // // 1) assign them to the CURRENT generated dates (this updates availability state)
+                              // // availabilityNotifier.assignEmployees(employees);
+
+                              // // 2) build order summary from availability state
+
+                              // final order = availabilityNotifier.buildOrderSummary();
+
+                              // debugPrint(
+                              //   '[EmployeesScreen] final Order built, navigating to summary',
+                              // );
+
+                              // // OPTION 1 (Dialog)
+                              // // showOrderSummaryDialog(context, order);
+                              // // OPTION 2 (Page)
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (_) => OrderSummaryPage(order: order),
+                              //   ),
+                              // );
+
+                              final stillMissing =
+                                  availabilityNotifier.missingVisits;
+
+                              if (availabilityNotifier.hasUnassignedVisits) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text("Notice"),
+                                    content: Text(
+                                      "You still have $stillMissing visit(s) not assigned.\n\n"
+                                      "Please press 'Save' first, then reopen filter to assign remaining visits.",
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text("OK"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                return;
+                              }
+                              final employees = ref
+                                  .read(employeesControllerProvider)
+                                  .selectedEmployees;
+                              // 1) assign them to the CURRENT generated dates (this updates availability state)
+                              // availabilityNotifier.assignEmployees(employees);
+
+                              // 2) build order summary from availability state
+
+                              final order = availabilityNotifier
+                                  .buildOrderSummary();
+
+                              debugPrint(
+                                '[EmployeesScreen] final Order built, navigating to summary',
+                              );
+
+                              // OPTION 1 (Dialog)
+                              // showOrderSummaryDialog(context, order);
+                              // OPTION 2 (Page)
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      OrderSummaryPage(order: order),
+                                ),
+                              );
+                            },
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
@@ -92,207 +355,150 @@ class _EmployeesScreenState extends ConsumerState<EmployeesScreen> {
 
   Widget _buildContent() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 18.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: 16.h),
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        SearchField(
-                          onFieldSubmitted: (value) {
-                            var epmloyeeNotifier = ref.read(
-                              employeesControllerProvider.notifier,
-                            );
+      padding: EdgeInsets.only(left: 18.w, right: 18, top: 20),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            SearchField(
+              onFieldSubmitted: (value) {
+                var epmloyeeNotifier = ref.read(
+                  employeesControllerProvider.notifier,
+                );
 
-                            epmloyeeNotifier.searchEmployee(value);
-                          },
-                        ),
-                        12.verticalSpace,
-                        Consumer(
-                          builder: (context, ref, child) {
-                            final employeesState = ref.watch(
-                              employeesControllerProvider,
-                            );
-
-                            return Align(
-                              alignment: Alignment.centerLeft,
-                              child: Wrap(
-                                alignment: WrapAlignment.start,
-                                spacing: 8.w,
-                                runSpacing: 5.h,
-                                children: employeesState.selectedEmployees
-                                    .map(
-                                      (e) => SelectedEmployeeCard(
-                                        name: e.employeeName,
-                                        onTap: () {
-                                          ref
-                                              .read(
-                                                employeesControllerProvider
-                                                    .notifier,
-                                              )
-                                              .unSelectEmployee(e);
-                                        },
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            );
-                          },
-                        ),
-                        24.verticalSpace,
-                        Text(
-                          context.tr(AppStrings.serviceCategory),
-                          style: Theme.of(context).textTheme.displayMedium,
-                        ),
-                        16.verticalSpace,
-                        Consumer(
-                          builder: (context, ref, child) {
-                            var selectedServiceType = ref.watch(
-                              availabilityControllerProvider.select(
-                                (value) => value.selectedServiceType,
-                              ),
-                            );
-                            return ServiceCategoryChips(
-                              selectedChip: selectedServiceType!,
-                            );
-                          },
-                        ),
-                        44.verticalSpace,
-                        Text(
-                          context.tr(AppStrings.employees),
-                          style: Theme.of(context).textTheme.displayMedium,
-                        ),
-                        16.verticalSpace,
-                        Consumer(
-                          builder: (context, ref, child) {
-                            final employeesState = ref.watch(
-                              employeesControllerProvider,
-                            );
-
-                            if (employeesState.employeesStates ==
-                                RequestStates.loaded) {
-                              if (employeesState.employees.isEmpty) {
-                                return Assets.images.noDataMin.image();
-                              }
-                              return SizedBox(
-                                height: 304.h,
-                                child: AppPaginationWidget(
-                                  onLoading: (page) => ref
-                                      .read(
-                                        employeesControllerProvider.notifier,
-                                      )
-                                      .onLoadMoreEmployees(),
-                                  child: ListView.separated(
-                                    // controller: _scrollController,
-                                    itemCount: employeesState.employees.length,
-                                    shrinkWrap: true,
-                                    // physics: BouncingScrollPhysics(),
-                                    // physics: NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return EmployeeBarChip(
-                                        employee:
-                                            employeesState.employees[index],
-                                        enabled: employeesState
-                                            .selectedEmployees
-                                            .contains(
-                                              employeesState.employees[index],
-                                            ),
-                                      );
-                                      // if (index ==
-                                      //     employeesState.employees.length) {
-                                      //   // Check if currentEmployeesPage is null and state is loaded
-                                      //   if ((employeesState.currentEmployeesPage ==
-                                      //       null)) {
-                                      //     return Center(
-                                      //       child: Text(
-                                      //         'No More Employees',
-                                      //         style: Theme.of(
-                                      //           context,
-                                      //         ).textTheme.bodyMedium,
-                                      //       ),
-                                      //     );
-                                      //   } else {
-                                      //     return Center(
-                                      //       child: FadeCircleLoadingIndicator(),
-                                      //     );
-                                      //   }
-                                      // } else {
-                                      //   return EmployeeBarChip(
-                                      //     employee:
-                                      //         employeesState.employees[index],
-                                      //     enabled: employeesState
-                                      //         .selectedEmployees
-                                      //         .contains(
-                                      //           employeesState.employees[index],
-                                      //         ),
-                                      //   );
-                                      // }
-                                    },
-                                    separatorBuilder: (_, __) =>
-                                        16.verticalSpace,
-                                  ),
-                                ),
-                              );
-                            } else if (employeesState.employeesStates ==
-                                RequestStates.error) {
-                              return AppErrorWidget(
-                                onTap: () => ref
-                                    .read(employeesControllerProvider.notifier)
-                                    .fetchEmployees(page: 1),
-                              );
-                            } else if (employeesState.employeesStates ==
-                                RequestStates.loading) {
-                              return Center(
-                                child: FadeCircleLoadingIndicator(),
-                              );
-                            }
-
-                            return SizedBox.shrink();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Padding(
-                  //   padding: EdgeInsets.symmetric(
-                  //     vertical: 25.h,
-                  //     horizontal: 22.w,
-                  //   ),
-                  //   child: Consumer(
-                  //     builder: (context, ref, child) {
-                  //       final selectedEmployees = ref.watch(
-                  //         employeesControllerProvider.select(
-                  //           (value) => value.selectedEmployees,
-                  //         ),
-                  //       );
-
-                  //       return CustomButton(
-                  //         title: tr(context: context, AppStrings.next),
-                  //         onPressed: selectedEmployees.isEmpty
-                  //             ? null
-                  //             : () {
-                  //                 context.pushRoute(DriverPaymentRoute());
-                  //                 // if (_formKey.currentState!.validate()) {}
-                  //               },
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
-                ],
-              ),
+                epmloyeeNotifier.searchEmployee(value);
+              },
             ),
-          ),
-        ],
+            12.verticalSpace,
+
+            Consumer(
+              builder: (context, ref, child) {
+                final employeesState = ref.watch(employeesControllerProvider);
+
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: Wrap(
+                    alignment: WrapAlignment.start,
+                    spacing: 8.w,
+                    runSpacing: 5.h,
+                    children: employeesState.selectedEmployees
+                        .map(
+                          (e) => SelectedEmployeeCard(
+                            name: e.employeeName,
+                            onTap: () {
+                              ref
+                                  .read(employeesControllerProvider.notifier)
+                                  .unSelectEmployee(e);
+                            },
+                          ),
+                        )
+                        .toList(),
+                  ),
+                );
+              },
+            ),
+            // 24.verticalSpace,
+
+            // Text(
+            //   context.tr(AppStrings.serviceCategory),
+            //   style: Theme.of(context).textTheme.displayMedium,
+            // ),
+            // 16.verticalSpace,
+            // Consumer(
+            //   builder: (context, ref, child) {
+            //     var selectedServiceType = ref.watch(
+            //       availabilityControllerProvider.select(
+            //         (value) => value.selectedServiceType,
+            //       ),
+            //     );
+            //     return ServiceCategoryChips(
+            //       selectedChip: selectedServiceType!,
+            //     );
+            //   },
+            // ),
+            30.verticalSpace,
+            Text(
+              context.tr(AppStrings.employees),
+              style: Theme.of(context).textTheme.displayMedium,
+            ),
+            24.verticalSpace,
+            Consumer(
+              builder: (context, ref, child) {
+                final employeesState = ref.watch(employeesControllerProvider);
+
+                if (employeesState.employeesStates == RequestStates.loaded) {
+                  if (employeesState.employees.isEmpty) {
+                    return Assets.images.noDataMin.image();
+                  }
+                  return Expanded(
+                    child: AppPaginationWidget(
+                      onLoading: (page) => ref
+                          .read(employeesControllerProvider.notifier)
+                          .onLoadMoreEmployees(),
+                      child: ListView.separated(
+                        // controller: _scrollController,
+                        itemCount: employeesState.employees.length,
+                        shrinkWrap: true,
+                        // physics: BouncingScrollPhysics(),
+                        // physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return EmployeeBarChip(
+                            employee: employeesState.employees[index],
+                            enabled: employeesState.selectedEmployees.contains(
+                              employeesState.employees[index],
+                            ),
+                          );
+                          // if (index ==
+                          //     employeesState.employees.length) {
+                          //   // Check if currentEmployeesPage is null and state is loaded
+                          //   if ((employeesState.currentEmployeesPage ==
+                          //       null)) {
+                          //     return Center(
+                          //       child: Text(
+                          //         'No More Employees',
+                          //         style: Theme.of(
+                          //           context,
+                          //         ).textTheme.bodyMedium,
+                          //       ),
+                          //     );
+                          //   } else {
+                          //     return Center(
+                          //       child: FadeCircleLoadingIndicator(),
+                          //     );
+                          //   }
+                          // } else {
+                          //   return EmployeeBarChip(
+                          //     employee:
+                          //         employeesState.employees[index],
+                          //     enabled: employeesState
+                          //         .selectedEmployees
+                          //         .contains(
+                          //           employeesState.employees[index],
+                          //         ),
+                          //   );
+                          // }
+                        },
+                        separatorBuilder: (_, __) => 16.verticalSpace,
+                      ),
+                    ),
+                  );
+                } else if (employeesState.employeesStates ==
+                    RequestStates.error) {
+                  return AppErrorWidget(
+                    onTap: () => ref
+                        .read(employeesControllerProvider.notifier)
+                        .fetchEmployees(page: 1),
+                  );
+                } else if (employeesState.employeesStates ==
+                    RequestStates.loading) {
+                  return Center(child: FadeCircleLoadingIndicator());
+                }
+
+                return SizedBox.shrink();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

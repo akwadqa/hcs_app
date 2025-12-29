@@ -49,7 +49,7 @@ ServiceType stringToServiceType(String string) {
   }
 }
 
-enum ShiftType { morning, evening, fullDay }
+enum ShiftType { morning, evening, fullDay , overTime,partTime}
 
 String shiftTypeToString(ShiftType shiftType) {
   switch (shiftType) {
@@ -59,6 +59,10 @@ String shiftTypeToString(ShiftType shiftType) {
       return 'Evening Shift';
     case ShiftType.fullDay:
       return 'Full Day';
+    case ShiftType.overTime:
+      return 'OverTime';
+    case ShiftType.partTime:
+      return 'Part Time';
   }
 }
 
@@ -70,6 +74,10 @@ ShiftType stringToShiftType(String string) {
       return ShiftType.evening;
     case 'Full Day':
       return ShiftType.fullDay;
+    case 'Part Time':
+      return ShiftType.partTime;
+    case 'Overtime'||'Over time'||'Over Time':
+      return ShiftType.overTime;
     default:
       return ShiftType.fullDay;
   }

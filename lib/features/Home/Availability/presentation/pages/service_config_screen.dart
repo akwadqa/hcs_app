@@ -139,7 +139,7 @@ class _ServiceConfigurationScreenState
                                       .read(
                                         availabilityControllerProvider.notifier,
                                       )
-                                      .selecPackage(p0),
+                                      .selectPackage(p0),
                                 );
                               },
                             ),
@@ -196,6 +196,7 @@ class _ServiceConfigurationScreenState
                   );
                 },
               ),
+          
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 25.h, horizontal: 22.w),
                 child: Consumer(
@@ -222,7 +223,7 @@ class _ServiceConfigurationScreenState
                       onPressed: selectedPackageState == null
                           ? null
                           : () {
-                              selectedPackageState.id == 'Daily'
+                              selectedPackageState.id != 'Packages'
                                   ? context.pushRoute(EmployeesRoute())
                                   : context.pushRoute(DaysSelectionRoute());
                               if (_formKey.currentState!.validate()) {}
@@ -231,6 +232,7 @@ class _ServiceConfigurationScreenState
                   },
                 ),
               ),
+            
             ],
           ),
         ),

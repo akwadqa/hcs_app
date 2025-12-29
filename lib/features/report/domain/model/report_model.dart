@@ -22,11 +22,11 @@ class OrdersReport {
 
 @JsonSerializable()
 class Totals {
-  @JsonKey(name: "total_outstanding_amount")
+  @JsonKey(name: "outstanding_amount")
   int totalOutstandingAmount;
   @JsonKey(name: "total_net_amount")
   int totalNetAmount;
-  @JsonKey(name: "total_received_amount")
+  @JsonKey(name: "received_amount")
   int totalReceivedAmount;
   Totals({
     required this.totalOutstandingAmount,

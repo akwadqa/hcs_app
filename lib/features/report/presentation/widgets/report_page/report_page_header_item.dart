@@ -14,29 +14,28 @@ class ReportPageHeaderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          4.verticalSpace,
-
-          //? Title :
-          Text(
-            title,
-            style: Theme.of(
-              context,
-            ).textTheme.displayMedium!.copyWith(fontSize: 12.sp),
-          ),
-          4.verticalSpace,
-
-          //? Value :
-          Text(
-            value,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium!.copyWith(fontSize: 18.sp),
-          ),
-        ],
-      ).symmetricPadding(vertical: 8.h),
-    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        4.verticalSpace,
+    
+        //? Title :
+        Text(
+          title,
+          style: Theme.of(
+            context,
+          ).textTheme.displayMedium!.copyWith(fontSize: 12.sp),
+        ),
+        4.verticalSpace,
+    
+        //? Value :
+        Text(
+          value,
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium!.copyWith(fontSize: 18.sp),
+        ),
+      ],
+    ).symmetricPadding(vertical: 8.h);
   }
 }

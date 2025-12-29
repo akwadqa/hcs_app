@@ -1,30 +1,30 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'submit_service_controller.dart';
+part of 'custom_date_orders_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$submitServiceControllerHash() =>
-    r'15066e9e824d8b7b9e87182ea7906ba8d9e07a39';
+String _$customDateOrdersControllerHash() =>
+    r'3d1520f6f4226b5bca9590b18800dbc75f28b824';
 
-/// See also [SubmitServiceController].
-@ProviderFor(SubmitServiceController)
-final submitServiceControllerProvider =
-    AutoDisposeNotifierProvider<
-      SubmitServiceController,
-      SubmitServiceState
+/// See also [CustomDateOrdersController].
+@ProviderFor(CustomDateOrdersController)
+final customDateOrdersControllerProvider =
+    AutoDisposeAsyncNotifierProvider<
+      CustomDateOrdersController,
+      List<Order>?
     >.internal(
-      SubmitServiceController.new,
-      name: r'submitServiceControllerProvider',
+      CustomDateOrdersController.new,
+      name: r'customDateOrdersControllerProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$submitServiceControllerHash,
+          : _$customDateOrdersControllerHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$SubmitServiceController = AutoDisposeNotifier<SubmitServiceState>;
+typedef _$CustomDateOrdersController = AutoDisposeAsyncNotifier<List<Order>?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

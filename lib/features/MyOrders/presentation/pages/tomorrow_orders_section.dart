@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/MyOrders/domain/models/services_order/services_order_model.dart';
-import 'package:hcs/features/MyOrders/presentation/controllers/cancelled_orders_controller.dart';
+import 'package:hcs/features/MyOrders/presentation/controllers/tomorrow_orders_controller.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/myorders_controller.dart';
 import 'package:hcs/gen/assets.gen.dart';
+import 'package:hcs/src/enums/orders_status_enums.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
@@ -30,8 +31,8 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
     super.initState();
     Future(
       () => ref
-          .read(cancelledOrdersControllerProvider.notifier)
-          .fetchCancelledOrders(page: 1),
+          .read(tomorrowOrdersControllerProvider.notifier)
+          .fetchTomorrowOrders(page: 1),
     );
   }
 
@@ -75,12 +76,12 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
     return AppPaginationWidget(
       enablePullDown: true,
       onRefresh: () {
-        return ref.read(cancelledOrdersControllerProvider.notifier).refreshCancelled();
+        return ref.read(tomorrowOrdersControllerProvider.notifier).refreshTomorrow();
       },
       onLoading: (page) {
         return ref
-            .read(cancelledOrdersControllerProvider.notifier)
-            .onLoadMoreCancelledOrders();
+            .read(tomorrowOrdersControllerProvider.notifier)
+            .onLoadMoreTomorrowOrders();
       },
       child: ListView.builder(
         itemCount: orders.length,
@@ -121,7 +122,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
                           Assets.images.pending.svg(),
                           9.horizontalSpace,
                           Text(
-                            orders[index].status.toString(),
+                            orders[index].status.toString().status,
                             style: Theme.of(context).textTheme.displayMedium!
                                 .copyWith(fontSize: 14.sp),
                           ),
@@ -172,13 +173,13 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = ref.watch(cancelledOrdersControllerProvider);
+    final controller = ref.watch(tomorrowOrdersControllerProvider);
     return controller.when(
       error: (e, st) => AppErrorWidget(
         onTap: () {
           ref
-              .read(cancelledOrdersControllerProvider.notifier)
-              .fetchCancelledOrders(page: 1);
+              .read(tomorrowOrdersControllerProvider.notifier)
+              .fetchTomorrowOrders(page: 1);
         },
       ),
       loading: () {
@@ -189,8 +190,8 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
           return RefreshIndicator(
             onRefresh: () async {
               await ref
-                  .read(cancelledOrdersControllerProvider.notifier)
-                  .fetchCancelledOrders(page: 1);
+                  .read(tomorrowOrdersControllerProvider.notifier)
+                  .fetchTomorrowOrders(page: 1);
             },
             child: ListView(
               physics: AlwaysScrollableScrollPhysics(),
@@ -213,7 +214,7 @@ class _CanceledOrdersScreenState extends ConsumerState<CanceledOrdersScreen> {
     //       onRefresh: () async {
     //         await ref
     //             .read(myOrdersControllerProvider.notifier)
-    //             .fetchCancelledOrders();
+    //             .fetchTomorrowOrders();
     //       },
     //       child: ListView(
     //         physics: AlwaysScrollableScrollPhysics(),

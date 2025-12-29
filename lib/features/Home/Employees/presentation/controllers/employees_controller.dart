@@ -5,6 +5,8 @@ import 'package:hcs/features/Home/Employees/data/models/get_employees_params.dar
 import 'package:hcs/features/Home/Employees/data/repositories/employees_repository.dart';
 import 'package:hcs/features/Home/Employees/presentation/controllers/employees_state.dart';
 import 'package:hcs/src/enums/request_state.dart';
+import 'package:hcs/src/enums/service_type.dart';
+import 'package:intl/intl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'employees_controller.g.dart';
@@ -15,11 +17,12 @@ class EmployeesController extends _$EmployeesController {
 
   @override
   EmployeesState build() => EmployeesState();
+  bool get hasSelectedEmployees => state.selectedEmployees.isNotEmpty;
 
   selectServiceCategory(String serviceCategory) {
     state = state.copyWith(
       serviceCategory: serviceCategory,
-      selectedEmployees: [],
+      // selectedEmployees: [],
     );
   }
 
@@ -31,6 +34,10 @@ class EmployeesController extends _$EmployeesController {
     fetchEmployees(page: 1);
   }
 
+  void setOvertimeHours(String overtimeHours) {
+    state = state.copyWith(overtimeHours: overtimeHours);
+  }
+
   selectEmployee(Employee selectedEmployee) {
     List<Employee> employeesList = List.from(state.selectedEmployees);
     int index = employeesList.indexWhere(
@@ -38,8 +45,13 @@ class EmployeesController extends _$EmployeesController {
     );
     if (index == -1) {
       employeesList.add(selectedEmployee);
+      // ref.read(availabilityControllerProvider.notifier).assignEmployees(employeesList);
       state = state.copyWith(selectedEmployees: employeesList);
     }
+  }
+
+  void clearSelectedEmployees() {
+    state = state.copyWith(selectedEmployees: []);
   }
 
   unSelectEmployee(Employee unSelectedEmployee) {
@@ -58,20 +70,37 @@ class EmployeesController extends _$EmployeesController {
     required int page,
   }) async {
     try {
-      if (showLoading)
+      if (showLoading) {
         state = state.copyWith(employeesStates: RequestStates.loading);
+      }
 
       final employeesRepo = ref.read(employeesRepositoryProvider);
       final availabilityController = ref.read(availabilityControllerProvider);
-
+        var selectedPackageState = ref.watch(
+      availabilityControllerProvider.select((value) => value.selectedPackage),
+    );
+      final selectedServiceType = ref.watch( 
+      availabilityControllerProvider.select((s) => s.selectedServiceType),
+    );
+    final bool dailyService = selectedPackageState?.id == 'Daily'||stringToServiceType(selectedServiceType ?? "On Call") !=
+                  ServiceType.packages;
+                  debugPrint("availabilityController.selectedShiftType");
+                  debugPrint(availabilityController.selectedShiftType);
+                  debugPrint(availabilityController.selectedPartTimeShift!);
       final employeesData = await employeesRepo.getEmployees(
         getEmployeesParams: GetEmployeesParams(
-          serviceType: availabilityController.selectedPackage?.id ?? 'Daily',
-          date: availabilityController.selectedDate,
+          serviceType: !dailyService?"Flexible" : 'Daily',
+          date:
+          availabilityController.generatedDates!=null&& availabilityController.generatedDates!.isNotEmpty ?DateFormat('yyyy-MM-dd').format(availabilityController.generatedDates!.first)
+          : 
+          availabilityController.selectedDate,
           days: availabilityController.selectedDays,
-          shift: availabilityController.selectedShiftType,
+          shift: 
+          // availabilityController.selectedPartTimeShift!=null?availabilityController.selectedPartTimeShift!:
+          availabilityController.selectedShiftType,
           serviceCategory: state.serviceCategory,
           employeeName: state.employeeSearchedFor,
+          overtimeHours: state.overtimeHours,
           page: page,
         ),
       );

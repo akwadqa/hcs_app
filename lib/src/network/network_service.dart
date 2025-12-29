@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/Auth/application/auth_service.dart';
 import 'package:hcs/src/constants/api_constance.dart';
 import 'package:hcs/src/localization/current_language.dart';
+import 'package:hcs/src/routing/app_router.gr.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../constants/services_urls.dart';
+import '../routing/app_router_provider.dart';
 
 part 'network_service.g.dart';
 
@@ -54,6 +58,7 @@ Dio dio(Ref ref) {
     DioAppInterceptors(
       languageCode: languageCode,
       token: userData?.$1,
+      ref: ref,
       onUnauthorized: () {},
     ),
   });
@@ -116,11 +121,13 @@ class DioAppInterceptors extends Interceptor {
   final String languageCode;
   final String? token;
   final void Function() onUnauthorized;
+  final Ref ref;
 
   DioAppInterceptors({
     required this.languageCode,
     required this.token,
     required this.onUnauthorized,
+    required this.ref,
   });
 
   @override
@@ -128,7 +135,7 @@ class DioAppInterceptors extends Interceptor {
     if (token != null) {
       options.headers['Authorization'] = 'token $token';
     }
-    options.queryParameters['sl'] = languageCode;
+    // options.queryParameters['sl'] = languageCode;
     super.onRequest(options, handler);
   }
 
@@ -137,7 +144,32 @@ class DioAppInterceptors extends Interceptor {
     if (err.response != null) {
       debugPrint(err.response!.data.toString());
     }
+        final request = err.requestOptions;
+
+    debugPrint("🔴 [DIO ERROR]");
+    debugPrint("⛔️ ${err.type} for ${request.method} ${request.uri}");
+    debugPrint("📥 Response data: ${_prettyJson(err.response?.data)}");
     final String? message = err.response?.data['message'];
+    
+    final statusCode = err.response?.statusCode;
+    final responseData = err.response?.data;
+       // ✅ تحقق من إذا كان Unauthorized
+    final isUnauthorized = statusCode == 401 ||
+        (responseData is Map &&
+            responseData['message']?.toString().toLowerCase().contains("unauthorized") == true);
+
+    if (isUnauthorized) {
+      debugPrint("🚪 Session expired → redirect to Login");
+
+      // 1. مسح بيانات المستخدم (التوكن)
+      ref.read(userDataProvider.notifier).removeData();
+
+      // 2. توجيه المستخدم لصفحة تسجيل الدخول
+      ref.read(appRouterProvider).replaceAll([const LoginRoute()]);
+      // لو تستخدم GoRouter:
+      // ref.read(goRouterProvider).go('/login');
+    }
+
     switch (err.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
@@ -173,6 +205,17 @@ class DioAppInterceptors extends Interceptor {
         throw ConnectionErrorException(err.requestOptions, message);
     }
     return handler.next(err);
+  }
+  
+  String _prettyJson(dynamic data) {
+    try {
+      if (data is Map || data is List) {
+        return const JsonEncoder.withIndent('  ').convert(data);
+      }
+      return data.toString();
+    } catch (_) {
+      return 'Invalid JSON';
+    }
   }
 }
 

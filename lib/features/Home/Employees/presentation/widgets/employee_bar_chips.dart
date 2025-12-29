@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
 import 'package:hcs/features/Home/Employees/data/models/employees_model.dart';
 import 'package:hcs/features/Home/Employees/presentation/controllers/employees_controller.dart';
 import 'package:hcs/src/theme/app_colors.dart';
+import 'package:intl/intl.dart';
 
 /// A single employee chip with enabled/disabled styling.
 class EmployeeBarChip extends StatefulWidget {
@@ -27,12 +29,29 @@ class _EmployeeBarChipState extends State<EmployeeBarChip> {
     return Consumer(
       builder: (context, ref, child) {
         final controller = ref.read(employeesControllerProvider.notifier);
+        final availability = ref.read(availabilityControllerProvider.notifier);
+
         return GestureDetector(
           onTap: () {
+            final availabilityCtrl = ref.read(
+              availabilityControllerProvider.notifier,
+            );
+            final selectedDateStr = ref
+                .read(availabilityControllerProvider)
+                .selectedDate;
+            final date = DateFormat('yyyy-MM-dd').parse(selectedDateStr);
             if (!widget.enabled) {
               controller.selectEmployee(widget.employee);
+              availability.addEmployeeToCurrentDates(widget.employee);
+              debugPrint(
+                '[EmployeeBarChip] selected: ${widget.employee.employeeName} <<<<<<<<<<',
+              );
             } else {
               controller.unSelectEmployee(widget.employee);
+              availability.removeEmployeeFromCurrentDates(widget.employee);
+              debugPrint(
+                '[EmployeeBarChip] unselected: ${widget.employee.employeeName}',
+              );
             }
             setState(() {
               widget.enabled = !widget.enabled;
@@ -41,6 +60,7 @@ class _EmployeeBarChipState extends State<EmployeeBarChip> {
 
           child: Container(
             width: 345.w,
+
             height: 48.h,
             alignment: Alignment.center,
             decoration: BoxDecoration(

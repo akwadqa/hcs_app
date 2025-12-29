@@ -15,6 +15,7 @@ import 'package:hcs/features/MyOrders/presentation/widgets/info_row.dart';
 import 'package:hcs/features/MyOrders/presentation/widgets/map_button.dart';
 import 'package:hcs/features/MyOrders/presentation/widgets/share_to_whatsapp.dart';
 import 'package:hcs/gen/assets.gen.dart';
+import 'package:hcs/src/enums/orders_status_enums.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/routing/app_router.gr.dart';
@@ -133,6 +134,7 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
           return Padding(
             padding: EdgeInsets.symmetric(vertical: 17.h, horizontal: 26.w),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (!order.isLoading)
                   Expanded(
@@ -148,8 +150,8 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                       buttonColor: AppColors.blueText,
                     ),
                   ),
-                if (orderStatus == 'Approved') 5.horizontalSpace,
-                if (orderStatus == 'Approved')
+                if (orderStatus == OrderStatus.completed.label||orderStatus == OrderStatus.pendingOutstanding.label) 5.horizontalSpace,
+                 if (orderStatus == OrderStatus.completed.label||orderStatus == OrderStatus.pendingOutstanding.label)
                   Expanded(
                     child: CustomButton(
                       title: AppStrings.cancelOrder.tr(context: context),

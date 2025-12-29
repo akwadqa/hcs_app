@@ -13,10 +13,9 @@ LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
       fullName: json['full_name'] as String?,
       statusCode: (json['status_code'] as num).toInt(),
       error: (json['error'] as num).toInt(),
-      //TODO : 
-      data: json['data'] != null
-          ? Data.fromJson(json['data'] as Map<String, dynamic>)
-          : null,
+      data: json['data'] == null
+          ? null
+          : Data.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>

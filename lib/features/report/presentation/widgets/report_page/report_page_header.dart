@@ -13,12 +13,15 @@ class ReportPageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      
       children: [
         //? Total amount :
         ReportPageHeaderItem(
           title: context.tr('totalAmount'),
-          value: report?.total.totalNetAmount.toString() ?? '0.0',
+          value:
+              '${report?.total.totalNetAmount.toString() ?? '0.0'} ${context.tr('qr')} ',
+          
         ),
 
         Container(width: 1.w, height: 70.h, color: AppColors.dividerGrey),
@@ -26,7 +29,9 @@ class ReportPageHeader extends StatelessWidget {
         //? Total paid amount :
         ReportPageHeaderItem(
           title: context.tr('totalPaidAmount'),
-          value: report?.total.totalReceivedAmount.toString() ?? '0.0',
+          value: 
+              '${report?.total.totalReceivedAmount.toString() ?? '0.0'} ${context.tr('qr')} ',
+
         ),
 
         Container(width: 1.w, height: 70.h, color: AppColors.dividerGrey),
@@ -36,7 +41,7 @@ class ReportPageHeader extends StatelessWidget {
           title: context.tr('outstandingAmount'),
           // value: '+ QR 0.0',
           value:
-              '${context.tr('qr')} ${report?.total.totalOutstandingAmount.toString() ?? '0.0'}',
+              '${report?.total.totalOutstandingAmount.toString() ?? '0.0'} ${context.tr('qr')} ',
         ),
       ],
     );

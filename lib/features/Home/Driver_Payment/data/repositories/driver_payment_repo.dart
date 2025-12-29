@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hcs/features/Home/Driver_Payment/data/models/customer_balance_model.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/models/discount_type.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/models/drivers_model.dart';
 import 'package:hcs/src/constants/api_constance.dart';
@@ -35,6 +36,15 @@ class DriverPaymentRepository {
       return DiscountTypes.fromJson(response.data);
     } else {
       throw Exception(response.message ?? 'Failed to Get DiscountTypes');
+    }
+  }
+  Future<CustomerBalanceModel> getCustomerBalance(String customerId) async {
+    final response = await _networkService.get(ApiConstance.getCustomerBalance(customerId: customerId));
+
+    if (response.statusCode == 200) {
+      return CustomerBalanceModel.fromJson(response.data);
+    } else {
+      throw Exception(response.message ?? 'Failed to Get getDiscoutType');
     }
   }
 }

@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/Home/Submit_Service/data/models/submit_service_params.dart';
 import 'package:hcs/src/constants/api_constance.dart';
@@ -19,6 +22,11 @@ class SubmitServiceRepository {
   Future<bool> submitService(SubmitServiceParams data) async {
 
 try {
+      /// 🔥 Pretty-print the full request body
+    debugPrint("==== SUBMIT SERVICE BODY ====");
+    debugPrint(const JsonEncoder.withIndent("  ").convert(data.toMap()));
+    debugPrint("================================");
+
    final  response = await _networkService.post(
       ApiConstance.submitService(),
       data.toMap(),

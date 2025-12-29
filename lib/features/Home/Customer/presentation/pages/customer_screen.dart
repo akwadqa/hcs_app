@@ -18,6 +18,8 @@ import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 import 'package:hcs/src/shared_widgets/fade_circle_loading_indicator.dart';
 
+import '../../../Availability/presentation/controllers/availability_controller.dart';
+
 @RoutePage()
 class CustomerScreen extends ConsumerStatefulWidget {
   final ServiceType serviceType;
@@ -192,6 +194,11 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
             padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
             child: Consumer(
               builder: (context, ref, child) {
+                    var selectedPackageState = ref.watch(
+                      availabilityControllerProvider.select(
+                        (value) => value.selectedPackage,
+                      ),
+                    );
                 final selectedCustomerState = ref.watch(
                   customerControllerProvider.select(
                     (value) => value.selectedCustomer,
@@ -203,7 +210,11 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
                   onPressed: selectedCustomerState == null
                       ? null
                       : () {
-                          context.pushRoute(ServiceConfigurationRoute());
+                          //  selectedPackageState?.id == 'Daily'
+                          //         ? 
+                                  context.pushRoute(EmployeesRoute());
+                                  // : context.pushRoute(DaysSelectionRoute());
+                          // context.pushRoute(ServiceConfigurationRoute());
                         },
                 );
               },

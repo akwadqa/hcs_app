@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
+import 'package:hcs/features/Home/Customer/presentation/controllers/customer_controller.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/models/discount_type.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/models/drivers_model.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/repositories/driver_payment_repo.dart';
@@ -16,16 +17,22 @@ class DriversPaymentController extends _$DriversPaymentController {
   @override
   DriverPaymentState build() => const DriverPaymentState();
 
-  Future<void> withCleaningSupplies(String choice) async {
+  Future<void> withCleaningSupplies(bool choice) async {
     state = state.copyWith(withCleaningSupplies: choice);
     final cleaningSupplies = calculatewithCleaningSupplies();
-    state = state.copyWith(costAfterCleaningSuplies: cleaningSupplies);
+    state = state.copyWith(costAfterCleaningSuplies: cleaningSupplies,fees: cleaningSupplies,);
     // calculateTotalCost(state.discountPercentage);
   }
 
   Future<void> selectPaymentMethod(String? selectedPaymentMethod) async {
     state = state.copyWith(selectedPaymentMethod: selectedPaymentMethod);
   }
+  Future<void> editFeesAmount(double? fees) async {
+    state = state.copyWith(fees: fees);
+  }
+
+
+  
 
   // In this function we getDiscountType and Auto selectDiscount,discountPercentage and calculateTotalCost
   Future<void> getDiscountType() async {
@@ -53,6 +60,37 @@ class DriversPaymentController extends _$DriversPaymentController {
     }
   }
 
+  Future<void> getCustomerBalance() async {
+    state = state.copyWith(customerBalanceState: RequestStates.loading);
+    try {
+      final customerController = ref.read(customerControllerProvider);
+
+      final driverPaymentRepo = ref.read(driverPaymentRepositoryProvider);
+      final customerBalanceData = await driverPaymentRepo.getCustomerBalance(customerController.selectedCustomer!.customerId);
+
+      // لن يغيّر discountPercentage إن كانت null (حسب تعديل calculateTotalCost)
+      calculateTotalCost(state.discountPercentage?.toDouble());
+
+      state = state.copyWith(
+        customerBalanceData: customerBalanceData.data,
+        // ❌ لا نكتب discountPercentage: 0.0 هنا حتى لا نفرض خصم من غير تدخل المستخدم
+        // selectedDiscount: driverPaymentData.data[0],
+        // discountPercentage: driverPaymentData.data[0].discountPercentage.toDouble(),
+        customerBalanceState: RequestStates.loaded,
+        driversMessage: '',
+      );
+    } catch (e) {
+      state = state.copyWith(
+        customerBalanceState: RequestStates.error,
+        driversMessage: e.toString(),
+      );
+    }
+  }
+
+  Future<void> idAdvancedToggle() async {
+    state = state.copyWith(isAdvancedBalance: !state.isAdvancedBalance);
+  }
+
   // In this function we chose Discount and Auto calculateCosts
   Future<void> selectDiscount(Discount? selectedDiscount) async {
     // هذه الاستدعاء يمرر قيمة صريحة من الواجهة، لذلك مسموح بتحديث النسبة
@@ -72,7 +110,7 @@ class DriversPaymentController extends _$DriversPaymentController {
         availabilityController.selectedServiceType!;
     final String selectedShiftType = availabilityController.selectedShiftType;
 
-    if (state.withCleaningSupplies == "no") {
+    if (!state.withCleaningSupplies) {
       return 0.0;
     }
     if (selectedServiceType == "Packages") {
@@ -87,18 +125,65 @@ class DriversPaymentController extends _$DriversPaymentController {
   }
 
   // In this function calculateEmployeesSum
-  double calculateEmployeesSum({double? newTotal}) {
-    final employeesController = ref.read(employeesControllerProvider);
-    final List<Employee> selectedEmployees =
-        employeesController.selectedEmployees;
+  // double calculateEmployeesSum({double? newTotal}) {
+  //   final employeesController = ref.read(employeesControllerProvider);
+  //   final List<Employee> selectedEmployees =
+  //       employeesController.selectedEmployees;
 
-    // ملاحظة: أبقينا المنطق كما هو دون تغيير جوهري كما طلبت
-    double total = selectedEmployees.fold(
-      0.0,
-      (sum, employee) => (sum + (state.newCost ?? employee.serviceCost)),
-    );
-    return total;
+  //   // ملاحظة: أبقينا المنطق كما هو دون تغيير جوهري كما طلبت
+  //   double total = selectedEmployees.fold(
+  //     0.0,
+  //     (sum, employee) => (sum + (state.newCost ?? employee.serviceCost)),
+  //   );
+  //   return total;
+  // }
+double calculateEmployeesSum() {
+  double total = 0.0;
+
+  final employeesController = ref.read(employeesControllerProvider);
+  final List<Employee> simpleEmployees = employeesController.selectedEmployees;
+
+  final Map<String, List<Employee>>? groupedEmployees =
+      ref.read(availabilityControllerProvider).assignedEmployeesPerDate;
+
+  debugPrint("========= CALCULATE ALL EMPLOYEES COST ==========");
+
+  // --------------------------------------------------
+  // 1) OLD FLOW → SINGLE FLAT LIST
+  // --------------------------------------------------
+  if (simpleEmployees.isNotEmpty) {
+    debugPrint("➡ Simple employees list count: ${simpleEmployees.length}");
+    for (var emp in simpleEmployees) {
+      debugPrint("   - ${emp.name} → cost: ${emp.serviceCost}");
+      total += emp.serviceCost;
+    }
+  } else {
+    debugPrint("➡ No simple employees selected.");
   }
+
+  // --------------------------------------------------
+  // 2) NEW FLOW → GROUPED BY DATE
+  // --------------------------------------------------
+  if (groupedEmployees != null && groupedEmployees.isNotEmpty) {
+    debugPrint("➡ Assigned employees by date:");
+
+    groupedEmployees.forEach((date, employees) {
+      debugPrint("   Date: $date (count: ${employees.length})");
+
+      for (var emp in employees) {
+        debugPrint("      - ${emp.name} → cost: ${emp.serviceCost}");
+        total += emp.serviceCost;
+      }
+    });
+  } else {
+    debugPrint("➡ No assigned employees per date.");
+  }
+
+  debugPrint("➡ TOTAL EMPLOYEES COST = $total");
+  debugPrint("=================================================\n");
+
+  return total;
+}
 
   // Controllers/drivers_payment_controllers.dart
   Future<void> overrideTotalCost(double? newTotal, bool isHanded) async {
@@ -111,7 +196,7 @@ class DriversPaymentController extends _$DriversPaymentController {
 
     // 2) احسب الـ base
     // ❗ عند الـ Package لا نستخدم calculateEmployeesSum(newTotal) لأنها تتأثر بـ state.newCost
-    final employeesCost = calculateEmployeesSum(newTotal: newTotal);
+    final employeesCost = calculateEmployeesSum();
 
     final base = employeesCost; // <-- original cost
 
@@ -152,32 +237,56 @@ class DriversPaymentController extends _$DriversPaymentController {
 
   // In this function we control 3 (originalCost , discountedCost, discountPercentage) in state
   Future<void> calculateTotalCost(double? discountPercentage) async {
-    if (discountPercentage == null || discountPercentage < 0) {
-      discountPercentage = 0.0;
-    } else if (discountPercentage > 100) {
-      discountPercentage = 100.0;
-    }
+  debugPrint("========== CALCULATE TOTAL COST ==========");
 
-    double employeesCost = calculateEmployeesSum();
-    double withCleaningSupplies = calculatewithCleaningSupplies();
-    double totalCost = employeesCost;
+  debugPrint("➡ Original discount input: $discountPercentage");
 
-    // Convert percentage to a decimal (e.g., 10% -> 0.10)
-    double discountDecimal = discountPercentage / 100;
-
-    // Calculate the discount amount
-    double discountAmount = totalCost * discountDecimal;
-
-    // Apply the discount
-    double discountedTotal = totalCost - discountAmount + withCleaningSupplies;
-
-    // Update the state with the new total cost
-    state = state.copyWith(
-      originalCost: totalCost + withCleaningSupplies,
-      discountedCost: discountedTotal,
-      discountPercentage: discountPercentage,
-    );
+  if (discountPercentage == null || discountPercentage < 0) {
+    debugPrint("⚠ discountPercentage is null or < 0 → forcing = 0");
+    discountPercentage = 0.0;
+  } else if (discountPercentage > 100) {
+    debugPrint("⚠ discountPercentage > 100 → forcing = 100");
+    discountPercentage = 100.0;
   }
+
+  debugPrint("➡ Final validated discount: $discountPercentage%");
+
+  // EMPLOYEES COST
+  double employeesCost = calculateEmployeesSum();
+  debugPrint("➡ Employees total cost: $employeesCost");
+
+  // CLEANING SUPPLIES
+  double withCleaningSupplies = calculatewithCleaningSupplies();
+  debugPrint("➡ Cleaning supplies: $withCleaningSupplies");
+
+  // OLD TOTAL
+  double totalCost = employeesCost;
+  debugPrint("➡ Base total before discount: $totalCost");
+
+  // PERCENT TO DECIMAL
+  double discountDecimal = discountPercentage / 100;
+  debugPrint("➡ Discount decimal: $discountDecimal");
+
+  // DISCOUNT VALUE
+  double discountAmount = totalCost * discountDecimal;
+  debugPrint("➡ Discount amount: $discountAmount");
+
+  // NEW TOTAL AFTER DISCOUNT + EXTRA SUPPLIES
+  double discountedTotal = totalCost - discountAmount + withCleaningSupplies;
+  debugPrint("➡ Total after discount + supplies: $discountedTotal");
+
+  debugPrint("➡ ORIGINAL + SUPPLIES: ${totalCost + withCleaningSupplies}");
+
+  debugPrint("========== END CALCULATION ==========\n");
+
+  // Update state
+  state = state.copyWith(
+    originalCost: totalCost,
+    discountedCost: discountedTotal,
+    discountPercentage: discountPercentage,
+  );
+}
+
 
   Future<void> selectDriver(Driver? selectedDriver) async {
     state = state.copyWith(selectedDriver: selectedDriver);

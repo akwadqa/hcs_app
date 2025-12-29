@@ -26,14 +26,18 @@ class MyOrdersRepository {
 
   Future<ApiResponse<ServicesOrder>> getServicesOrders({
     required int page,
-    required String status,
-    required String orderSearched,
+    String? status,
+    String? orderSearched,
+    String? dateType,
+    String? date,
   }) async {
     try {
       final result = await _remoteDatasource.getServicesOrders(
         page: page,
         status: status,
         orderSearched: orderSearched,
+        date: date,
+        dateType: dateType,
       );
       if (result.hasFailed) {
         throw Exception(result.message ?? 'Failed to fetch Orders');
