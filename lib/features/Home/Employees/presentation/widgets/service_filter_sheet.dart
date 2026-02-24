@@ -274,6 +274,12 @@ class ServiceFilterSheet extends ConsumerWidget {
                     var availabilityNotifier = ref.read(
                       availabilityControllerProvider.notifier,
                     );
+                        final selectedShift = ref.watch(
+      availabilityControllerProvider.select((s) => s.selectedShiftType),
+    );
+    final employeeNotifier = ref.watch(employeesControllerProvider);
+
+   final isOvertime=(selectedShift == shiftTypeToString(ShiftType.overTime))&&employeeNotifier.overtimeHours==null;
                     var selectedPackageState = ref.watch(
                       availabilityControllerProvider.select(
                         (value) => value.selectedPackage,
@@ -294,9 +300,11 @@ class ServiceFilterSheet extends ConsumerWidget {
                           ? tr(context: context, AppStrings.next)
                           : tr(context: context, AppStrings.checkAvailability),
                       onPressed: 
-                      // selectedPackageState == null
-                      //     ? null
-                      //     :
+                     isOvertime
+
+                      
+                          ? null
+                          :
                            () {
                               if (stringToServiceType(selectedServiceType) ==
                                   ServiceType.packages) {

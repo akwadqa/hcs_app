@@ -287,13 +287,24 @@ final bool nowIsEvening = isDaily
               decimal: true,
             ),
             textInputAction: TextInputAction.done,
+            validator: (value) {
+              if(value==null){
+                return "this field is required";
+              }
+              else if(value.isEmpty){
+                return "this field is required";
+
+              }
+              return "";
+            },
+            onChanged: (value) {
+              employeeNotifier.setOvertimeHours(value);
+              
+            },
             onFieldSubmitted: (value) {
               employeeNotifier.setOvertimeHours(value);
             },
-            // onChanged: (value) {
-            //  driversPaymentNotifier.editFeesAmount(value);
-
-            // },
+         
             decoration: InputDecoration(
               labelText: "Overtime Hours",
               hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,

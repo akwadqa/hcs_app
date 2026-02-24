@@ -120,3 +120,27 @@
 //     orderCancelltionMessage,
 //   ];
 // }
+import 'package:hcs/src/enums/orders_status_enums.dart';
+import 'package:hcs/src/enums/shift_type_enum.dart';
+
+class OrdersFilterState {
+  final OrderStatus? status;
+  final ShiftTypeEnum? shiftType;
+
+  const OrdersFilterState({
+    this.status,
+    this.shiftType,
+  });
+
+  OrdersFilterState copyWith({
+    OrderStatus? status,
+    ShiftTypeEnum? shiftType,
+  }) {
+    return OrdersFilterState(
+      status: status ?? this.status,
+      shiftType: shiftType ?? this.shiftType,
+    );
+  }
+
+  static const empty = OrdersFilterState();
+}

@@ -30,6 +30,7 @@ class MyOrdersRepository {
     String? orderSearched,
     String? dateType,
     String? date,
+    String? shiftType,
   }) async {
     try {
       final result = await _remoteDatasource.getServicesOrders(
@@ -38,6 +39,7 @@ class MyOrdersRepository {
         orderSearched: orderSearched,
         date: date,
         dateType: dateType,
+        shiftType: shiftType,
       );
       if (result.hasFailed) {
         throw Exception(result.message ?? 'Failed to fetch Orders');

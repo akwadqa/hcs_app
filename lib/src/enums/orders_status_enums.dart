@@ -1,3 +1,12 @@
+import 'shift_type_enum.dart';
+
+class OrderFilter {
+  final OrderStatus? status;
+  final ShiftTypeEnum? shiftType;
+
+  OrderFilter({this.status, this.shiftType});
+}
+
 enum OrderStatus {
   all,
   completed,

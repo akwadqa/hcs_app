@@ -7,9 +7,12 @@ import 'package:hcs/features/MyOrders/presentation/controllers/myorders_controll
 import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 
+import '../controllers/order_details_controller.dart';
+import 'share_to_whatsapp.dart';
 
 class AppointmentCard extends ConsumerWidget {
   final Appointment appointmentData;
+  final String serviceOrderID;
   // final Details? orderDetailstData;
   // final String logId;
   // final String logStatus;
@@ -21,6 +24,7 @@ class AppointmentCard extends ConsumerWidget {
   const AppointmentCard({
     super.key,
     required this.appointmentData,
+    required this.serviceOrderID,
     // required this.orderDetailstData,
     // required this.logId,
     // required this.logStatus,
@@ -34,70 +38,86 @@ class AppointmentCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncAppointmentData = ref.read(myOrdersControllerProvider);
+        final controller = ref.watch(orderDetailsControllerProvider);
+
     return Stack(
       children: [
-        Card(
-          color: Colors.white,
-          shadowColor: Colors.transparent,
-          elevation: 0,
-          margin: EdgeInsets.symmetric(vertical: 18.h, horizontal: 24.w),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 18.w),
-            child: Column(
-              children: [
-                if (appointmentData.logStatus == "Cancelled")
-                  Chip(
-                    label: Text(
-                      "Canceled",
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.bold,
+        InkWell(
+onTap: () {
+  debugPrint(controller.value!.supervisor?.supervisorName??"");
+},
+          child: Card(
+            color: Colors.white,
+            shadowColor: Colors.transparent,
+            elevation: 0,
+            margin: EdgeInsets.symmetric(vertical: 18.h, horizontal: 24.w),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 18.w),
+              child: Column(
+                children: [
+                  if (appointmentData.logStatus == "Cancelled")
+                    Chip(
+                      label: Text(
+                        "Canceled",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
+                      backgroundColor: Colors.red.shade50,
+                      padding: EdgeInsets.symmetric(horizontal: 6.w),
                     ),
-                    backgroundColor: Colors.red.shade50,
-                    padding: EdgeInsets.symmetric(horizontal: 6.w),
+          
+                  //? for the id :
+                  // AppoinmentInfoRow(
+                  //   'Order Number:',
+                  //   value: appointmentData.logId,
+                  //   image: Assets.images.numberVector.path,
+                  // ),
+                  AppoinmentInfoRow(
+                    'Driver Status:',
+                    value: appointmentData.driverStatus,
+                    image: Assets.images.driverStatus.path,
                   ),
-        
-                //? for the id :
-                // AppoinmentInfoRow(
-                //   'Order Number:',
-                //   value: appointmentData.logId,
-                //   image: Assets.images.numberVector.path,
-                // ),
-                AppoinmentInfoRow(
-                  'Driver Status:',
-                  value: appointmentData.driverStatus,
-                  image: Assets.images.driverStatus.path,
-                ),
-                AppoinmentInfoRow(
-                  'Service type:',
-                  value: appointmentData.serviceType,
-                  image: Assets.images.serviceType.path,
-                ),
-                AppoinmentInfoRow(
-                  'Date:',
-                  value: appointmentData.date,
-                  image: Assets.images.date.path,
-                ),
-                AppoinmentInfoRow(
-                  'Employee Name:',
-                  value: appointmentData.employeeName,
-                  image: Assets.images.employeeName.path,
-                ),
-                AppoinmentInfoRow(
-                  'supervisor Name:',
-                  value: appointmentData.supervisorName,
-                  image: Assets.images.employeeName.path,
-                ),
-              ],
+                  AppoinmentInfoRow(
+                    'Service type:',
+                    value: appointmentData.serviceType,
+                    image: Assets.images.serviceType.path,
+                  ),
+                  AppoinmentInfoRow(
+                    'Date:',
+                    value: appointmentData.date,
+                    image: Assets.images.date.path,
+                  ),
+                  AppoinmentInfoRow(
+                    'Employee Name:',
+                    value: appointmentData.employeeName,
+                    image: Assets.images.employeeName.path,
+                  ),
+                  AppoinmentInfoRow(
+                    'supervisor Name:',
+                    value: appointmentData.supervisorName,
+                    image: Assets.images.employeeName.path,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
 
+        PositionedDirectional(
+          end: 30,
+          top: 20,
+          child: ShareToWhatsApp(
+            serviceOrderId: serviceOrderID,
+            orderDetails: controller.value,
+            appointment: appointmentData,
+          ),
+        ),
         // PositionedDirectional(
         //   start: 12,
         //   top: 12,

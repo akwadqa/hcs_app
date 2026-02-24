@@ -7,7 +7,7 @@ part of 'employees_controller.dart';
 // **************************************************************************
 
 String _$employeesControllerHash() =>
-    r'9c29d1f03fea9f77ba777bbd44500f2204a1b6af';
+    r'0cf7db61352981ac27ed2473bcef32cbff344f1d';
 
 /// See also [EmployeesController].
 @ProviderFor(EmployeesController)

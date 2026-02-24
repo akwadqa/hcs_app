@@ -76,28 +76,33 @@ class EmployeesController extends _$EmployeesController {
 
       final employeesRepo = ref.read(employeesRepositoryProvider);
       final availabilityController = ref.read(availabilityControllerProvider);
-        var selectedPackageState = ref.watch(
-      availabilityControllerProvider.select((value) => value.selectedPackage),
-    );
-      final selectedServiceType = ref.watch( 
-      availabilityControllerProvider.select((s) => s.selectedServiceType),
-    );
-    final bool dailyService = selectedPackageState?.id == 'Daily'||stringToServiceType(selectedServiceType ?? "On Call") !=
-                  ServiceType.packages;
-                  debugPrint("availabilityController.selectedShiftType");
-                  debugPrint(availabilityController.selectedShiftType);
-                  debugPrint(availabilityController.selectedPartTimeShift!);
+      var selectedPackageState = ref.watch(
+        availabilityControllerProvider.select((value) => value.selectedPackage),
+      );
+      final selectedServiceType = ref.watch(
+        availabilityControllerProvider.select((s) => s.selectedServiceType),
+      );
+      final bool dailyService =
+          selectedPackageState?.id == 'Daily' ||
+          stringToServiceType(selectedServiceType ?? "On Call") !=
+              ServiceType.packages;
+      debugPrint("availabilityController.selectedShiftType");
+      debugPrint(availabilityController.selectedShiftType);
+      debugPrint(availabilityController.selectedPartTimeShift!);
       final employeesData = await employeesRepo.getEmployees(
         getEmployeesParams: GetEmployeesParams(
-          serviceType: !dailyService?"Flexible" : 'Daily',
+          serviceType: !dailyService ? "Flexible" : 'Daily',
           date:
-          availabilityController.generatedDates!=null&& availabilityController.generatedDates!.isNotEmpty ?DateFormat('yyyy-MM-dd').format(availabilityController.generatedDates!.first)
-          : 
-          availabilityController.selectedDate,
+              availabilityController.generatedDates != null &&
+                  availabilityController.generatedDates!.isNotEmpty
+              ? DateFormat(
+                  'yyyy-MM-dd',
+                ).format(availabilityController.generatedDates!.first)
+              : availabilityController.selectedDate,
           days: availabilityController.selectedDays,
-          shift: 
-          // availabilityController.selectedPartTimeShift!=null?availabilityController.selectedPartTimeShift!:
-          availabilityController.selectedShiftType,
+          shift:
+              // availabilityController.selectedPartTimeShift!=null?availabilityController.selectedPartTimeShift!:
+              availabilityController.selectedShiftType,
           serviceCategory: state.serviceCategory,
           employeeName: state.employeeSearchedFor,
           overtimeHours: state.overtimeHours,

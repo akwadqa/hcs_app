@@ -19,6 +19,7 @@ class TodayOrdersController extends _$TodayOrdersController {
     /// current selected filter: all | approved | pending | cancelled
   String _searchQuery = '';
   String _currentStatus = 'all'; 
+  String? _currentShiftType ; 
 
   // ---------------------------------------------------------------------------
   // FETCH ORDERS
@@ -42,6 +43,7 @@ class TodayOrdersController extends _$TodayOrdersController {
         dateType: "today",
         orderSearched: _searchQuery.isEmpty ? null : _searchQuery,
         status: _currentStatus == "all" ? null : _currentStatus,
+         shiftType: _currentShiftType,
       );
 
       _currentPage = response.pagination?.currentPage ?? _currentPage;
@@ -108,8 +110,12 @@ class TodayOrdersController extends _$TodayOrdersController {
   // FILTER BY STATUS (SERVER SIDE)
   // ---------------------------------------------------------------------------
 
-  void applyStatusFilter(String status) {
-    _currentStatus = status; 
-    refreshToday(); // Re-fetch from API with new status
-  }
+void applyFilters({
+  required String status,
+  String? shiftType,
+}) {
+  _currentStatus = status;
+  _currentShiftType = shiftType;
+  refreshToday();
+}
 }

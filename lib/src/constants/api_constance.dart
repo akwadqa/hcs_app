@@ -54,13 +54,14 @@ class ApiConstance {
       'service_type': serviceType,
       'date': date,
       'shift': shift,
-     if(overTimeHours!=null) "overtime_hours":overTimeHours,
+     if(overTimeHours!=null)
+      "overtime_hours":overTimeHours,
       // 'designation': '',
       'page': page,
       'limit': '10',
     };
 
-    if (serviceCategory != null && serviceCategory.isNotEmpty) {
+    if (serviceCategory != null && serviceCategory.isNotEmpty && overTimeHours==null) {
       queryParams['service_category'] = serviceCategory;
     }
 

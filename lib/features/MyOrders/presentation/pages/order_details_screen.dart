@@ -234,7 +234,7 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
             ),
           );
 
-          return SizedBox.shrink();
+          // return SizedBox.shrink();
         },
 
         // bottomNavigationBar: controller.whenOrNull(

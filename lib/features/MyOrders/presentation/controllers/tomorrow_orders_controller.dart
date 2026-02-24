@@ -17,6 +17,7 @@ class TomorrowOrdersController extends _$TomorrowOrdersController {
 
   String _searchQuery = '';
   String _currentStatus = 'all';
+  String? _currentShiftType ;
 
   // ---------------------------------------------------------------------------
   // FETCH ORDERS (SERVER FILTERING)
@@ -36,6 +37,8 @@ class TomorrowOrdersController extends _$TomorrowOrdersController {
         dateType: "tomorrow",
         status: _currentStatus == "all" ? null : _currentStatus,
         orderSearched: _searchQuery.isEmpty ? null : _searchQuery,
+        shiftType: _currentShiftType,
+        
       );
 
       _currentPage = response.pagination?.currentPage ?? _currentPage;
@@ -105,5 +108,10 @@ class TomorrowOrdersController extends _$TomorrowOrdersController {
   void applyStatusFilter(String status) {
     _currentStatus = status;
     refreshTomorrow();
+  }
+    void applyFilters({required String status, String? shiftType}) {
+    _currentStatus = status;
+    _currentShiftType = shiftType;
+    refreshTomorrow ();
   }
 }

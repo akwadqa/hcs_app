@@ -7,7 +7,7 @@ part of 'today_orders_controller.dart';
 // **************************************************************************
 
 String _$todayOrdersControllerHash() =>
-    r'40a853b4771ab5c2667b09578fe331825f315c2a';
+    r'c2a1f8dfec0cd574934aa2d9f2191e6b9860107a';
 
 /// See also [TodayOrdersController].
 @ProviderFor(TodayOrdersController)

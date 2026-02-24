@@ -3,15 +3,24 @@ import 'package:hcs/features/MyOrders/presentation/controllers/custom_date_order
 import 'package:hcs/features/MyOrders/presentation/controllers/today_orders_controller.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/tomorrow_orders_controller.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/pending_orders_controller.dart';
+import 'package:hcs/src/enums/orders_status_enums.dart';
+import 'package:hcs/src/enums/shift_type_enum.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'myorders_state.dart';
 
 part 'myorders_controller.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class MyOrdersController extends _$MyOrdersController {
+    OrdersFilterState _filter = OrdersFilterState.empty;
+
+  OrdersFilterState get filter => _filter;
   @override
   FutureOr<List<Order>?> build() {
     // return fetchApprovedOrders(page: 1);
+         return [];
+
   }
 
   // List<Order> _acceptList = [];
@@ -44,25 +53,67 @@ class MyOrdersController extends _$MyOrdersController {
     }
   }
 
-void applyStatusFilter(String status, {required int tabIndex}) {
+  void updateStatus(OrderStatus? status) {
+    _filter = _filter.copyWith(status: status);
+    state = AsyncValue.data(state.value);
+    // state = state;
+    // state = AsyncData(state.value); // notify listeners
+  }
+
+  void updateShiftType(ShiftTypeEnum? shiftType) {
+    _filter = _filter.copyWith(shiftType: shiftType);
+    state = AsyncValue.data(state.value);
+    // state = state;
+    // state = AsyncData(state.value);
+  }
+
+  void clearFilters() {
+    _filter = OrdersFilterState.empty;
+    state = AsyncValue.data(state.value);
+    // state = state;
+    // state = AsyncData(state.value);
+  }
+
+void applyFilters({required int tabIndex}) {
   final today = ref.read(todayOrdersControllerProvider.notifier);
   final custom = ref.read(customDateOrdersControllerProvider.notifier);
   final tomorrow = ref.read(tomorrowOrdersControllerProvider.notifier);
 
+  final statusValue = _filter.status?.apiValue ?? '';
+  final shiftValue = _filter.shiftType?.apiValue;
+
   switch (tabIndex) {
     case 0:
-      custom.applyStatusFilter(status);
-
+      custom.applyFilters(status: statusValue,shiftType: shiftValue);
       break;
     case 1:
-      today.applyStatusFilter(status);
-
+      today.applyFilters(status: statusValue,shiftType: shiftValue);
       break;
     case 2:
-      tomorrow.applyStatusFilter(status);
+      tomorrow.applyFilters(status: statusValue,shiftType: shiftValue);
       break;
   }
-}
+} 
+
+// void applyStatusFilter({String? status,String? shiftType, required int tabIndex}) {
+//   final today = ref.read(todayOrdersControllerProvider.notifier);
+//   final custom = ref.read(customDateOrdersControllerProvider.notifier);
+//   final tomorrow = ref.read(tomorrowOrdersControllerProvider.notifier);
+
+//   switch (tabIndex) {
+//     case 0:
+//       custom.applyStatusFilter(status);
+
+//       break;
+//     case 1:
+//       today.applyStatusFilter(status);
+
+//       break;
+//     case 2:
+//       tomorrow.applyStatusFilter(status);
+//       break;
+//   }
+// }
 
 
 }

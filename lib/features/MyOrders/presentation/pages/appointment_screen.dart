@@ -6,9 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/MyOrders/presentation/controllers/appointment_controller.dart';
-import 'package:hcs/features/MyOrders/presentation/controllers/myorders_controller.dart';
 import 'package:hcs/features/MyOrders/presentation/widgets/appointment_card.dart';
-import 'package:hcs/features/MyOrders/presentation/widgets/share_to_whatsapp.dart';
 import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/shared_widgets/app_error_widget.dart';
 import 'package:hcs/src/shared_widgets/app_pagination_widget.dart';
@@ -101,7 +99,8 @@ class _MyOrdersContentState extends ConsumerState<AppoinmentScreen> {
             shrinkWrap: true,
             itemCount: data.length,
             itemBuilder: (context, index) {
-              return AppointmentCard(appointmentData: data[index]);
+              return AppointmentCard(appointmentData: data[index], serviceOrderID: widget.serviceOrderID,  
+              );
             },
           ),
           onLoading: (page) {

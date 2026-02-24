@@ -5,6 +5,7 @@ import 'package:hcs/features/MyOrders/presentation/controllers/myorders_controll
 import 'package:hcs/features/MyOrders/presentation/widgets/filter_status_menu.dart';
 import 'package:hcs/gen/assets.gen.dart';
 import 'package:hcs/src/enums/orders_status_enums.dart';
+import 'package:hcs/src/enums/shift_type_enum.dart';
 import 'package:hcs/src/extenssions/widget_extensions.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 
@@ -46,15 +47,24 @@ final int? tabIndex;
         
         suffixIcon:tabIndex!=null? GestureDetector(
           onTap: () async{
-               final selected = await showStatusFilterMenu(context);
+final filter = await showOrderFilterMenu(context,ref,tabIndex!);
 
-    if (selected != null) {
-      // final currentTabIndex = DefaultTabController.of(context).index ?? 0;
+// if (filter != null) {
+//   ref
+//       .read(myOrdersControllerProvider.notifier)
+//       .applyStatusFilter(
+//         filter.status?.apiValue ?? '',
+//         filter.shiftType?.apiValue,
+//         tabIndex: tabIndex!,
+//       );
+// }
+    // if (selected != null) {
+    //   // final currentTabIndex = DefaultTabController.of(context).index ?? 0;
 
-      ref
-          .read(myOrdersControllerProvider.notifier)
-          .applyStatusFilter(selected.apiValue, tabIndex: tabIndex!);
-    }
+    //   ref
+    //       .read(myOrdersControllerProvider.notifier)
+    //       .applyStatusFilter(selected.status!.apiValue,selected.shiftType?.apiValue, tabIndex: tabIndex!);
+    // }
           },
           child: Icon(
             Icons.filter_alt_rounded,

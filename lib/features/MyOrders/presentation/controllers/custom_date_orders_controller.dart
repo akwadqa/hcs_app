@@ -14,6 +14,7 @@ class CustomDateOrdersController extends _$CustomDateOrdersController {
 
   String _searchQuery = '';
   String _currentStatus = 'all';
+  String? _currentShiftType;
 
   @override
   FutureOr<List<Order>?> build() async {
@@ -41,10 +42,11 @@ class CustomDateOrdersController extends _$CustomDateOrdersController {
 
       final response = await repo.getServicesOrders(
         page: page,
-        date: date,                 // custom date
-        dateType: "",               // empty as per your API
+        date: date, // custom date
+        dateType: "", // empty as per your API
         status: _currentStatus == "all" ? null : _currentStatus,
         orderSearched: _searchQuery.isEmpty ? null : _searchQuery,
+        shiftType: _currentShiftType,
       );
 
       _currentPage = response.pagination?.currentPage ?? 1;
@@ -92,11 +94,7 @@ class CustomDateOrdersController extends _$CustomDateOrdersController {
     _currentPage = 1;
     _totalPages = 1;
 
-    await fetchOrdersForDate(
-      date: _selectedDate!,
-      page: 1,
-      showLoading: true,
-    );
+    await fetchOrdersForDate(date: _selectedDate!, page: 1, showLoading: true);
 
     return true;
   }
@@ -114,6 +112,12 @@ class CustomDateOrdersController extends _$CustomDateOrdersController {
   // ---------------------------------------------------------------------------
   void applyStatusFilter(String status) {
     _currentStatus = status;
+    refresh();
+  }
+
+  void applyFilters({required String status, String? shiftType}) {
+    _currentStatus = status;
+    _currentShiftType = shiftType;
     refresh();
   }
 }

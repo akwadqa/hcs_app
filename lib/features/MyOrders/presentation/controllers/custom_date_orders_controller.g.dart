@@ -7,7 +7,7 @@ part of 'custom_date_orders_controller.dart';
 // **************************************************************************
 
 String _$customDateOrdersControllerHash() =>
-    r'3d1520f6f4226b5bca9590b18800dbc75f28b824';
+    r'e8fbb514e8410f4eb12d2b2cb8b1dca23b3c34c1';
 
 /// See also [CustomDateOrdersController].
 @ProviderFor(CustomDateOrdersController)

@@ -15,6 +15,7 @@ class MyOrdersDataSource {
     String? status,
     String? orderSearched,
     String? dateType,
+    String? shiftType,
 
     String? date,
   }) async {
@@ -28,6 +29,7 @@ class MyOrdersDataSource {
           if (orderSearched != null) "search": orderSearched,
           if (date != null) "for_date": date,
           if (dateType != null) "date_type": dateType,
+          if (shiftType != null) "shift_type": shiftType,
           'action': 'supervisor',
         },
       );
