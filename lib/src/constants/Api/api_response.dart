@@ -1,6 +1,6 @@
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hcs/src/constants/Api/pagination.dart';
+
 // part 'api_response.g.dart';
 @JsonSerializable(genericArgumentFactories: true)
 class ApiResponse<T> {
@@ -16,8 +16,9 @@ class ApiResponse<T> {
 
   factory ApiResponse.fromJson(
     Map<String, dynamic> json,
-    T Function(Object? json) fromJsonT,
-  ) {
+    T Function(Object? json) fromJsonT, {
+    String? dataKey,
+  }) {
     try {
       final statusCode = json['status_code'] ?? json['status'];
       final hasError =
@@ -29,7 +30,16 @@ class ApiResponse<T> {
           error: json['error'],
         );
       }
+      if (dataKey != null) {
+        final rawData = json['data'];
 
+        final parsedData = dataKey != null ? rawData[dataKey] : rawData;
+
+        return ApiResponse.success(
+          message: json['message'],
+          data: fromJsonT(parsedData),
+        );
+      }
       // For void responses, skip data parsing
       if (T.toString() == 'void') {
         return ApiResponse<T>.success(message: json['message'], data: null);

@@ -49,7 +49,7 @@ ServiceType stringToServiceType(String string) {
   }
 }
 
-enum ShiftType { morning, evening, fullDay , overTime,partTime}
+enum ShiftType { morning, evening, fullDay, overTime, partTime }
 
 String shiftTypeToString(ShiftType shiftType) {
   switch (shiftType) {
@@ -76,7 +76,7 @@ ShiftType stringToShiftType(String string) {
       return ShiftType.fullDay;
     case 'Part Time':
       return ShiftType.partTime;
-    case 'Overtime'||'Over time'||'Over Time':
+    case 'Overtime' || 'Over time' || 'Over Time':
       return ShiftType.overTime;
     default:
       return ShiftType.fullDay;
@@ -108,4 +108,45 @@ String paymentMethodToString(PaymentMethod paymentMethod) {
     case PaymentMethod.cash:
       return 'Cash';
   }
+}
+
+/// A "service items" flow (Deep Clean or Maintenance).
+enum HomeServiceMode {
+  deepClean(
+    title: 'Deep Clean',
+    apiServiceType: 'Home Cleaning Services', // /service_items?service_type=...
+    orderServiceType: 'Deep Clean', // create_service_order body
+    showQtyField: false,
+  ),
+  maintenance(
+    title: 'Maintenance',
+    apiServiceType: 'Maintenance',
+    orderServiceType: 'Maintenance',
+    showQtyField: true, // Number of devices (ACs)
+  );
+
+  final String title;
+  final String apiServiceType;
+  final String orderServiceType;
+  final bool showQtyField;
+
+  const HomeServiceMode({
+    required this.title,
+    required this.apiServiceType,
+    required this.orderServiceType,
+    required this.showQtyField,
+  });
+ static HomeServiceMode fromSelectedServiceType(String? selected) {
+    switch (selected) {
+      case 'Maintenance':
+        return HomeServiceMode.maintenance;
+      case 'Deep Clean':
+      default:
+        return HomeServiceMode.deepClean;
+    }
+  }
+  static HomeServiceMode fromServiceType(ServiceType s) =>
+      s == ServiceType.maintenance
+          ? HomeServiceMode.maintenance
+          : HomeServiceMode.deepClean;
 }

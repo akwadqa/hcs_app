@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hcs/features/app/presentation/presentation/controller/app_controller.dart';
 import 'package:hcs/features/report/presentation/pages/report_screen.dart';
 import 'package:hcs/src/localization/current_language.dart';
 import 'package:hcs/src/routing/app_router_provider.dart';
@@ -22,7 +23,11 @@ class _AppState extends ConsumerState<App> {
           .read(currentLanguageProvider.notifier)
           .changeLanguage(context, context.locale.languageCode),
     );
+    Future(() {
+      ref.read(currentLanguageProvider.notifier).getLanguage(context);
+          ref.read(appControllerProvider.notifier).checkAppVersion();
 
+    });
     super.initState();
   }
 

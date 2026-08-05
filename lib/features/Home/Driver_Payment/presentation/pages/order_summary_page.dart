@@ -18,7 +18,7 @@ class OrderSummaryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: const Color(0xffF3F5F9),
-      appBar: CustomAppbar(title: "Order Summary",hasBackArrow: true),
+      appBar: CustomAppbar(title: "Order Summary", hasBackArrow: true),
       //  AppBar(
       //   backgroundColor: Colors.white,
       //   elevation: 0,
@@ -55,8 +55,11 @@ class OrderSummaryPage extends StatelessWidget {
                         Text(
                           "Service Category",
                           style: Theme.of(context).textTheme.bodyLarge!
-                              .copyWith(color: AppColors.primary,fontWeight: FontWeight.w800,fontSize: 14),
-                          
+                              .copyWith(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 14,
+                              ),
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -69,8 +72,12 @@ class OrderSummaryPage extends StatelessWidget {
                           ),
                           child: Text(
                             "Visit : ${visit.visitNumber}",
-                            style:Theme.of(context).textTheme.displayMedium!
-                              .copyWith(color: AppColors.primary,fontWeight: FontWeight.bold,fontSize: 14),
+                            style: Theme.of(context).textTheme.displayMedium!
+                                .copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
                           ),
                         ),
                       ],
@@ -79,28 +86,36 @@ class OrderSummaryPage extends StatelessWidget {
                     Text(
                       visit.serviceCategory,
                       // order.serviceType,
-                      style:Theme.of(context).textTheme.bodyLarge!
-                              .copyWith(color: AppColors.grayishCharcoal,fontWeight: FontWeight.bold,fontSize: 14),
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: AppColors.grayishCharcoal,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
                     ),
 
                     10.verticalSpace,
-                    const Divider(
-                      height: 8,
-                      color: AppColors.primary,
-                    ),
+                    const Divider(height: 8, color: AppColors.primary),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                         Text(
+                        Text(
                           "Shift Type",
                           style: Theme.of(context).textTheme.bodyLarge!
-                              .copyWith(color: AppColors.primary,fontWeight: FontWeight.w800,fontSize: 15),
+                              .copyWith(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 15,
+                              ),
                         ),
-                      Text(
+                        Text(
                           DateFormat('E, dd-MM-yyyy').format(visit.date),
                           style: Theme.of(context).textTheme.bodyLarge!
-                              .copyWith(color: AppColors.grayishCharcoal,fontWeight: FontWeight.bold,fontSize: 14),
+                              .copyWith(
+                                color: AppColors.grayishCharcoal,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
                         ),
                       ],
                     ),
@@ -108,19 +123,27 @@ class OrderSummaryPage extends StatelessWidget {
                     const SizedBox(height: 6),
 
                     Text(
-                                         order.shiftType.startsWith("Part")?"${order.shiftType} - ${visit.shiftType}":visit.shiftType,
-                    
-                                              // visit.shiftType,
-                                              style: Theme.of(context).textTheme.bodyLarge!
-                       .copyWith(color: AppColors.grayishCharcoal,fontWeight: FontWeight.bold,fontSize: 14),
-                                            ),
+                      order.shiftType.startsWith("Part")
+                          ? "${order.shiftType} - ${visit.shiftType}"
+                          : visit.shiftType,
+
+                      // visit.shiftType,
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: AppColors.grayishCharcoal,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
 
                     12.verticalSpace,
 
-                     Text(
+                    Text(
                       "Employees",
-                      style:Theme.of(context).textTheme.bodyLarge!
-                              .copyWith(color: AppColors.primary,fontWeight: FontWeight.w800,fontSize: 15),
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 15,
+                      ),
                     ),
                     const SizedBox(height: 6),
 
@@ -129,8 +152,11 @@ class OrderSummaryPage extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: 4),
                         child: Text(
                           e.employeeName,
-                          style:Theme.of(context).textTheme.displayMedium!
-                              .copyWith(color: AppColors.blackText,fontSize: 14),
+                          style: Theme.of(context).textTheme.displayMedium!
+                              .copyWith(
+                                color: AppColors.blackText,
+                                fontSize: 14,
+                              ),
                         ),
                       ),
                     ),

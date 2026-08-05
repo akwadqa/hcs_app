@@ -6,6 +6,7 @@ import 'package:hcs/features/Home/Employees/presentation/controllers/employees_c
 import 'package:hcs/features/Home/Submit_Service/data/models/submit_service_params.dart';
 import 'package:hcs/features/Home/Submit_Service/data/repo/submit_servcie_repo.dart';
 import 'package:hcs/features/Home/Submit_Service/presentation/submit_service_state.dart';
+import 'package:hcs/features/Home/deep_clean/presentation/controller/deep_clean_controller.dart';
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:hcs/src/enums/service_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -26,19 +27,48 @@ class SubmitServiceController extends _$SubmitServiceController {
       var selectedPackageState = ref.watch(
         availabilityControllerProvider.select((value) => value.selectedPackage),
       );
-        final selectedServiceType = ref.watch(
-      availabilityControllerProvider.select((s) => s.selectedServiceType),
-    );
-      final isDailyService = selectedPackageState?.id == 'Daily'||stringToServiceType(selectedServiceType ?? "On Call") !=
-                  ServiceType.packages;
+      final selectedServiceType = ref.watch(
+        availabilityControllerProvider.select((s) => s.selectedServiceType),
+      );
+      final isDailyService =
+          selectedPackageState?.id == 'Daily' ||
+          stringToServiceType(selectedServiceType ?? "On Call") !=
+              ServiceType.packages;
+
       final submitServiceRepo = ref.read(submitServiceRepositoryProvider);
       final customerController = ref.read(customerControllerProvider);
       final availabilityController = ref.read(availabilityControllerProvider);
-      final availabilityControllerNotifier = ref.read(availabilityControllerProvider.notifier);
+      final availabilityControllerNotifier = ref.read(
+        availabilityControllerProvider.notifier,
+      );
+
       final employeesController = ref.read(employeesControllerProvider);
       final driverPaymentController = ref.read(
         driversPaymentControllerProvider,
       );
+
+      final deepCleanState = ref.read(deepCleanControllerProvider);
+      final mode = HomeServiceMode.fromSelectedServiceType(selectedServiceType);
+
+      // final isDeepClean =
+      //     stringToServiceType(selectedServiceType ?? "") ==
+      //     ServiceType.deepClean;
+      final isServiceItemsFlow = deepCleanState.chosenServices.isNotEmpty;
+// final isServiceItemsFlow =
+//     selectedServiceType == 'Deep Clean' || selectedServiceType == 'Maintenance';
+      // Build serviceItems only when Deep Clean (or any future service-items flow)
+      final List<ServiceItemParam>? serviceItems = isServiceItemsFlow
+          ? deepCleanState.chosenServices
+                .map(
+                  (s) => ServiceItemParam(
+                    itemCode: s.itemCode,
+                    rate: s.rate ?? 0,
+                    priceListRate: s.rate,
+                    qty: deepCleanState.qtyFor(s.itemCode),
+                  ),
+                )
+                .toList()
+          : null;
 
       final result = await submitServiceRepo.submitService(
         SubmitServiceParams(
@@ -47,15 +77,24 @@ class SubmitServiceController extends _$SubmitServiceController {
           customerId: customerController.selectedCustomer!.customerId,
           customerName: customerController.selectedCustomer!.customerName,
           driver: driverPaymentController.selectedDriver!.driverId,
-          date: availabilityController.selectedDate,
-          serviceType:!isDailyService?"Flexible" : 'Daily',
+          date: isServiceItemsFlow
+              ? _formatDate(deepCleanState.selectedDate ?? DateTime.now())
+              : availabilityController.selectedDate,
           // serviceType: availabilityController.selectedPackage!.id,
-          shiftType: availabilityController.selectedShiftType,
+          shiftType: isServiceItemsFlow
+              ? _shiftForBackend(deepCleanState.selectedShift?.label)
+              : availabilityController.selectedShiftType,
           days: availabilityController.selectedDays,
-          employees: employeesController.selectedEmployees,
-          assignedEmployeesPerDate: isDailyService
+          employees: isServiceItemsFlow
+              ? const []
+              : employeesController.selectedEmployees,
+          assignedEmployeesPerDate: isServiceItemsFlow || isDailyService
               ? null
               : availabilityController.assignedEmployeesPerDate,
+          // ---- serviceType ----
+          serviceType: isServiceItemsFlow
+              ? mode.orderServiceType
+              : (!isDailyService ? 'Flexible' : 'Daily'),
           paymentMethod: driverPaymentController.selectedPaymentMethod,
           totalAmount: driverPaymentController.originalCost.toString(),
           totalNetAmount: driverPaymentController.newCost,
@@ -70,11 +109,12 @@ class SubmitServiceController extends _$SubmitServiceController {
           // cleaningFee: driverPaymentController.fees,
           note: driverPaymentController.note,
           useAdvancedPayment: driverPaymentController.isAdvancedBalance,
-          flexibleOption: isDailyService
+          flexibleOption: (isDailyService || isServiceItemsFlow)
               ? null
-              :availabilityControllerNotifier.requiredVisits.toString(),
-          overTimeHours:employeesController.overtimeHours,
-          outstandingBalance: driverPaymentController.isAdvancedBalance
+              : availabilityControllerNotifier.requiredVisits.toString(),
+          overTimeHours: isServiceItemsFlow ? null : employeesController.overtimeHours,
+          outstandingBalance: driverPaymentController.isAdvancedBalance,
+          serviceItems: serviceItems,
         ),
       );
       debugPrint(
@@ -91,6 +131,7 @@ class SubmitServiceController extends _$SubmitServiceController {
         ref.invalidate(customerControllerProvider);
         ref.invalidate(availabilityControllerProvider);
         ref.invalidate(driversPaymentControllerProvider);
+        ref.invalidate(deepCleanControllerProvider);
       }
       return result;
     } catch (e) {
@@ -99,6 +140,25 @@ class SubmitServiceController extends _$SubmitServiceController {
         submitServiceMessage: e.toString(),
       );
       throw "";
+    }
+  }
+
+  String _formatDate(DateTime d) =>
+      '${d.year.toString().padLeft(4, '0')}-'
+      '${d.month.toString().padLeft(2, '0')}-'
+      '${d.day.toString().padLeft(2, '0')}';
+
+  String _shiftForBackend(String? uiLabel) {
+    switch (uiLabel) {
+      case 'Full day':
+      case 'Full Day':
+        return 'Full Day';
+      case 'Morning':
+        return 'Morning Shift';
+      case 'Evening':
+        return 'Evening Shift';
+      default:
+        return uiLabel ?? 'Full Day';
     }
   }
 }

@@ -200,7 +200,9 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
 
                           TextFormField(
                             controller: TextEditingController(
-                              text: driversPaymentState.discountedCost == null||driversPaymentState.discountedCost!<=0
+                              text:
+                                  driversPaymentState.discountedCost == null ||
+                                      driversPaymentState.discountedCost! <= 0
                                   ? driversPaymentState.originalCost.toString()
                                   : driversPaymentState.discountedCost
                                         .toString(),
@@ -243,7 +245,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                                 ),
                                 TextSpan(
                                   text:
-                                      '${driversPaymentState.discountedCost == null||driversPaymentState.discountedCost!<=0 ? driversPaymentState.originalCost.toString() : driversPaymentState.discountedCost.toString()} ',
+                                      '${driversPaymentState.discountedCost == null || driversPaymentState.discountedCost! <= 0 ? driversPaymentState.originalCost.toString() : driversPaymentState.discountedCost.toString()} ',
                                   style: Theme.of(
                                     context,
                                   ).textTheme.displaySmall,
@@ -276,7 +278,12 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                                   (value) => value.selectedServiceType,
                                 ),
                               );
+                              // 🔑 hide for Packages / Deep Clean / Maintenance
+                              // final hideSupplies = selectedServiceType == "Packages" ||
+                              //     selectedServiceType == "Deep Clean" ||
+                              //     selectedServiceType == "Maintenance";
 
+                              // if (hideSupplies) return const SizedBox.shrink();
                               return selectedServiceType != "Packages"
                                   ? Column(
                                       crossAxisAlignment:
@@ -674,6 +681,7 @@ class _DriverPaymentScreenState extends ConsumerState<DriverPaymentScreen> {
                             (value) => value.selectedServiceType,
                           ),
                         );
+
                         final submitServiceStates = ref.watch(
                           submitServiceControllerProvider.select(
                             (value) => value.submitServiceStates,

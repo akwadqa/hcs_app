@@ -10,6 +10,8 @@ import 'package:hcs/features/Home/Employees/presentation/controllers/employees_c
 import 'package:hcs/src/enums/request_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../deep_clean/presentation/controller/deep_clean_controller.dart';
+
 part 'drivers_payment_controllers.g.dart';
 
 @riverpod
@@ -234,7 +236,13 @@ double calculateEmployeesSum() {
     );
     // selectDiscount(state.discountType[6]);
   }
-
+double calculateServiceItemsSum() {
+  final chosen =
+      ref.read(deepCleanControllerProvider);
+  final total = chosen.chosenServices.fold<double>(0.0,  (sum, item) => sum + ((item.rate ?? 0) * chosen.qtyFor(item.itemCode)));
+  debugPrint("➡ Deep Clean service items subtotal: $total");
+  return total;
+}
   // In this function we control 3 (originalCost , discountedCost, discountPercentage) in state
   Future<void> calculateTotalCost(double? discountPercentage) async {
   debugPrint("========== CALCULATE TOTAL COST ==========");
@@ -250,8 +258,10 @@ double calculateEmployeesSum() {
   }
 
   debugPrint("➡ Final validated discount: $discountPercentage%");
-
-  // EMPLOYEES COST
+  final selectedServiceType =
+      ref.read(availabilityControllerProvider).selectedServiceType;
+final usesServiceItems =
+    selectedServiceType == 'Deep Clean' || selectedServiceType == 'Maintenance';  // EMPLOYEES COST
   double employeesCost = calculateEmployeesSum();
   debugPrint("➡ Employees total cost: $employeesCost");
 
@@ -260,7 +270,9 @@ double calculateEmployeesSum() {
   debugPrint("➡ Cleaning supplies: $withCleaningSupplies");
 
   // OLD TOTAL
-  double totalCost = employeesCost;
+  double totalCost = usesServiceItems
+      ? calculateServiceItemsSum()
+      : employeesCost;
   debugPrint("➡ Base total before discount: $totalCost");
 
   // PERCENT TO DECIMAL

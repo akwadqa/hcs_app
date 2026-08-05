@@ -25,8 +25,9 @@ class ShareToWhatsApp extends StatelessWidget {
 
     final String message =
         '''
+${appointment != null ? "Visit Details" : "Order Details"}
+
 Booking Number: $serviceOrderId
-"${appointment!=null? "Visit number: ${appointment?.logId}":"" }"
 Supervisor Name: ${orderDetails?.supervisor?.supervisorName}
 ${orderDetails?.customer?.customerName}
 ${orderDetails?.customer?.zone != null ? 'Zone ${orderDetails?.customer?.zone}, ${orderDetails?.customer?.location} \n' : ''}
@@ -34,14 +35,14 @@ Mobile: ${orderDetails?.customer?.phoneNumber}
 ${orderDetails?.customer?.locationUrl ?? ""}
 
 Driver: ${orderDetails?.driver?.driverName}
-Date: ${appointment==null? orderDetails?.date:appointment?.date}
+Date: ${appointment == null ? orderDetails?.date : appointment?.date}
 Service Type: ${orderDetails?.serviceType}
 
 Shift Type: ${orderDetails?.shiftType}
 Duration: ${orderDetails?.shiftType == "Full Day" ? "10 Hours" : "5 Hours"}
-${appointment==null? (orderDetails?.days != null ? 'Days: ${(orderDetails?.days as List?)?.join(', ')}' : ''):appointment?.serviceType}
+${appointment == null ? (orderDetails?.days != null ? 'Days: ${(orderDetails?.days as List?)?.join(', ')}' : '') : appointment?.serviceType}
 
- ${appointment==null? (orderDetails?.staffAppointment != null ? 'Names of Cleaners: ${orderDetails!.staffAppointment!.length > 1 ? '\n' : ''}$emplyeesName' : ''):"Name of Cleaner: ${appointment?.employeeName}"}
+ ${appointment == null ? (orderDetails?.staffAppointment != null ? 'Names of Cleaners: ${orderDetails!.staffAppointment!.length > 1 ? '\n' : ''}$emplyeesName' : '') : "Name of Cleaner: ${appointment?.employeeName}"}
 
 Cleaning Material: ${orderDetails?.withCleaningSupplies == 0 ? 'NO' : "YES"}
 

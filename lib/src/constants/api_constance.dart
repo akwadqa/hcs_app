@@ -1,5 +1,5 @@
 class ApiConstance {
-  static const String devBaseUrl = "https://highclass.akwad.qa/api/method";
+  static const String devBaseUrl = "https://hcs.akwad.qa/api/method";
   static const String prodBaseUrl = "https://erp.hcs.qa/api/method";
   static const String baseUrl = prodBaseUrl;
   static const String baseDomain = "highclass";
@@ -18,6 +18,8 @@ class ApiConstance {
       '$baseUrl/$baseDomain.api.authentication.login';
   static String forgotPassword(String email) =>
       '$baseUrl/frappe.core.doctype.user.user.reset_password?user=$email';
+  static String getVersion = '$baseUrl/highclass.api.api.app_version';
+
   ////////////////// *  Customers   /////////////////////
   ///
   static String getCustomerBalance({required String customerId}) =>
@@ -54,14 +56,15 @@ class ApiConstance {
       'service_type': serviceType,
       'date': date,
       'shift': shift,
-     if(overTimeHours!=null)
-      "overtime_hours":overTimeHours,
+      if (overTimeHours != null) "overtime_hours": overTimeHours,
       // 'designation': '',
       'page': page,
       'limit': '10',
     };
 
-    if (serviceCategory != null && serviceCategory.isNotEmpty && overTimeHours==null) {
+    if (serviceCategory != null &&
+        serviceCategory.isNotEmpty &&
+        overTimeHours == null) {
       queryParams['service_category'] = serviceCategory;
     }
 
@@ -114,4 +117,12 @@ class ApiConstance {
 
   static String orderCancelltion =
       '$baseUrl/$baseDomain.api.service_order.cancel_service_order';
+  static String getServiceItems({required String serviceType}) =>
+      '$baseUrl/$baseDomain.api.service_type.service_items?service_type=$serviceType';
+  ////////////////// *  DeepClean   /////////////////////
+  static String getDeepCleanServices =
+      '$baseUrl/$baseDomain.api.service_type.service_items';
+
+  static String createDeepCleanOrder =
+      '$baseUrl/$baseDomain.api.deep_clean.create_order';
 }

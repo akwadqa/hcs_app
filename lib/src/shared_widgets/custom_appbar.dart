@@ -131,7 +131,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                           // ),
                         ],
                       ),
-                      100.horizontalSpace,
+                      // 100.horizontalSpace,
                     ],
                   ],
                 )

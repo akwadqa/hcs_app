@@ -2,6 +2,27 @@ import 'package:dio/dio.dart';
 import 'package:hcs/features/Home/Employees/data/models/employees_model.dart';
 import 'package:intl/intl.dart';
 
+class ServiceItemParam {
+  final String itemCode;
+  final double? priceListRate;
+  final int qty;
+  final double rate;
+
+  ServiceItemParam({
+    required this.itemCode,
+    required this.rate,
+    this.priceListRate,
+    this.qty = 1,
+  });
+
+  Map<String, dynamic> toMap() => {
+    'item_code': itemCode,
+    if (priceListRate != null) 'price_list_rate': priceListRate,
+    'qty': qty,
+    'rate': rate,
+  };
+}
+
 class SubmitServiceParams {
   final String customerId;
   final String customerName;
@@ -28,6 +49,10 @@ class SubmitServiceParams {
   final bool? outstandingBalance;
   final Map<String, List<Employee>>? assignedEmployeesPerDate;
 
+  /// NEW — chosen Deep Clean / Maintenance services.
+  /// If not null and non-empty, they are sent as `service_items`.
+  final List<ServiceItemParam>? serviceItems;
+
   SubmitServiceParams({
     required this.customerId,
     required this.customerName,
@@ -53,11 +78,12 @@ class SubmitServiceParams {
     this.flexibleOption,
     this.overTimeHours,
     this.outstandingBalance,
+    this.serviceItems,
   });
 
   Map<String, dynamic> toMap() {
-    // final totalCostWithSuplies=(discountCost?? totalNetAmount?? totalAmount)+(cleaningSuppliesFees??0);
-    // New employees mapping based on assignedEmployeesPerDate
+    // ---- date -> weekday name helper (unchanged) ----
+
     String getDayName(String dateString) {
       // Step 1: Parse using correct pattern
       DateTime date = DateTime.parse(dateString); // works for yyyy-MM-dd
@@ -101,6 +127,9 @@ class SubmitServiceParams {
       return data;
     }
 
+    // ---- Detect Deep Clean / Maintenance flow ----
+    final hasServiceItems = serviceItems != null && serviceItems!.isNotEmpty;
+
     return {
       'is_part_time': partTime,
       // 'customer_name': customerName,
@@ -114,8 +143,11 @@ class SubmitServiceParams {
       if (overTimeHours != null) "overtime_hours": overTimeHours,
       if (flexibleOption != null) "flexible_option": "$flexibleOption visits",
       'shift_type': shiftType,
-      // 'days': days, // Keep as-is; if backend expects string, only then encode
-      'employees': assignedEmployeesPerDate != null
+      // ---- employees ----
+      // For Deep Clean / Maintenance we send an empty list (as per your Postman body).
+      'employees': hasServiceItems
+          ? const []
+          : assignedEmployeesPerDate != null
           ? mappedEmployeesFromAssigned(assignedEmployeesPerDate)
           : employees
                 .map(
@@ -123,13 +155,19 @@ class SubmitServiceParams {
                     'employee_name': e.name,
                     'occupation': e.designation,
                     'monthly_contract_amount': e.serviceCost,
-                    'shift':shiftType,
+                    'shift': shiftType,
                     'date': date,
                     "day": getDayName(date),
                     // "day":"monday"
                   },
                 )
                 .toList(),
+      // ---- NEW: service items (Deep Clean / Maintenance) ----
+      if (hasServiceItems)
+        'service_items': serviceItems!
+            .map((e) => e.toMap())
+            .toList(growable: false),
+            
       'payment_method': paymentMethod,
       'use_advance_payment': useAdvancedPayment ? 1 : 0,
 
