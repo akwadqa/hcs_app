@@ -5,9 +5,10 @@ import 'package:hcs/features/MyOrders/data/datasources/my_orders_data_source.dar
 import 'package:hcs/features/MyOrders/domain/models/appointment/appoitnment_model.dart';
 import 'package:hcs/features/MyOrders/domain/models/order_details/order_details_model.dart';
 import 'package:hcs/features/MyOrders/domain/models/services_order/services_order_model.dart';
-import 'package:hcs/src/constants/Api/api_response.dart';
+import 'package:hcs/src/constants/api/api_response.dart';
 import 'package:hcs/src/constants/api_constance.dart';
-import 'package:hcs/src/network/network_service.dart';
+import 'package:hcs/src/network/services/dio_client.dart';
+import 'package:hcs/src/network/services/network_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'myorders_repository.g.dart';
@@ -15,14 +16,14 @@ part 'myorders_repository.g.dart';
 @Riverpod(keepAlive: true)
 MyOrdersRepository myOrdersRepository(Ref ref) {
   final networkService = ref.watch(networkServiceProvider());
-  return MyOrdersRepository(MyOrdersDataSource(networkService),networkService);
+  return MyOrdersRepository(MyOrdersDataSource(networkService), networkService);
 }
 
 class MyOrdersRepository {
   final MyOrdersDataSource _remoteDatasource;
   final NetworkService networkService;
 
-  MyOrdersRepository(this._remoteDatasource,this.networkService);
+  MyOrdersRepository(this._remoteDatasource, this.networkService);
 
   Future<ApiResponse<ServicesOrder>> getServicesOrders({
     required int page,

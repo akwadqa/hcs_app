@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hcs/src/constants/Api/pagination.dart';
+import 'package:hcs/src/constants/api/pagination.dart';
 
 // part 'api_response.g.dart';
 @JsonSerializable(genericArgumentFactories: true)

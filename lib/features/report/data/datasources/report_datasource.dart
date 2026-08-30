@@ -1,8 +1,8 @@
 import 'package:hcs/features/report/domain/model/report_model.dart';
-import 'package:hcs/src/constants/Api/api_response.dart';
+import 'package:hcs/src/constants/api/api_response.dart';
 import 'package:hcs/src/constants/api_constance.dart';
-import 'package:hcs/src/network/network_service.dart';
-
+import 'package:hcs/src/network/services/dio_client.dart';
+import 'package:hcs/src/network/services/network_service.dart';
 class ReportRemoteDatasource {
   final NetworkService _networkService;
 

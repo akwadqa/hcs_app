@@ -6,7 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/Home/Customer/data/models/add_cutomer_mdoel.dart';
 import 'package:hcs/features/Home/Customer/data/models/customers_model.dart';
 import 'package:hcs/src/constants/api_constance.dart';
-import 'package:hcs/src/network/network_service.dart';
+import 'package:hcs/src/network/services/dio_client.dart';
+import 'package:hcs/src/network/services/network_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'customer_repository.g.dart';
@@ -32,7 +33,7 @@ class CustomerRepository {
     });
     final response = await _networkService.post(
       ApiConstance.addCustomers,
-      formData,
+     data:  formData,
     );
 
     // final data = json.encode(response.data);

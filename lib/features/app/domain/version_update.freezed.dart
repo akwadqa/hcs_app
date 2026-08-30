@@ -19,7 +19,7 @@ mixin _$VersionUpdate {
 @JsonKey(name: 'android_version') String get appAndroidVersion;@JsonKey(name: 'ios_version') String get appIosVersion;@JsonKey(name: 'app_update_required') bool? get appUpdateRequired;// @JsonKey(name: 'app_update_required_message')
 //     String? appUpdateRequiredMessage,
 @JsonKey(name: 'app_update_message') String? get appUpdateMessage;// @JsonKey(name: 'app_new_update_title') String? appNewUpdateTitle,
-@JsonKey(name: 'app_ios_url') String? get appIosUrl;@JsonKey(name: 'app_android_url') String? get appAndroidUrl;
+@JsonKey(name: 'ios_url') String? get appIosUrl;@JsonKey(name: 'android_url') String? get appAndroidUrl;
 /// Create a copy of VersionUpdate
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -52,7 +52,7 @@ abstract mixin class $VersionUpdateCopyWith<$Res>  {
   factory $VersionUpdateCopyWith(VersionUpdate value, $Res Function(VersionUpdate) _then) = _$VersionUpdateCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'android_version') String appAndroidVersion,@JsonKey(name: 'ios_version') String appIosVersion,@JsonKey(name: 'app_update_required') bool? appUpdateRequired,@JsonKey(name: 'app_update_message') String? appUpdateMessage,@JsonKey(name: 'app_ios_url') String? appIosUrl,@JsonKey(name: 'app_android_url') String? appAndroidUrl
+@JsonKey(name: 'android_version') String appAndroidVersion,@JsonKey(name: 'ios_version') String appIosVersion,@JsonKey(name: 'app_update_required') bool? appUpdateRequired,@JsonKey(name: 'app_update_message') String? appUpdateMessage,@JsonKey(name: 'ios_url') String? appIosUrl,@JsonKey(name: 'android_url') String? appAndroidUrl
 });
 
 
@@ -88,7 +88,7 @@ as String?,
 @JsonSerializable()
 
 class _VersionUpdate implements VersionUpdate {
-   _VersionUpdate({@JsonKey(name: 'android_version') required this.appAndroidVersion, @JsonKey(name: 'ios_version') required this.appIosVersion, @JsonKey(name: 'app_update_required') required this.appUpdateRequired, @JsonKey(name: 'app_update_message') this.appUpdateMessage, @JsonKey(name: 'app_ios_url') this.appIosUrl, @JsonKey(name: 'app_android_url') this.appAndroidUrl});
+   _VersionUpdate({@JsonKey(name: 'android_version') required this.appAndroidVersion, @JsonKey(name: 'ios_version') required this.appIosVersion, @JsonKey(name: 'app_update_required') required this.appUpdateRequired, @JsonKey(name: 'app_update_message') this.appUpdateMessage, @JsonKey(name: 'ios_url') this.appIosUrl, @JsonKey(name: 'android_url') this.appAndroidUrl});
   factory _VersionUpdate.fromJson(Map<String, dynamic> json) => _$VersionUpdateFromJson(json);
 
 @override@JsonKey(name: 'android_version') final  String appAndroidVersion;
@@ -98,8 +98,8 @@ class _VersionUpdate implements VersionUpdate {
 //     String? appUpdateRequiredMessage,
 @override@JsonKey(name: 'app_update_message') final  String? appUpdateMessage;
 // @JsonKey(name: 'app_new_update_title') String? appNewUpdateTitle,
-@override@JsonKey(name: 'app_ios_url') final  String? appIosUrl;
-@override@JsonKey(name: 'app_android_url') final  String? appAndroidUrl;
+@override@JsonKey(name: 'ios_url') final  String? appIosUrl;
+@override@JsonKey(name: 'android_url') final  String? appAndroidUrl;
 
 /// Create a copy of VersionUpdate
 /// with the given fields replaced by the non-null parameter values.
@@ -134,7 +134,7 @@ abstract mixin class _$VersionUpdateCopyWith<$Res> implements $VersionUpdateCopy
   factory _$VersionUpdateCopyWith(_VersionUpdate value, $Res Function(_VersionUpdate) _then) = __$VersionUpdateCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'android_version') String appAndroidVersion,@JsonKey(name: 'ios_version') String appIosVersion,@JsonKey(name: 'app_update_required') bool? appUpdateRequired,@JsonKey(name: 'app_update_message') String? appUpdateMessage,@JsonKey(name: 'app_ios_url') String? appIosUrl,@JsonKey(name: 'app_android_url') String? appAndroidUrl
+@JsonKey(name: 'android_version') String appAndroidVersion,@JsonKey(name: 'ios_version') String appIosVersion,@JsonKey(name: 'app_update_required') bool? appUpdateRequired,@JsonKey(name: 'app_update_message') String? appUpdateMessage,@JsonKey(name: 'ios_url') String? appIosUrl,@JsonKey(name: 'android_url') String? appAndroidUrl
 });
 
 

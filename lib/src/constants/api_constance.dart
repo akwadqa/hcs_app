@@ -1,24 +1,25 @@
-class ApiConstance {
-  static const String devBaseUrl = "https://hcs.akwad.qa/api/method";
-  static const String prodBaseUrl = "https://erp.hcs.qa/api/method";
-  static const String baseUrl = prodBaseUrl;
-  static const String baseDomain = "highclass";
-  static const String baseImageUrl = 'https://$baseDomain.akwad.qa/';
+import 'dart:convert';
 
-  static String imageUrl(String? path) {
-    if (path != null) {
-      return '$baseImageUrl$path';
-    } else {
-      return 'https://picsum.photos/600/400?random=1';
-    }
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hcs/src/constants/api/dotenv_keys.dart';
+
+class ApiConstance {
+  // Loaded from .env file after app starts
+  static String baseUrl = dotenv.get(DotenvKeys.baseUrl);
+  static String baseDomain = 'highclass';
+  static String baseImageUrl = 'https://$baseDomain.akwad.qa/';
+
+  // Initialize constants from .env
+  static void init() {
+    baseUrl = dotenv.get(DotenvKeys.baseUrl);
+    baseImageUrl = 'https://$baseDomain.akwad.qa/';
   }
 
   ////////////////// *  Login   /////////////////////
-  static const String loginPath =
-      '$baseUrl/$baseDomain.api.authentication.login';
+  static  String loginPath = '$baseUrl/$baseDomain.api.authentication.login';
   static String forgotPassword(String email) =>
       '$baseUrl/frappe.core.doctype.user.user.reset_password?user=$email';
-  static String getVersion = '$baseUrl/highclass.api.api.app_version';
+  static  String getVersion = '$baseUrl/highclass.api.api.app_version';
 
   ////////////////// *  Customers   /////////////////////
   ///
@@ -32,12 +33,10 @@ class ApiConstance {
   static String addCustomers = '$baseUrl/$baseDomain.api.customer.customer';
 
   ////////////////// *  Availabillty   /////////////////////
-  static String getPackages =
-      '$baseUrl/$baseDomain.api.service_type.service_types';
+  static String getPackages = '$baseUrl/$baseDomain.api.service_type.service_types';
 
   //////////////////* Report //////////////////////////
-  static String getReport =
-      '$baseUrl/$baseDomain.api.service_order.service_orders';
+  static String getReport = '$baseUrl/$baseDomain.api.service_order.service_orders';
 
   ////////////////// *  Employees   /////////////////////
 
@@ -108,21 +107,21 @@ class ApiConstance {
   // static String getServiceOrderDetails({required String serviceOrderId}) =>
   //     '$baseUrl/$baseDomain.api.service_order.service_order_details?service_order_id=$serviceOrderId';
 
-  static String getServiceOrderDetails =
+  static String getServiceOrderDetails() =>
       '$baseUrl/$baseDomain.api.service_order.service_order_details';
 
   //? This for appointment :
   static String appontmentsLogs() =>
       '$baseUrl/$baseDomain.api.staff_appointment_log.staff_appointment_logs?limit=10';
 
-  static String orderCancelltion =
+  static String orderCancelltion() =>
       '$baseUrl/$baseDomain.api.service_order.cancel_service_order';
   static String getServiceItems({required String serviceType}) =>
       '$baseUrl/$baseDomain.api.service_type.service_items?service_type=$serviceType';
   ////////////////// *  DeepClean   /////////////////////
-  static String getDeepCleanServices =
+  static String getDeepCleanServices() =>
       '$baseUrl/$baseDomain.api.service_type.service_items';
 
-  static String createDeepCleanOrder =
+  static String createDeepCleanOrder() =>
       '$baseUrl/$baseDomain.api.deep_clean.create_order';
 }

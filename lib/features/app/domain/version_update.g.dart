@@ -12,8 +12,8 @@ _VersionUpdate _$VersionUpdateFromJson(Map<String, dynamic> json) =>
       appIosVersion: json['ios_version'] as String,
       appUpdateRequired: json['app_update_required'] as bool?,
       appUpdateMessage: json['app_update_message'] as String?,
-      appIosUrl: json['app_ios_url'] as String?,
-      appAndroidUrl: json['app_android_url'] as String?,
+      appIosUrl: json['ios_url'] as String?,
+      appAndroidUrl: json['android_url'] as String?,
     );
 
 Map<String, dynamic> _$VersionUpdateToJson(_VersionUpdate instance) =>
@@ -22,6 +22,6 @@ Map<String, dynamic> _$VersionUpdateToJson(_VersionUpdate instance) =>
       'ios_version': instance.appIosVersion,
       'app_update_required': instance.appUpdateRequired,
       'app_update_message': instance.appUpdateMessage,
-      'app_ios_url': instance.appIosUrl,
-      'app_android_url': instance.appAndroidUrl,
+      'ios_url': instance.appIosUrl,
+      'android_url': instance.appAndroidUrl,
     };

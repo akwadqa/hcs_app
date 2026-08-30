@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hcs/features/app/domain/version_update.dart';
-import 'package:hcs/src/constants/Api/api_response.dart';
-import 'package:hcs/src/constants/Api/end_points.dart';
+import 'package:hcs/src/constants/api/api_response.dart';
+import 'package:hcs/src/constants/api/end_points.dart';
 import 'package:hcs/src/constants/api_constance.dart';
-import 'package:hcs/src/network/network_service.dart';
+import 'package:hcs/src/network/services/network_service.dart';
 
 class AppDataSource {
   final NetworkService _networkService;

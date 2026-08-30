@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hcs/features/Home/deep_clean/domain/models/deep_clean_order_params.dart';
-import 'package:hcs/features/Home/deep_clean/domain/models/deep_clean_service_model.dart';
 import 'package:hcs/features/Home/deep_clean/domain/models/service_item_model.dart';
-import 'package:hcs/src/constants/Api/api_response.dart';
+import 'package:hcs/src/constants/api/api_response.dart';
 import 'package:hcs/src/constants/api_constance.dart';
-import 'package:hcs/src/network/network_service.dart';
-
-import 'deep_clean_mock.dart';
+import 'package:hcs/src/network/services/network_service.dart';
 
 class DeepCleanRemoteDataSource {
   final NetworkService _networkService;
@@ -51,8 +48,8 @@ class DeepCleanRemoteDataSource {
   Future<ApiResponse<void>> createOrder(DeepCleanOrderParams params) async {
     try {
       final response = await _networkService.post(
-        ApiConstance.createDeepCleanOrder,
-        params.toJson(),
+        ApiConstance.createDeepCleanOrder(),
+       queryParameters:  params.toJson(),
       );
 
       if (response.data == null || response.statusCode != 200) {

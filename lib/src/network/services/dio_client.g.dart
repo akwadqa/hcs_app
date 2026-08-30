@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'network_service.dart';
+part of 'dio_client.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dioHash() => r'7fd93a372dffb1b72da37300d274907dffd8aec4';
+String _$dioHash() => r'3a556a9991e2d18954bed0337a5eeb33068502b1';
 
 /// See also [dio].
 @ProviderFor(dio)
@@ -46,16 +46,24 @@ class _SystemHash {
   }
 }
 
-/// See also [networkService].
+/// NetworkService injection
+///
+/// Copied from [networkService].
 @ProviderFor(networkService)
 const networkServiceProvider = NetworkServiceFamily();
 
-/// See also [networkService].
+/// NetworkService injection
+///
+/// Copied from [networkService].
 class NetworkServiceFamily extends Family<NetworkService> {
-  /// See also [networkService].
+  /// NetworkService injection
+  ///
+  /// Copied from [networkService].
   const NetworkServiceFamily();
 
-  /// See also [networkService].
+  /// NetworkService injection
+  ///
+  /// Copied from [networkService].
   NetworkServiceProvider call([Dio? dio]) {
     return NetworkServiceProvider(dio);
   }
@@ -82,9 +90,13 @@ class NetworkServiceFamily extends Family<NetworkService> {
   String? get name => r'networkServiceProvider';
 }
 
-/// See also [networkService].
+/// NetworkService injection
+///
+/// Copied from [networkService].
 class NetworkServiceProvider extends Provider<NetworkService> {
-  /// See also [networkService].
+  /// NetworkService injection
+  ///
+  /// Copied from [networkService].
   NetworkServiceProvider([Dio? dio])
     : this._internal(
         (ref) => networkService(ref as NetworkServiceRef, dio),

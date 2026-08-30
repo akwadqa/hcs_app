@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:hcs/features/MyOrders/domain/models/order_details/order_details_model.dart';
 import 'package:hcs/features/MyOrders/domain/models/services_order/services_order_model.dart';
-import 'package:hcs/src/constants/Api/api_response.dart';
+import 'package:hcs/src/constants/api/api_response.dart';
 import 'package:hcs/src/constants/api_constance.dart';
-import 'package:hcs/src/network/network_service.dart';
-
+import 'package:hcs/src/network/services/dio_client.dart';
+import 'package:hcs/src/network/services/network_service.dart';
 class MyOrdersDataSource {
   final NetworkService _networkService;
 
@@ -48,7 +48,7 @@ class MyOrdersDataSource {
   }) async {
     try {
       final response = await _networkService.get(
-        ApiConstance.getServiceOrderDetails,
+        ApiConstance.getServiceOrderDetails   (),
         queryParameters: {'service_order_id': serviceOrderId},
       );
       return ApiResponse.fromJson(
@@ -67,8 +67,8 @@ class MyOrdersDataSource {
       final data = FormData.fromMap({'service_order_id': serviceOrderId});
 
       final response = await _networkService.post(
-        ApiConstance.orderCancelltion,
-        data,
+        ApiConstance.orderCancelltion(),
+      data:   data,
       );
 
       return ApiResponse.fromJson(response.data, (_) => []);

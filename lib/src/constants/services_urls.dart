@@ -1,8 +1,14 @@
-abstract class ServicesUrls {
-  //!Development
-  static const String domain = 'https://domain.com';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hcs/src/constants/api/dotenv_keys.dart';
 
-  // !Production
+class ServicesUrls {
+  static String baseUrl = '';
+  static String imageUrl = '';
 
-  static const String baseUrl = '$domain/api.php?_d=';
+  static init() {
+    baseUrl = dotenv.get(DotenvKeys.baseUrl);
+    imageUrl = dotenv.get(DotenvKeys.imageUrl);
+    debugPrint('mnor $baseUrl');
+  }
 }

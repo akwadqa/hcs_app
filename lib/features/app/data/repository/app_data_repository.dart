@@ -1,8 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/app/data/remote/app_data_source.dart';
 import 'package:hcs/features/app/domain/version_update.dart';
-import 'package:hcs/src/constants/Api/api_response.dart';
-import 'package:hcs/src/network/network_service.dart';
+import 'package:hcs/src/constants/api/api_response.dart';
+import 'package:hcs/src/network/exception/dio_exceptions.dart';
+import 'package:hcs/src/network/services/dio_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_data_repository.g.dart';

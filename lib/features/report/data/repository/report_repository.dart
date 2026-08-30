@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/report/data/datasources/report_datasource.dart';
 import 'package:hcs/features/report/domain/model/report_model.dart';
-import 'package:hcs/src/constants/Api/api_response.dart';
-import 'package:hcs/src/network/network_service.dart';
+import 'package:hcs/src/constants/api/api_response.dart';
+import 'package:hcs/src/network/exception/dio_exceptions.dart';
+import 'package:hcs/src/network/services/dio_client.dart';
+import 'package:hcs/src/network/services/network_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'report_repository.g.dart';
