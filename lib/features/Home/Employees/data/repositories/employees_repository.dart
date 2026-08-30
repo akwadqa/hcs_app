@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/Home/Employees/data/models/employees_model.dart';
 import 'package:hcs/features/Home/Employees/data/models/get_employees_params.dart';
 import 'package:hcs/src/constants/api_constance.dart';
-import 'package:hcs/src/network/network_service.dart';
+import 'package:hcs/src/network/services/dio_client.dart';
+import 'package:hcs/src/network/services/network_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'employees_repository.g.dart';
@@ -21,7 +22,6 @@ class EmployeesRepository {
   Future<Employees> getEmployees({
     required GetEmployeesParams getEmployeesParams,
   }) async {
-
     final response = await _networkService.get(
       ApiConstance.getEmployees(
         serviceType: getEmployeesParams.serviceType,
@@ -30,6 +30,7 @@ class EmployeesRepository {
         serviceCategory: getEmployeesParams.serviceCategory,
         days: getEmployeesParams.days,
         employeeName: getEmployeesParams.employeeName,
+        overTimeHours: getEmployeesParams.overtimeHours,
         page: getEmployeesParams.page.toString(),
       ),
     );

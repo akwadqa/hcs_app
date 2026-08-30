@@ -13,10 +13,11 @@ class EmployeesState extends Equatable {
 
   //service category
   final String serviceCategory;
+  final String? overtimeHours;
 
   const EmployeesState({
     //employees
-    this.currentEmployeesPage=1,
+    this.currentEmployeesPage = 1,
     this.employees = const [],
     this.employeesStates = RequestStates.init,
     this.employeesMessage = '',
@@ -24,6 +25,7 @@ class EmployeesState extends Equatable {
     this.employeeSearchedFor = '',
     //service category
     this.serviceCategory = 'Flexible',
+    this.overtimeHours,
   });
   EmployeesState copyWith({
     //employees
@@ -33,20 +35,26 @@ class EmployeesState extends Equatable {
     String? employeesMessage,
     List<Employee>? selectedEmployees,
     String? employeeSearchedFor,
-    bool setCurrentEmployeesPage = false, 
+    bool setCurrentEmployeesPage = false,
     //service category
     String? serviceCategory,
+    String? overtimeHours,
   }) {
     return EmployeesState(
       //employees
-  currentEmployeesPage:currentEmployeesPage ?? this.currentEmployeesPage,
-            employees: employees ?? this.employees,
+      currentEmployeesPage: currentEmployeesPage ?? null,
+
+      // currentEmployeesPage: setCurrentEmployeesPage
+      //     ? currentEmployeesPage // يسمح نمرّر null صراحةً
+      //     : (currentEmployeesPage ?? this.currentEmployeesPage),
+      employees: employees ?? this.employees,
       employeesStates: employeesStates ?? this.employeesStates,
       employeesMessage: employeesMessage ?? this.employeesMessage,
       selectedEmployees: selectedEmployees ?? this.selectedEmployees,
       employeeSearchedFor: employeeSearchedFor ?? this.employeeSearchedFor,
       //service category
       serviceCategory: serviceCategory ?? this.serviceCategory,
+      overtimeHours: overtimeHours ?? this.overtimeHours,
     );
   }
 
@@ -56,6 +64,10 @@ class EmployeesState extends Equatable {
     currentEmployeesPage,
     employees,
     employeesStates,
-    employeesMessage, selectedEmployees, employeeSearchedFor, serviceCategory,
+    employeesMessage,
+    selectedEmployees,
+    employeeSearchedFor,
+    serviceCategory,
+    overtimeHours,
   ];
 }

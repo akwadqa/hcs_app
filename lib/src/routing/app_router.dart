@@ -10,6 +10,7 @@ class AppRouter extends RootStackRouter {
       page: IntroRoute.page,
       children: [
         AutoRoute(page: LoginRoute.page),
+        AutoRoute(page: ReportRoute.page),
         AutoRoute(
           page: MainRoute.page,
           children: [
@@ -23,6 +24,10 @@ class AppRouter extends RootStackRouter {
                 AutoRoute(page: EmployeesRoute.page),
                 AutoRoute(page: DriverPaymentRoute.page),
                 AutoRoute(page: DaysSelectionRoute.page),
+                AutoRoute(page: DeepCleanRoute.page),
+                AutoRoute(page: ServiceDetailsRoute.page),
+                AutoRoute(page: OrderSummaryRoute.page),
+
               ],
             ),
             AutoRoute(
@@ -30,6 +35,7 @@ class AppRouter extends RootStackRouter {
               children: [
                 AutoRoute(initial: true, page: MyOrdersContentRoute.page),
                 AutoRoute(page: OrderDetailsRoute.page),
+                AutoRoute(page: AppoinmentRoute.page),
               ],
             ),
             AutoRoute(

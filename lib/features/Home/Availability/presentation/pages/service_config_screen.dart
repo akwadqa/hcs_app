@@ -139,7 +139,7 @@ class _ServiceConfigurationScreenState
                                       .read(
                                         availabilityControllerProvider.notifier,
                                       )
-                                      .selecPackage(p0),
+                                      .selectPackage(p0),
                                 );
                               },
                             ),
@@ -151,6 +151,27 @@ class _ServiceConfigurationScreenState
               ),
 
               ShiftTypeChips(),
+              24.verticalSpace,
+              Row(
+                children: [
+                  Consumer(
+                    builder: (context, ref, _) {
+                      bool isPartTime = ref
+                          .watch(availabilityControllerProvider)
+                          .isPartTime;
+                      return Checkbox(
+                        value: isPartTime,
+                        onChanged: (val) {
+                          ref
+                              .read(availabilityControllerProvider.notifier)
+                              .changePartTime(val ?? false);
+                        },
+                      );
+                    },
+                  ),
+                  Text('is Part Time', style: TextStyle()),
+                ],
+              ),
               24.verticalSpace,
 
               Consumer(
@@ -175,6 +196,7 @@ class _ServiceConfigurationScreenState
                   );
                 },
               ),
+          
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 25.h, horizontal: 22.w),
                 child: Consumer(
@@ -201,7 +223,7 @@ class _ServiceConfigurationScreenState
                       onPressed: selectedPackageState == null
                           ? null
                           : () {
-                              selectedPackageState.id == 'Daily'
+                              selectedPackageState.id != 'Packages'
                                   ? context.pushRoute(EmployeesRoute())
                                   : context.pushRoute(DaysSelectionRoute());
                               if (_formKey.currentState!.validate()) {}
@@ -210,6 +232,7 @@ class _ServiceConfigurationScreenState
                   },
                 ),
               ),
+            
             ],
           ),
         ),

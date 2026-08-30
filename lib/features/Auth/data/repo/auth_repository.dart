@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/Auth/data/models/login_response_model.dart';
 import 'package:hcs/features/Auth/data/models/login_params.dart';
 import 'package:hcs/src/constants/api_constance.dart';
-import 'package:hcs/src/network/network_service.dart';
+import 'package:hcs/src/network/services/dio_client.dart';
+import 'package:hcs/src/network/services/network_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_repository.g.dart';
@@ -32,21 +33,24 @@ class AuthRepository {
   // }
 
   /// Login API request
-  Future<(String,String)> login(LoginParams params) async {
+  Future<(String, String)> login(LoginParams params) async {
     var formData = FormData.fromMap({
       'email': params.email,
       'password': params.pass,
-      'action':"supervisor",
+      'action': "supervisor",
     });
 
     final response = await _networkService.post(
       ApiConstance.loginPath,
-      formData,
+    data:   formData,
     );
 
     final data = json.encode(response.data);
     if (response.statusCode == 200) {
-      return (loginResponseFromJson(data).data.token,loginResponseFromJson(data).fullName);
+      return (
+        loginResponseFromJson(data).data!.token,
+        loginResponseFromJson(data).fullName ?? '',
+      );
     } else {
       throw Exception(response.message ?? "An unknown error occurred");
     }
@@ -58,7 +62,7 @@ class AuthRepository {
 
     final response = await _networkService.post(
       ApiConstance.forgotPassword(email),
-      formData,
+    data:   formData,
     );
 
     if (response.statusCode == 200) {

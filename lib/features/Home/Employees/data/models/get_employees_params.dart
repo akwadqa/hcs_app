@@ -7,6 +7,7 @@ class GetEmployeesParams extends Equatable {
   final String shift;
   final String? serviceCategory;
   final String? employeeName;
+  final String? overtimeHours;
   final int page;
 
   const GetEmployeesParams({
@@ -17,6 +18,7 @@ class GetEmployeesParams extends Equatable {
     required this.serviceCategory,
     required this.employeeName,
     required this.page,
+    required this.overtimeHours,
   });
 
   @override
@@ -28,5 +30,6 @@ class GetEmployeesParams extends Equatable {
     serviceCategory,
     employeeName,
     page,
+    overtimeHours,
   ];
 }

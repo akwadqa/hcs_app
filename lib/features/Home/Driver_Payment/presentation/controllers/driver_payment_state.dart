@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:hcs/features/Home/Driver_Payment/data/models/customer_balance_model.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/models/discount_type.dart';
 import 'package:hcs/features/Home/Driver_Payment/data/models/drivers_model.dart';
 import 'package:hcs/src/enums/request_state.dart';
@@ -11,9 +12,10 @@ class DriverPaymentState extends Equatable {
   final String? driversMessage;
   final Driver? selectedDriver;
   final String selectedPaymentMethod;
-  final String withCleaningSupplies;
+  final bool withCleaningSupplies;
   //
   final RequestStates discountStates;
+  final RequestStates customerBalanceState;
   final List<Discount> discountType;
   final Discount? selectedDiscount;
   final double? discountPercentage;
@@ -23,7 +25,9 @@ class DriverPaymentState extends Equatable {
   final double? costAfterCleaningSuplies;
   //
   final String note;
-
+  final CustomerBalanceData? customerBalanceData;
+  final bool isAdvancedBalance;
+  final double? fees;
   const DriverPaymentState({
     //drivers
     this.currentDriversPage,
@@ -32,28 +36,33 @@ class DriverPaymentState extends Equatable {
     this.driversMessage = '',
     this.selectedDriver,
     this.selectedPaymentMethod = 'SkipCash',
-    this.withCleaningSupplies = 'no',
+    this.withCleaningSupplies = false,
     //
     this.discountStates = RequestStates.init,
     this.selectedDiscount,
     this.discountType = const [],
-    this.discountPercentage ,
+    this.discountPercentage,
     this.originalCost = 0.0,
     this.discountedCost,
-    this.costAfterCleaningSuplies=0,
+    this.costAfterCleaningSuplies = 0,
     this.newCost,
+    this.fees,
     //
     this.note = '',
+    this.customerBalanceData,
+    this.customerBalanceState = RequestStates.init,
+    this.isAdvancedBalance = false,
   });
   DriverPaymentState copyWith({
     //drivers
     int? currentDriversPage,
     List<Driver>? drivers,
     RequestStates? driversStates,
+    RequestStates? customerBalanceState,
     String? driversMessage,
     Driver? selectedDriver,
     String? selectedPaymentMethod,
-    String? withCleaningSupplies,
+    bool? withCleaningSupplies,
 
     //
     RequestStates? discountStates,
@@ -66,6 +75,9 @@ class DriverPaymentState extends Equatable {
     double? costAfterCleaningSuplies,
     //
     String? note,
+    CustomerBalanceData? customerBalanceData,
+    bool? isAdvancedBalance,
+    double? fees,
   }) {
     return DriverPaymentState(
       //drivers
@@ -85,7 +97,12 @@ class DriverPaymentState extends Equatable {
       discountedCost: discountedCost ?? this.discountedCost,
       note: note ?? this.note,
       newCost: newCost ?? this.newCost,
-      costAfterCleaningSuplies: costAfterCleaningSuplies ?? this.costAfterCleaningSuplies,
+      costAfterCleaningSuplies:
+          costAfterCleaningSuplies ?? this.costAfterCleaningSuplies,
+      customerBalanceData: customerBalanceData ?? this.customerBalanceData,
+      customerBalanceState: customerBalanceState ?? this.customerBalanceState,
+      isAdvancedBalance: isAdvancedBalance ?? this.isAdvancedBalance,
+      fees: fees ?? this.fees,
     );
   }
 
@@ -105,5 +122,6 @@ class DriverPaymentState extends Equatable {
     newCost,
     costAfterCleaningSuplies,
     discountedCost, note,
+    isAdvancedBalance, customerBalanceData, customerBalanceState, fees,
   ];
 }

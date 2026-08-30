@@ -1,0 +1,481 @@
+import 'dart:async';
+
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:hcs/src/extenssions/int_extenssion.dart';
+import 'package:hcs/src/extenssions/widget_extensions.dart';
+import 'package:hcs/src/shared_widgets/custom_button_widget.dart';
+import 'package:hcs/src/utils/app_alert.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../theme/app_colors.dart';
+
+class AppDialogs {
+  AppDialogs._();
+
+  static Future<void> loading(
+    BuildContext context, {
+    bool dismissible = false,
+  }) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: dismissible,
+      useRootNavigator: true,
+      builder: (_) => const Center(child: _LoadingIndicator()),
+    );
+  }
+
+  static void close(BuildContext context) {
+    if (Navigator.of(context, rootNavigator: true).canPop()) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+  }
+
+  static Future<void> success(
+    BuildContext context, {
+    required String title,
+    String? message,
+    Widget? child,
+    String okText = 'OK',
+    bool dismissible = true,
+  }) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: dismissible,
+      builder: (_) => _ResultDialog(
+        icon: const Icon(Icons.check_circle, color: Colors.green, size: 24),
+        title: title,
+        message: message,
+        okText: okText,
+        child: child,
+      ),
+    );
+  }
+
+  static Future<void> error(
+    BuildContext context, {
+    required String title,
+    String? message,
+    Widget? child,
+    String okText = 'OK',
+    bool dismissible = true,
+  }) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: dismissible,
+      builder: (_) => _ResultDialog(
+        icon: const Icon(Icons.cancel, color: Colors.red, size: 24),
+        title: title,
+        message: message,
+        okText: okText,
+        child: child,
+      ),
+    );
+  }
+
+  static Future<bool> confirm(
+    BuildContext context, {
+    required String title,
+    String? message,
+    Widget? child,
+    String cancelText = 'Cancel',
+    String confirmText = 'Confirm',
+    bool destructive = false,
+    bool dismissible = true,
+  }) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: dismissible,
+      builder: (_) => _ConfirmDialog(
+        title: title,
+        message: message,
+        cancelText: cancelText,
+        confirmText: confirmText,
+        destructive: destructive,
+        child: child,
+      ),
+    );
+    return result ?? false;
+  }
+
+  static Future<void> showUpdateDialog(
+    BuildContext context,
+    String title,
+    String message,
+    String? url,
+    bool isRequired,
+  ) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        final theme = Theme.of(context);
+
+        return PopScope(
+          canPop: !isRequired,
+          child: AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            title: Text(
+              title.tr(),
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            content: Text(
+              message.tr(),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                height: 1.5,
+                color: theme.colorScheme.onSurface.withOpacity(0.8),
+              ),
+            ),
+            actionsPadding: const EdgeInsets.only(bottom: 8, right: 8, left: 8),
+            actionsAlignment: MainAxisAlignment.spaceBetween,
+            actions: [
+              Row(
+                children: [
+                  if (!isRequired)
+                    Expanded(
+                      child: CustomButtonWidget(
+                        text: 'later'.tr(),
+                        backgroundColor: Colors.transparent,
+                        color: AppColors.black900,
+                        isFiled: false,
+                        height: 45,
+                        radius: 10,
+                        width: double.infinity,
+                        onTap: () => Navigator.of(context).pop(),
+                      ),
+                    ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: CustomButtonWidget(
+                      text: 'update'.tr(),
+                      backgroundColor: AppColors.primary,
+                      color: AppColors.offWhite,
+                      isFiled: true,
+                      height: 45,
+                      width: double.infinity / 2,
+                      radius: 10,
+                      onTap: () async {
+                        // if (url == null) return;
+                        final uri = Uri.parse(url??"https://play.google.com/store/apps/details?id=qa.app.hcs");
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(
+                            uri,
+                            mode: LaunchMode.externalApplication,
+                          );
+                        } else {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(tr('could_not_open_link')),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _LoadingIndicator extends StatelessWidget {
+  const _LoadingIndicator();
+
+  @override
+  Widget build(BuildContext context) {
+    final bg = Theme.of(context).dialogBackgroundColor;
+    return Material(
+      color: Colors.black38,
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: SizedBox(width: 48, height: 48, child: MailPulseAnimation()),
+        ),
+      ),
+    );
+  }
+}
+
+class _ResultDialog extends StatelessWidget {
+  final Widget icon;
+  final String title;
+  final String? message;
+  final Widget? child;
+  final String okText;
+
+  const _ResultDialog({
+    required this.icon,
+    required this.title,
+    this.message,
+    this.child,
+    required this.okText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final titleStyle = Theme.of(context).textTheme.titleMedium;
+    final bodyStyle = Theme.of(context).textTheme.bodyMedium;
+
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      contentPadding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+      actionsPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      title: Row(
+        children: [
+          icon,
+          const SizedBox(width: 8),
+          Expanded(child: Text(title, style: titleStyle)),
+        ],
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (message != null) Text(message!, style: bodyStyle),
+          if (message != null && child != null) const SizedBox(height: 12),
+          if (child != null) child!,
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(okText),
+        ),
+      ],
+    );
+  }
+}
+
+class _ConfirmDialog extends StatelessWidget {
+  final String title;
+  final String? message;
+  final Widget? child;
+  final String cancelText;
+  final String confirmText;
+  final bool destructive;
+
+  const _ConfirmDialog({
+    required this.title,
+    this.message,
+    this.child,
+    required this.cancelText,
+    required this.confirmText,
+    required this.destructive,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final titleStyle = Theme.of(context).textTheme.titleMedium;
+    final bodyStyle = Theme.of(context).textTheme.bodyMedium;
+
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      contentPadding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+      actionsPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      title: Text(title, style: titleStyle),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (message != null) Text(message!, style: bodyStyle),
+          if (message != null && child != null) const SizedBox(height: 12),
+          if (child != null) child!,
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: Text(cancelText),
+        ),
+        FilledButton(
+          style: destructive
+              ? FilledButton.styleFrom(backgroundColor: Colors.red)
+              : null,
+          onPressed: () => Navigator.pop(context, true),
+          child: Text(confirmText),
+        ),
+      ],
+    );
+  }
+}
+
+Future<void> showCustomDialog({
+  required BuildContext context,
+  required Widget title,
+  Widget? icon,
+  bool? withDismiss,
+}) {
+  return showDialog(
+    context: context,
+    barrierDismissible: withDismiss ?? true,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 300, maxHeight: 400),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 50),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [icon ?? SizedBox(), 28.verticalSpace, title],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Future<void> showAutoClosingDialog(BuildContext context, String message) async {
+  Timer timer;
+
+  timer = Timer(Duration(seconds: 3), () {
+    Navigator.of(context).pop();
+  });
+
+  await showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (context) => AlertDialog(
+      title: Text(
+        message,
+        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 16),
+      ).centered(),
+      icon: Icon(Icons.error, color: AppColors.darkRed, size: 50),
+      actions: [
+        TextButton(
+          onPressed: () {
+            if (timer.isActive) timer.cancel();
+            Navigator.of(context).pop();
+          },
+          child: Text(
+            "OK",
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
+          ).centered(),
+        ),
+      ],
+    ),
+  ).then((val) {
+    if (timer.isActive) {
+      timer.cancel();
+    }
+  });
+}
+
+Dialog showYesNowChoicesDialog(
+  BuildContext context, {
+  required String title,
+  required String dsc,
+  required VoidCallback yesButton,
+  VoidCallback? noButton,
+}) {
+  return Dialog(
+    insetPadding: EdgeInsets.symmetric(horizontal: 20),
+    backgroundColor: Colors.white.withOpacity(0.8),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        40.verticalSpace,
+        Text(
+          title.tr(),
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ).centered(),
+        40.verticalSpace,
+        Text(
+          dsc.tr(),
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            fontSize: 14,
+            color: AppColors.grey600,
+            fontWeight: FontWeight.w500,
+          ),
+        ).centered(),
+        40.verticalSpace,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: CustomButtonWidget(
+                text: context.tr("yes"),
+                onTap: yesButton,
+                backgroundColor: AppColors.blackText,
+                isFiled: true,
+                height: 45,
+                radius: 12,
+                width: MediaQuery.sizeOf(context).width,
+              ),
+            ),
+            20.horizontalSpace,
+            Flexible(
+              child: CustomButtonWidget(
+                text: context.tr("no"),
+                onTap:
+                    noButton ??
+                    () {
+                      Navigator.pop(context);
+                    },
+                color: AppColors.blackText,
+                isFiled: false,
+
+                height: 45,
+                radius: 12,
+                width: MediaQuery.sizeOf(context).width,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ).symmetricPadding(horizontal: 20, vertical: 25),
+  );
+}
+
+Future<void> showErrorDialog(BuildContext context, String message) {
+  return showCustomDialog(
+    context: context,
+    title: Text(message),
+    icon: Icon(Icons.error, color: AppColors.darkRed, size: 50),
+  );
+}
+
+Future<void> showAboutInfoDialog(
+  BuildContext context,
+  String message, {
+  IconData? icon,
+  Color? iconColor,
+  bool? withDismiss,
+}) {
+  return showCustomDialog(
+    withDismiss: withDismiss,
+    context: context,
+    title: Text(message),
+    icon: Icon(
+      icon ?? Icons.info,
+      color: iconColor ?? AppColors.primary,
+      size: 50,
+    ),
+  );
+}

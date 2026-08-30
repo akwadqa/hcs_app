@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hcs/features/Home/Availability/presentation/controllers/availability_controller.dart';
 import 'package:hcs/features/Home/Customer/presentation/widgets/service_card.dart';
+import 'package:hcs/features/Home/deep_clean/presentation/controller/deep_clean_controller.dart';
 import 'package:hcs/src/enums/service_type.dart';
 import 'package:hcs/src/manager/app_strings.dart';
 import 'package:hcs/src/routing/app_router.gr.dart';
@@ -78,21 +79,29 @@ class _HomeContentState extends ConsumerState<HomeContentScreen> {
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
-                        onTap: index < 2
-                            ? () {
-                                availabilityNotifier.selectService(
-                                  serviceTypeToString(list[index]),
-                                );
+                        onTap: () {
+                          final st = list[index];
+                          availabilityNotifier.selectService(
+                            serviceTypeToString(st),
+                          );
 
-                                context.pushRoute(
-                                  CustomerRoute(serviceType: list[index]),
-                                );
-                              }
-                            : null,
+                          // 🔀 Set the mode when entering a service-items flow
+                          // if (st == ServiceType.deepClean ||
+                          //     st == ServiceType.maintenance) {
+                          //       debugPrint("HomeServiceMode =ServiceType");
+                          //   ref
+                          //       .read(deepCleanControllerProvider.notifier)
+                          //       .setMode(HomeServiceMode.fromServiceType(st));
+                          // }
 
+                          context.pushRoute(CustomerRoute(serviceType: st));
+                        },
+
+                        // : null,
                         child: ServiceCard(
                           serviceType: list[index],
-                          enabled: index < 2,
+                          enabled: true,
+                          // index < 3,
                         ),
                       );
                     },
@@ -106,7 +115,7 @@ class _HomeContentState extends ConsumerState<HomeContentScreen> {
           ),
         ),
       ),
-      appBar: CustomAppbar(isHome: true,withouTitle: true,),
+      appBar: CustomAppbar(isHome: true, withouTitle: true),
     );
   }
 }

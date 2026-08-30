@@ -1,4 +1,4 @@
-package com.example.hcs
+package qa.app.hcs
 
 import io.flutter.embedding.android.FlutterActivity
 

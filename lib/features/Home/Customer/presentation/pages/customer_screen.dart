@@ -18,6 +18,8 @@ import 'package:hcs/src/shared_widgets/custom_appbar.dart';
 import 'package:hcs/src/shared_widgets/custom_button.dart';
 import 'package:hcs/src/shared_widgets/fade_circle_loading_indicator.dart';
 
+import '../../../Availability/presentation/controllers/availability_controller.dart';
+
 @RoutePage()
 class CustomerScreen extends ConsumerStatefulWidget {
   final ServiceType serviceType;
@@ -192,18 +194,39 @@ class _CustomerScreenState extends ConsumerState<CustomerScreen> {
             padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
             child: Consumer(
               builder: (context, ref, child) {
+                final selectedPackageState = ref.watch(
+                  availabilityControllerProvider.select(
+                    (value) => value.selectedPackage,
+                  ),
+                );
+
                 final selectedCustomerState = ref.watch(
                   customerControllerProvider.select(
                     (value) => value.selectedCustomer,
                   ),
                 );
+                final isServiceItemsFlow =
+                    widget.serviceType == ServiceType.deepClean ||
+                    widget.serviceType == ServiceType.maintenance ||
+                    selectedPackageState?.id == 'DeepClean';
 
                 return CustomButton(
                   title: tr(context: context, AppStrings.next),
                   onPressed: selectedCustomerState == null
                       ? null
                       : () {
-                          context.pushRoute(ServiceConfigurationRoute());
+                          debugPrint(selectedPackageState?.id);
+                          if (isServiceItemsFlow) {
+                            // Go to Deep Clean flow
+                            context.pushRoute(const DeepCleanRoute());
+                          } else {
+                            // Old behavior
+                            context.pushRoute(EmployeesRoute());
+                            // Or your previous logic:
+                            // selectedPackageState?.id == 'Daily'
+                            //     ? context.pushRoute(EmployeesRoute())
+                            //     : context.pushRoute(DaysSelectionRoute());
+                          }
                         },
                 );
               },

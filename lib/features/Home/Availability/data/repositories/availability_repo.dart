@@ -3,7 +3,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hcs/features/Home/Availability/data/models/packages_model.dart';
 import 'package:hcs/src/constants/api_constance.dart';
-import 'package:hcs/src/network/network_service.dart';
+import 'package:hcs/src/network/services/dio_client.dart';
+import 'package:hcs/src/network/services/network_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'availability_repo.g.dart';

@@ -16,6 +16,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final List<Widget>? actions;
   final TabController? tabController;
+  final ValueChanged<int>? onTabTap;
 
   const CustomAppbar({
     super.key,
@@ -26,6 +27,8 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.title,
     this.tabController,
+    this.onTabTap,
+
   });
 
   @override
@@ -50,16 +53,31 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                   labelColor: AppColors.blueTitle,
                   unselectedLabelColor: AppColors.greyText,
                   indicatorColor: AppColors.blueTitle,
+                  onTap: onTabTap,
                   labelStyle: Theme.of(context).textTheme.displayMedium,
                   unselectedLabelStyle: Theme.of(
                     context,
                   ).textTheme.displayMedium,
-
                   tabs: const [
-                    Tab(text: 'Accept'),
-                    Tab(text: 'Pending'),
-                    Tab(text: 'Cancelled'),
+                    Tab(
+                      icon: SizedBox(
+                        child: Icon(
+                          Icons.date_range_outlined,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+
+                    //? Dont forget it :
+                    // Tab(text: 'Yesterday'),
+                    Tab(text: 'Today'),
+                    Tab(text: 'Tomorrow'),
                   ],
+                  // tabs: const [
+                  //   Tab(text: 'Accept'),
+                  //   Tab(text: 'Pending'),
+                  //   Tab(text: 'Cancelled'),
+                  // ],
                 ),
               ),
             )
@@ -74,8 +92,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
               (value) => value.selectedServiceType,
             ),
           );
-          return 
-          withouTitle
+          return withouTitle
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -85,7 +102,6 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
 
                         10.horizontalSpace,
                         Text(
-                          
                           user?.$2 ?? "supervisor",
                           style: Theme.of(context).textTheme.displaySmall!
                               .copyWith(
@@ -95,34 +111,31 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       ],
                     ),
-           if(  isHome)
-           ...[
-               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                  // mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Assets.images.logo.image(
-                      height: 50.h,
-                      width: 70.w,
-                      fit: BoxFit.fitWidth,
-                    ),
-                    // SizedBox(width: 8.w),
-                    // Text(
-                    //   "${serviceTypeToString(ServiceType.home)} Service",
-                    //   style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                    //     fontSize: 12.sp,
-                    //     fontWeight: FontWeight.w600,
-                    //   ),
-                    // ),
+                    if (isHome) ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        // mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Assets.images.logo.image(
+                            height: 50.h,
+                            width: 70.w,
+                            fit: BoxFit.fitWidth,
+                          ),
+                          // SizedBox(width: 8.w),
+                          // Text(
+                          //   "${serviceTypeToString(ServiceType.home)} Service",
+                          //   style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                          //     fontSize: 12.sp,
+                          //     fontWeight: FontWeight.w600,
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                      // 100.horizontalSpace,
+                    ],
                   ],
                 )
-                ,
-                100.horizontalSpace,
-              ]
-                  ],
-                )
-              : 
-          title != null
+              : title != null
               ? Text(
                   title!,
                   style: Theme.of(context).textTheme.displaySmall!.copyWith(

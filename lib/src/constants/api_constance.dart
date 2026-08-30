@@ -1,22 +1,30 @@
-class ApiConstance {
-  static const String baseUrl = "https://highclass.akwad.qa/api/method";
-  static const String baseDomain = "highclass";
-  static const String baseImageUrl = 'https://$baseDomain.akwad.qa/';
+import 'dart:convert';
 
-  static String imageUrl(String? path) {
-    if (path != null) {
-      return '$baseImageUrl$path';
-    } else {
-      return 'https://picsum.photos/600/400?random=1';
-    }
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hcs/src/constants/api/dotenv_keys.dart';
+
+class ApiConstance {
+  // Loaded from .env file after app starts
+  static String baseUrl = dotenv.get(DotenvKeys.baseUrl);
+  static String baseDomain = 'highclass';
+  static String baseImageUrl = 'https://$baseDomain.akwad.qa/';
+
+  // Initialize constants from .env
+  static void init() {
+    baseUrl = dotenv.get(DotenvKeys.baseUrl);
+    baseImageUrl = 'https://$baseDomain.akwad.qa/';
   }
 
   ////////////////// *  Login   /////////////////////
-  static const String loginPath =
-      '$baseUrl/$baseDomain.api.authentication.login';
+  static  String loginPath = '$baseUrl/$baseDomain.api.authentication.login';
   static String forgotPassword(String email) =>
       '$baseUrl/frappe.core.doctype.user.user.reset_password?user=$email';
+  static  String getVersion = '$baseUrl/highclass.api.api.app_version';
+
   ////////////////// *  Customers   /////////////////////
+  ///
+  static String getCustomerBalance({required String customerId}) =>
+      '$baseUrl/$baseDomain.api.customer.get_customer_balances?customer=$customerId';
   static String getCustomers({
     required String page,
     required String customerName,
@@ -25,8 +33,10 @@ class ApiConstance {
   static String addCustomers = '$baseUrl/$baseDomain.api.customer.customer';
 
   ////////////////// *  Availabillty   /////////////////////
-  static String getPackages =
-      '$baseUrl/$baseDomain.api.service_type.service_types';
+  static String getPackages = '$baseUrl/$baseDomain.api.service_type.service_types';
+
+  //////////////////* Report //////////////////////////
+  static String getReport = '$baseUrl/$baseDomain.api.service_order.service_orders';
 
   ////////////////// *  Employees   /////////////////////
 
@@ -37,6 +47,7 @@ class ApiConstance {
     required String shift,
     String? serviceCategory,
     String? employeeName,
+    String? overTimeHours,
     required String page,
   }) {
     // return 'https://highclass.akwad.qa/api/method/highclass.api.employee.employees?service_type=Flexible – 8 visits/month&date=2025-06-28&shift=Full Day&designation=&service_category=Company&days=["monday", "wednesday"]&page=1&limit=10';
@@ -44,12 +55,15 @@ class ApiConstance {
       'service_type': serviceType,
       'date': date,
       'shift': shift,
-      'designation': '',
+      if (overTimeHours != null) "overtime_hours": overTimeHours,
+      // 'designation': '',
       'page': page,
-      'limit': '50',
+      'limit': '10',
     };
 
-    if (serviceCategory != null && serviceCategory.isNotEmpty) {
+    if (serviceCategory != null &&
+        serviceCategory.isNotEmpty &&
+        overTimeHours == null) {
       queryParams['service_category'] = serviceCategory;
     }
 
@@ -78,19 +92,36 @@ class ApiConstance {
       '$baseUrl/$baseDomain.api.discount_type.discount_types';
   ////////////////// *  SubmitService   /////////////////////
   static String submitService() =>
-      '$baseUrl/$baseDomain.api.service_order.service_order';
+      '$baseUrl/$baseDomain.api.service_order.create_service_order';
 
   //////////////////! *  MyOrders Services   /////////////////////
-  static String myServicesOrders({
-    required String page,
-    required String status,
-    required String orderSearched
-  }) =>
-      '$baseUrl/$baseDomain.api.service_order.service_orders?page=$page&limit=10&status=$status&search=$orderSearched&action=supervisor';
+  static String myServicesOrders() =>
+      '$baseUrl/$baseDomain.api.service_order.service_orders';
+  // static String myServicesOrders({
+  //   required String page,
+  //   required String status,
+  //   required String orderSearched,
+  // }) =>
+  //     '$baseUrl/$baseDomain.api.service_order.service_orders?page=$page&limit=10&status=$status&search=$orderSearched&action=supervisor';
 
-  static String getServiceOrderDetails({required String serviceOrderId}) =>
-      '$baseUrl/$baseDomain.api.service_order.service_order_details?service_order_id=$serviceOrderId';
+  // static String getServiceOrderDetails({required String serviceOrderId}) =>
+  //     '$baseUrl/$baseDomain.api.service_order.service_order_details?service_order_id=$serviceOrderId';
+
+  static String getServiceOrderDetails() =>
+      '$baseUrl/$baseDomain.api.service_order.service_order_details';
+
+  //? This for appointment :
+  static String appontmentsLogs() =>
+      '$baseUrl/$baseDomain.api.staff_appointment_log.staff_appointment_logs?limit=10';
 
   static String orderCancelltion() =>
       '$baseUrl/$baseDomain.api.service_order.cancel_service_order';
+  static String getServiceItems({required String serviceType}) =>
+      '$baseUrl/$baseDomain.api.service_type.service_items?service_type=$serviceType';
+  ////////////////// *  DeepClean   /////////////////////
+  static String getDeepCleanServices() =>
+      '$baseUrl/$baseDomain.api.service_type.service_items';
+
+  static String createDeepCleanOrder() =>
+      '$baseUrl/$baseDomain.api.deep_clean.create_order';
 }

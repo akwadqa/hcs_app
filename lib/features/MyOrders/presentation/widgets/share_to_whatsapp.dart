@@ -1,70 +1,88 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hcs/features/MyOrders/data/models/orders_details_model.dart';
+import 'package:hcs/features/MyOrders/domain/models/appointment/appoitnment_model.dart';
+import 'package:hcs/features/MyOrders/domain/models/order_details/order_details_model.dart';
 import 'package:hcs/src/theme/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShareToWhatsApp extends StatelessWidget {
   final String serviceOrderId;
-  final Details? orderDetails;
+  final OrderDetails? orderDetails;
+  final Appointment? appointment;
   const ShareToWhatsApp({
     super.key,
     required this.serviceOrderId,
     required this.orderDetails,
+    this.appointment,
   });
+
   // https://www.waze.com/ul?ll=${orderDetails?.customer?.locationUrl?.split('=').last}
 
   void shareToWhatsApp() async {
+    final emplyeesName = orderDetails?.staffAppointment != null
+        ? orderDetails!.staffAppointment!.join('\n')
+        : '';
+
     final String message =
         '''
+${appointment != null ? "Visit Details" : "Order Details"}
+
 Booking Number: $serviceOrderId
-
 Supervisor Name: ${orderDetails?.supervisor?.supervisorName}
-
 ${orderDetails?.customer?.customerName}
-Zone ${orderDetails?.customer?.zone}, ${orderDetails?.customer?.location}
+${orderDetails?.customer?.zone != null ? 'Zone ${orderDetails?.customer?.zone}, ${orderDetails?.customer?.location} \n' : ''}
 Mobile: ${orderDetails?.customer?.phoneNumber}
-
 ${orderDetails?.customer?.locationUrl ?? ""}
 
 Driver: ${orderDetails?.driver?.driverName}
-Date: ${orderDetails?.date}
+Date: ${appointment == null ? orderDetails?.date : appointment?.date}
 Service Type: ${orderDetails?.serviceType}
 
 Shift Type: ${orderDetails?.shiftType}
 Duration: ${orderDetails?.shiftType == "Full Day" ? "10 Hours" : "5 Hours"}
-Days: ${(orderDetails?.days as List?)?.join(', ')}
-Names of Cleaners: ${(orderDetails?.staffAppointment as List?)?.join(', ')}
+${appointment == null ? (orderDetails?.days != null ? 'Days: ${(orderDetails?.days as List?)?.join(', ')}' : '') : appointment?.serviceType}
+
+ ${appointment == null ? (orderDetails?.staffAppointment != null ? 'Names of Cleaners: ${orderDetails!.staffAppointment!.length > 1 ? '\n' : ''}$emplyeesName' : '') : "Name of Cleaner: ${appointment?.employeeName}"}
+
 Cleaning Material: ${orderDetails?.withCleaningSupplies == 0 ? 'NO' : "YES"}
-${orderDetails?.note != null ? "Note: ${orderDetails?.note}" : ""}
 
-Payment collect by ${orderDetails?.methodOfPayment} QR ${orderDetails?.totalNetAmount}
-
-https://highclass.akwad.qa
+${(orderDetails?.note != null && orderDetails?.note != "") ? "Note: ${orderDetails?.note}\n" : ""}
+Order Amount : ${orderDetails?.totalNetAmount} QR By ${(orderDetails?.methodOfPayment == 'SkipCash') ? 'Skip Cash \n${orderDetails!.skipcashLink}' : 'Cash'}
 ''';
+    // ${orderDetails?.skipcashLink != null ? orderDetails!.skipcashLink : ''}
+    // ${(orderDetails?.methodOfPayment == 'Cash') ? 'Payment collect by Cash QR ${orderDetails?.totalNetAmount}' : ''}
 
-final waScheme = Uri.parse('whatsapp://send?text=${Uri.encodeComponent(message)}');
-  final waWeb    = Uri.parse('https://wa.me/?text=${Uri.encodeComponent(message)}');
+    // ${(orderDetails?.methodOfPayment == 'SkipCash') ? 'Skip Cash ${orderDetails!.skipcashLink}' : ''}
+    // Payment collect by ${orderDetails?.methodOfPayment} QR ${orderDetails?.totalNetAmount}
 
-  // Try the WhatsApp app first
-  final launched = await launchUrl(
-    waScheme,
-    mode: LaunchMode.externalApplication,
-  ).catchError((_) => false);
+    final waScheme = Uri.parse(
+      'whatsapp://send?text=${Uri.encodeComponent(message)}',
+    );
+    final waWeb = Uri.parse(
+      'https://wa.me/?text=${Uri.encodeComponent(message)}',
+    );
+    debugPrint('-------------------');
+    debugPrint(orderDetails?.staffAppointment?.length.toString() ?? 'link');
+    debugPrint('-------------------');
 
-  if (launched == true) return;
+    // Try the WhatsApp app first
+    final launched = await launchUrl(
+      waScheme,
+      mode: LaunchMode.externalApplication,
+    ).catchError((_) => false);
 
-  // Fallback to web (needs a browser)
-  final webLaunched = await launchUrl(
-    waWeb,
-    mode: LaunchMode.externalApplication,
-  ).catchError((_) => false);
+    if (launched == true) return;
 
-  if (webLaunched != true) {
-    debugPrint('No app/browser available to handle WhatsApp link');
-    // Show a snackbar/toast to the user if you want
-  }
+    // Fallback to web (needs a browser)
+    final webLaunched = await launchUrl(
+      waWeb,
+      mode: LaunchMode.externalApplication,
+    ).catchError((_) => false);
 
+    if (webLaunched != true) {
+      debugPrint('No app/browser available to handle WhatsApp link');
+      // Show a snackbar/toast to the user if you want
+    }
   }
 
   @override
