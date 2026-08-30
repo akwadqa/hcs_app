@@ -114,7 +114,8 @@ String paymentMethodToString(PaymentMethod paymentMethod) {
 enum HomeServiceMode {
   deepClean(
     title: 'Deep Clean',
-    apiServiceType: 'Home Cleaning Services', // /service_items?service_type=...
+    // apiServiceType: 'Home Cleaning Services', // /service_items?service_type=...
+    apiServiceType: 'Deep Clean', // /service_items?service_type=...
     orderServiceType: 'Deep Clean', // create_service_order body
     showQtyField: false,
   ),
@@ -136,7 +137,7 @@ enum HomeServiceMode {
     required this.orderServiceType,
     required this.showQtyField,
   });
- static HomeServiceMode fromSelectedServiceType(String? selected) {
+  static HomeServiceMode fromSelectedServiceType(String? selected) {
     switch (selected) {
       case 'Maintenance':
         return HomeServiceMode.maintenance;
@@ -145,8 +146,9 @@ enum HomeServiceMode {
         return HomeServiceMode.deepClean;
     }
   }
+
   static HomeServiceMode fromServiceType(ServiceType s) =>
       s == ServiceType.maintenance
-          ? HomeServiceMode.maintenance
-          : HomeServiceMode.deepClean;
+      ? HomeServiceMode.maintenance
+      : HomeServiceMode.deepClean;
 }
